@@ -250,1102 +250,1182 @@ return {
 	attributeFill = function(unitTest)
 		TerraLib().setProgressVisible(false)
 
-		local proj = {}
-		proj.file = "myproject.tview"
-		proj.title = "TerraLib Tests"
-		proj.author = "Avancini Rodrigo"
-
-		File(proj.file):deleteIfExists()
-		-- CREATE A PROJECT
-		TerraLib().createProject(proj, {})
-
-		-- CREATE A LAYER THAT WILL BE USED AS REFERENCE TO CREATE THE CELLULAR SPACE
-		local layerName1 = "Para"
-		local layerFile1 = filePath("test/limitePA_polyc_pol.shp", "gis")
-		TerraLib().addShpLayer(proj, layerName1, layerFile1)
-
-		local host = "localhost"
-		local port = "5432"
-		local user = "postgres"
-		local password = getConfig().password
-		local database = "postgis_22_sample" -- TODO: REVIEW TEST WITH NEW DATABASE (PROBLEM IN DROP)
-		local encoding = "CP1252"
-		local tableName = "para_cells"
-
-		local pgData = {
-			type = "POSTGIS",
-			host = host,
-			port = port,
-			user = user,
-			password = password,
-			database = database,
-			table = tableName,
-			encoding = encoding
-		}
-
-		TerraLib().dropPgTable(pgData)
-
-		-- CREATE THE CELLULAR SPACE
-		local clName = "Para_Cells"
-		local resolution = 5e5
-		local mask = true
-		TerraLib().addPgCellSpaceLayer(proj, layerName1, clName, resolution, pgData, mask)
-
-		local clSet = TerraLib().getDataSet{project = proj, layer = clName}
-
-		unitTest:assertEquals(getn(clSet), 9)
-
-		for k, v in pairs(clSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom"))
-			unitTest:assertNotNil(v)
-		end
-
-		-- CREATE A LAYER WITH POLYGONS TO DO OPERATIONS
-		local layerName2 = "Protection_Unit"
-		local layerFile2 = filePath("test/BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "gis")
-		TerraLib().addShpLayer(proj, layerName2, layerFile2)
-
-		-- POSTGIS OUTPUT
-		-- FILL CELLULAR SPACE WITH PRESENCE OPERATION
-		local presLayerName = clName.."_"..layerName2.."_Presence"
-
-		pgData.table = string.lower(presLayerName)
-		TerraLib().dropPgTable(pgData)
-
-		local operation = "presence"
-		local attribute = "presence"
-		local select = "FID"
-
-		TerraLib().attributeFill{
-			project = proj,
-			from = layerName2,
-			to = clName,
-			out = presLayerName,
-			attribute = attribute,
-			operation = operation,
-			select = select
-		}
-
-		local presSet = TerraLib().getDataSet{project = proj, layer = presLayerName}
-
-		unitTest:assertEquals(getn(presSet), 9)
-
-		for k, v in pairs(presSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or (k == "presence"))
-			unitTest:assertNotNil(v)
-		end
-
-		local presLayerInfo = TerraLib().getLayerInfo(proj, presLayerName)
-		unitTest:assertEquals(presLayerInfo.name, presLayerName)
-		unitTest:assertEquals(presLayerInfo.type, "POSTGIS")
-		unitTest:assertEquals(presLayerInfo.rep, "polygon")
-		unitTest:assertEquals(presLayerInfo.host, host)
-		unitTest:assertEquals(presLayerInfo.port, port)
-		unitTest:assertEquals(presLayerInfo.user, user)
-		unitTest:assertEquals(presLayerInfo.password, password)
-		unitTest:assertEquals(presLayerInfo.database, database)
-		unitTest:assertEquals(presLayerInfo.table, string.lower(presLayerName))
-
-		-- FILL CELLULAR SPACE WITH PERCENTAGE TOTAL AREA OPERATION
-		local areaLayerName = clName.."_"..layerName2.."_Area"
-
-		pgData.table = string.lower(areaLayerName)
-		TerraLib().dropPgTable(pgData)
-
-		operation = "area"
-		attribute = "area_percent"
-		select = "FID"
-		local default = 0
-
-		TerraLib().attributeFill{
-			project = proj,
-			from = layerName2,
-			to = presLayerName,
-			out = areaLayerName,
-			attribute = attribute,
-			operation = operation,
-			select = select,
-			default = default
-		}
-
-		local areaSet = TerraLib().getDataSet{project = proj, layer = areaLayerName}
-
-		unitTest:assertEquals(getn(areaSet), 9)
-
-		for k, v in pairs(areaSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
-							(k == "presence") or (k == "area_percent") )
-			unitTest:assertNotNil(v)
-		end
-
-		local areaLayerInfo = TerraLib().getLayerInfo(proj, areaLayerName)
-		unitTest:assertEquals(areaLayerInfo.name, areaLayerName)
-		unitTest:assertEquals(areaLayerInfo.type, "POSTGIS")
-		unitTest:assertEquals(areaLayerInfo.rep, "polygon")
-		unitTest:assertEquals(areaLayerInfo.host, host)
-		unitTest:assertEquals(areaLayerInfo.port, port)
-		unitTest:assertEquals(areaLayerInfo.user, user)
-		unitTest:assertEquals(areaLayerInfo.password, password)
-		unitTest:assertEquals(areaLayerInfo.database, database)
-		unitTest:assertEquals(areaLayerInfo.table, string.lower(areaLayerName))
-
-		-- FILL CELLULAR SPACE WITH COUNT OPERATION
-		local countLayerName = clName.."_"..layerName2.."_Count"
-
-		pgData.table = string.lower(countLayerName)
-		TerraLib().dropPgTable(pgData)
-
-		operation = "count"
-		attribute = "count"
-		select = "FID"
-		default = 0
-
-		TerraLib().attributeFill{
-			project = proj,
-			from = layerName2,
-			to = areaLayerName,
-			out = countLayerName,
-			attribute = attribute,
-			operation = operation,
-			select = select,
-			default = default
-		}
-
-		local countSet = TerraLib().getDataSet{project = proj, layer = countLayerName}
-
-		unitTest:assertEquals(getn(countSet), 9)
-
-		for k, v in pairs(countSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
-							(k == "presence") or (k == "area_percent") or (k == "count"))
-			unitTest:assertNotNil(v)
-		end
-
-		local countLayerInfo = TerraLib().getLayerInfo(proj, countLayerName)
-		unitTest:assertEquals(countLayerInfo.name, countLayerName)
-		unitTest:assertEquals(countLayerInfo.type, "POSTGIS")
-		unitTest:assertEquals(countLayerInfo.rep, "polygon")
-		unitTest:assertEquals(countLayerInfo.host, host)
-		unitTest:assertEquals(countLayerInfo.port, port)
-		unitTest:assertEquals(countLayerInfo.user, user)
-		unitTest:assertEquals(countLayerInfo.password, password)
-		unitTest:assertEquals(countLayerInfo.database, database)
-		unitTest:assertEquals(countLayerInfo.table, string.lower(countLayerName))
-
-		-- FILL CELLULAR SPACE WITH DISTANCE OPERATION
-		local distLayerName = clName.."_"..layerName2.."_Distance"
-
-		pgData.table = string.lower(distLayerName)
-		TerraLib().dropPgTable(pgData)
-
-		operation = "distance"
-		attribute = "distance"
-		select = "FID"
-
-		TerraLib().attributeFill{
-			project = proj,
-			from = layerName2,
-			to = countLayerName,
-			out = distLayerName,
-			attribute = attribute,
-			operation = operation,
-			select = select
-		}
-
-		local distSet = TerraLib().getDataSet{project = proj, layer = distLayerName}
-
-		unitTest:assertEquals(getn(distSet), 9)
-
-		for k, v in pairs(distSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
-							(k == "presence") or (k == "area_percent") or (k == "count") or
-							(k == "distance"))
-			unitTest:assertNotNil(v)
-		end
-
-		local distLayerInfo = TerraLib().getLayerInfo(proj, distLayerName)
-		unitTest:assertEquals(distLayerInfo.name, distLayerName)
-		unitTest:assertEquals(distLayerInfo.type, "POSTGIS")
-		unitTest:assertEquals(distLayerInfo.rep, "polygon")
-		unitTest:assertEquals(distLayerInfo.host, host)
-		unitTest:assertEquals(distLayerInfo.port, port)
-		unitTest:assertEquals(distLayerInfo.user, user)
-		unitTest:assertEquals(distLayerInfo.password, password)
-		unitTest:assertEquals(distLayerInfo.database, database)
-		unitTest:assertEquals(distLayerInfo.table, string.lower(distLayerName))
-
-		-- FILL CELLULAR SPACE WITH MINIMUM OPERATION
-		local layerName3 = "Amazon_Munic"
-		local layerFile3 = filePath("test/municipiosAML_ok.shp", "gis")
-		TerraLib().addShpLayer(proj, layerName3, layerFile3)
-
-		local minLayerName = clName.."_"..layerName3.."_Minimum"
-
-		pgData.table = string.lower(minLayerName)
-		TerraLib().dropPgTable(pgData)
-
-		operation = "minimum"
-		attribute = "minimum"
-		select = "POPULACAO_"
-
-		TerraLib().attributeFill{
-			project = proj,
-			from = layerName3,
-			to = distLayerName,
-			out = minLayerName,
-			attribute = attribute,
-			operation = operation,
-			select = select
-		}
-
-		local minSet = TerraLib().getDataSet{project = proj, layer = minLayerName}
-
-		unitTest:assertEquals(getn(minSet), 9)
-
-		for k, v in pairs(minSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
-							(k == "presence") or (k == "area_percent") or (k == "count") or
-							(k == "distance") or (k == "minimum"))
-			unitTest:assertNotNil(v)
-		end
-
-		local minLayerInfo = TerraLib().getLayerInfo(proj, minLayerName)
-		unitTest:assertEquals(minLayerInfo.name, minLayerName)
-		unitTest:assertEquals(minLayerInfo.type, "POSTGIS")
-		unitTest:assertEquals(minLayerInfo.rep, "polygon")
-		unitTest:assertEquals(minLayerInfo.host, host)
-		unitTest:assertEquals(minLayerInfo.port, port)
-		unitTest:assertEquals(minLayerInfo.user, user)
-		unitTest:assertEquals(minLayerInfo.password, password)
-		unitTest:assertEquals(minLayerInfo.database, database)
-		unitTest:assertEquals(minLayerInfo.table, string.lower(minLayerName))
-
-		-- FILL CELLULAR SPACE WITH MAXIMUM OPERATION
-		local maxLayerName = clName.."_"..layerName3.."_Maximum"
-
-		pgData.table = string.lower(maxLayerName)
-		TerraLib().dropPgTable(pgData)
-
-		operation = "maximum"
-		attribute = "maximum"
-		select = "POPULACAO_"
-
-		TerraLib().attributeFill{
-			project = proj,
-			from = layerName3,
-			to = minLayerName,
-			out = maxLayerName,
-			attribute = attribute,
-			operation = operation,
-			select = select
-		}
-
-		local maxSet = TerraLib().getDataSet{project = proj, layer = maxLayerName}
-
-		unitTest:assertEquals(getn(maxSet), 9)
-
-		for k, v in pairs(maxSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
-							(k == "presence") or (k == "area_percent") or (k == "count") or
-							(k == "distance") or (k == "minimum") or (k == "maximum"))
-			unitTest:assertNotNil(v)
-		end
-
-		local maxLayerInfo = TerraLib().getLayerInfo(proj, maxLayerName)
-		unitTest:assertEquals(maxLayerInfo.name, maxLayerName)
-		unitTest:assertEquals(maxLayerInfo.type, "POSTGIS")
-		unitTest:assertEquals(maxLayerInfo.rep, "polygon")
-		unitTest:assertEquals(maxLayerInfo.host, host)
-		unitTest:assertEquals(maxLayerInfo.port, port)
-		unitTest:assertEquals(maxLayerInfo.user, user)
-		unitTest:assertEquals(maxLayerInfo.password, password)
-		unitTest:assertEquals(maxLayerInfo.database, database)
-		unitTest:assertEquals(maxLayerInfo.table, string.lower(maxLayerName))
-
-		-- FILL CELLULAR SPACE WITH PERCENTAGE OPERATION
-		local percLayerName = clName.."_"..layerName2.."_Percentage"
-
-		pgData.table = string.lower(percLayerName)
-		TerraLib().dropPgTable(pgData)
-
-		operation = "coverage"
-		attribute = "perc"
-		select = "ADMINISTRA"
-
-		TerraLib().attributeFill{
-			project = proj,
-			from = layerName2,
-			to = maxLayerName,
-			out = percLayerName,
-			attribute = attribute,
-			operation = operation,
-			select = select
-		}
-
-		local percentSet = TerraLib().getDataSet{project = proj, layer = percLayerName, missing = -1}
-
-		unitTest:assertEquals(getn(percentSet), 9)
-
-		local missCount = 0
-
-		for k, v in pairs(percentSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
-							(k == "presence") or (k == "area_percent") or (k == "count") or
-							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc_") ~= nil))
-			unitTest:assertNotNil(v)
-
-			if string.match(k, "perc_") then
-				missCount = missCount + 1
+		local allSupportedOperationTogether = function()
+			local proj = {}
+			proj.file = "myproject.tview"
+			proj.title = "TerraLib Tests"
+			proj.author = "Avancini Rodrigo"
+
+			File(proj.file):deleteIfExists()
+			-- CREATE A PROJECT
+			TerraLib().createProject(proj, {})
+
+			-- CREATE A LAYER THAT WILL BE USED AS REFERENCE TO CREATE THE CELLULAR SPACE
+			local layerName1 = "Para"
+			local layerFile1 = filePath("test/limitePA_polyc_pol.shp", "gis")
+			TerraLib().addShpLayer(proj, layerName1, layerFile1)
+
+			local host = "localhost"
+			local port = "5432"
+			local user = "postgres"
+			local password = getConfig().password
+			local database = "postgis_22_sample" -- TODO: REVIEW TEST WITH NEW DATABASE (PROBLEM IN DROP)
+			local encoding = "CP1252"
+			local tableName = "para_cells"
+
+			local pgData = {
+				type = "POSTGIS",
+				host = host,
+				port = port,
+				user = user,
+				password = password,
+				database = database,
+				table = tableName,
+				encoding = encoding
+			}
+
+			TerraLib().dropPgTable(pgData)
+
+			-- CREATE THE CELLULAR SPACE
+			local clName = "Para_Cells"
+			local resolution = 5e5
+			local mask = true
+			TerraLib().addPgCellSpaceLayer(proj, layerName1, clName, resolution, pgData, mask)
+
+			local clSet = TerraLib().getDataSet{project = proj, layer = clName}
+
+			unitTest:assertEquals(getn(clSet), 9)
+
+			for k, v in pairs(clSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom"))
+				unitTest:assertNotNil(v)
 			end
+
+			-- CREATE A LAYER WITH POLYGONS TO DO OPERATIONS
+			local layerName2 = "Protection_Unit"
+			local layerFile2 = filePath("test/BCIM_Unidade_Protecao_IntegralPolygon_PA_polyc_pol.shp", "gis")
+			TerraLib().addShpLayer(proj, layerName2, layerFile2)
+
+			-- POSTGIS OUTPUT
+			-- FILL CELLULAR SPACE WITH PRESENCE OPERATION
+			local presLayerName = clName.."_"..layerName2.."_Presence"
+
+			pgData.table = string.lower(presLayerName)
+			TerraLib().dropPgTable(pgData)
+
+			local operation = "presence"
+			local attribute = "presence"
+			local select = "FID"
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = clName,
+				out = presLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
+
+			local presSet = TerraLib().getDataSet{project = proj, layer = presLayerName}
+
+			unitTest:assertEquals(getn(presSet), 9)
+
+			for k, v in pairs(presSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or (k == "presence"))
+				unitTest:assertNotNil(v)
+			end
+
+			local presLayerInfo = TerraLib().getLayerInfo(proj, presLayerName)
+			unitTest:assertEquals(presLayerInfo.name, presLayerName)
+			unitTest:assertEquals(presLayerInfo.type, "POSTGIS")
+			unitTest:assertEquals(presLayerInfo.rep, "polygon")
+			unitTest:assertEquals(presLayerInfo.host, host)
+			unitTest:assertEquals(presLayerInfo.port, port)
+			unitTest:assertEquals(presLayerInfo.user, user)
+			unitTest:assertEquals(presLayerInfo.password, password)
+			unitTest:assertEquals(presLayerInfo.database, database)
+			unitTest:assertEquals(presLayerInfo.table, string.lower(presLayerName))
+
+			-- FILL CELLULAR SPACE WITH PERCENTAGE TOTAL AREA OPERATION
+			local areaLayerName = clName.."_"..layerName2.."_Area"
+
+			pgData.table = string.lower(areaLayerName)
+			TerraLib().dropPgTable(pgData)
+
+			operation = "area"
+			attribute = "area_percent"
+			select = "FID"
+			local default = 0
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = presLayerName,
+				out = areaLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select,
+				default = default
+			}
+
+			local areaSet = TerraLib().getDataSet{project = proj, layer = areaLayerName}
+
+			unitTest:assertEquals(getn(areaSet), 9)
+
+			for k, v in pairs(areaSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
+								(k == "presence") or (k == "area_percent") )
+				unitTest:assertNotNil(v)
+			end
+
+			local areaLayerInfo = TerraLib().getLayerInfo(proj, areaLayerName)
+			unitTest:assertEquals(areaLayerInfo.name, areaLayerName)
+			unitTest:assertEquals(areaLayerInfo.type, "POSTGIS")
+			unitTest:assertEquals(areaLayerInfo.rep, "polygon")
+			unitTest:assertEquals(areaLayerInfo.host, host)
+			unitTest:assertEquals(areaLayerInfo.port, port)
+			unitTest:assertEquals(areaLayerInfo.user, user)
+			unitTest:assertEquals(areaLayerInfo.password, password)
+			unitTest:assertEquals(areaLayerInfo.database, database)
+			unitTest:assertEquals(areaLayerInfo.table, string.lower(areaLayerName))
+
+			-- FILL CELLULAR SPACE WITH COUNT OPERATION
+			local countLayerName = clName.."_"..layerName2.."_Count"
+
+			pgData.table = string.lower(countLayerName)
+			TerraLib().dropPgTable(pgData)
+
+			operation = "count"
+			attribute = "count"
+			select = "FID"
+			default = 0
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = areaLayerName,
+				out = countLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select,
+				default = default
+			}
+
+			local countSet = TerraLib().getDataSet{project = proj, layer = countLayerName}
+
+			unitTest:assertEquals(getn(countSet), 9)
+
+			for k, v in pairs(countSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
+								(k == "presence") or (k == "area_percent") or (k == "count"))
+				unitTest:assertNotNil(v)
+			end
+
+			local countLayerInfo = TerraLib().getLayerInfo(proj, countLayerName)
+			unitTest:assertEquals(countLayerInfo.name, countLayerName)
+			unitTest:assertEquals(countLayerInfo.type, "POSTGIS")
+			unitTest:assertEquals(countLayerInfo.rep, "polygon")
+			unitTest:assertEquals(countLayerInfo.host, host)
+			unitTest:assertEquals(countLayerInfo.port, port)
+			unitTest:assertEquals(countLayerInfo.user, user)
+			unitTest:assertEquals(countLayerInfo.password, password)
+			unitTest:assertEquals(countLayerInfo.database, database)
+			unitTest:assertEquals(countLayerInfo.table, string.lower(countLayerName))
+
+			-- FILL CELLULAR SPACE WITH DISTANCE OPERATION
+			local distLayerName = clName.."_"..layerName2.."_Distance"
+
+			pgData.table = string.lower(distLayerName)
+			TerraLib().dropPgTable(pgData)
+
+			operation = "distance"
+			attribute = "distance"
+			select = "FID"
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = countLayerName,
+				out = distLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
+
+			local distSet = TerraLib().getDataSet{project = proj, layer = distLayerName}
+
+			unitTest:assertEquals(getn(distSet), 9)
+
+			for k, v in pairs(distSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
+								(k == "presence") or (k == "area_percent") or (k == "count") or
+								(k == "distance"))
+				unitTest:assertNotNil(v)
+			end
+
+			local distLayerInfo = TerraLib().getLayerInfo(proj, distLayerName)
+			unitTest:assertEquals(distLayerInfo.name, distLayerName)
+			unitTest:assertEquals(distLayerInfo.type, "POSTGIS")
+			unitTest:assertEquals(distLayerInfo.rep, "polygon")
+			unitTest:assertEquals(distLayerInfo.host, host)
+			unitTest:assertEquals(distLayerInfo.port, port)
+			unitTest:assertEquals(distLayerInfo.user, user)
+			unitTest:assertEquals(distLayerInfo.password, password)
+			unitTest:assertEquals(distLayerInfo.database, database)
+			unitTest:assertEquals(distLayerInfo.table, string.lower(distLayerName))
+
+			-- FILL CELLULAR SPACE WITH MINIMUM OPERATION
+			local layerName3 = "Amazon_Munic"
+			local layerFile3 = filePath("test/municipiosAML_ok.shp", "gis")
+			TerraLib().addShpLayer(proj, layerName3, layerFile3)
+
+			local minLayerName = clName.."_"..layerName3.."_Minimum"
+
+			pgData.table = string.lower(minLayerName)
+			TerraLib().dropPgTable(pgData)
+
+			operation = "minimum"
+			attribute = "minimum"
+			select = "POPULACAO_"
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName3,
+				to = distLayerName,
+				out = minLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
+
+			local minSet = TerraLib().getDataSet{project = proj, layer = minLayerName}
+
+			unitTest:assertEquals(getn(minSet), 9)
+
+			for k, v in pairs(minSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
+								(k == "presence") or (k == "area_percent") or (k == "count") or
+								(k == "distance") or (k == "minimum"))
+				unitTest:assertNotNil(v)
+			end
+
+			local minLayerInfo = TerraLib().getLayerInfo(proj, minLayerName)
+			unitTest:assertEquals(minLayerInfo.name, minLayerName)
+			unitTest:assertEquals(minLayerInfo.type, "POSTGIS")
+			unitTest:assertEquals(minLayerInfo.rep, "polygon")
+			unitTest:assertEquals(minLayerInfo.host, host)
+			unitTest:assertEquals(minLayerInfo.port, port)
+			unitTest:assertEquals(minLayerInfo.user, user)
+			unitTest:assertEquals(minLayerInfo.password, password)
+			unitTest:assertEquals(minLayerInfo.database, database)
+			unitTest:assertEquals(minLayerInfo.table, string.lower(minLayerName))
+
+			-- FILL CELLULAR SPACE WITH MAXIMUM OPERATION
+			local maxLayerName = clName.."_"..layerName3.."_Maximum"
+
+			pgData.table = string.lower(maxLayerName)
+			TerraLib().dropPgTable(pgData)
+
+			operation = "maximum"
+			attribute = "maximum"
+			select = "POPULACAO_"
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName3,
+				to = minLayerName,
+				out = maxLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
+
+			local maxSet = TerraLib().getDataSet{project = proj, layer = maxLayerName}
+
+			unitTest:assertEquals(getn(maxSet), 9)
+
+			for k, v in pairs(maxSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
+								(k == "presence") or (k == "area_percent") or (k == "count") or
+								(k == "distance") or (k == "minimum") or (k == "maximum"))
+				unitTest:assertNotNil(v)
+			end
+
+			local maxLayerInfo = TerraLib().getLayerInfo(proj, maxLayerName)
+			unitTest:assertEquals(maxLayerInfo.name, maxLayerName)
+			unitTest:assertEquals(maxLayerInfo.type, "POSTGIS")
+			unitTest:assertEquals(maxLayerInfo.rep, "polygon")
+			unitTest:assertEquals(maxLayerInfo.host, host)
+			unitTest:assertEquals(maxLayerInfo.port, port)
+			unitTest:assertEquals(maxLayerInfo.user, user)
+			unitTest:assertEquals(maxLayerInfo.password, password)
+			unitTest:assertEquals(maxLayerInfo.database, database)
+			unitTest:assertEquals(maxLayerInfo.table, string.lower(maxLayerName))
+
+			-- FILL CELLULAR SPACE WITH PERCENTAGE OPERATION
+			local percLayerName = clName.."_"..layerName2.."_Percentage"
+
+			pgData.table = string.lower(percLayerName)
+			TerraLib().dropPgTable(pgData)
+
+			operation = "coverage"
+			attribute = "perc"
+			select = "ADMINISTRA"
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName2,
+				to = maxLayerName,
+				out = percLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
+
+			local percentSet = TerraLib().getDataSet{project = proj, layer = percLayerName, missing = -1}
+
+			unitTest:assertEquals(getn(percentSet), 9)
+
+			local missCount = 0
+
+			for k, v in pairs(percentSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
+								(k == "presence") or (k == "area_percent") or (k == "count") or
+								(k == "distance") or (k == "minimum") or (k == "maximum") or
+								(string.match(k, "perc_") ~= nil))
+				unitTest:assertNotNil(v)
+
+				if string.match(k, "perc_") then
+					missCount = missCount + 1
+				end
+			end
+
+			unitTest:assertEquals(missCount, 2)
+
+			local percLayerInfo = TerraLib().getLayerInfo(proj, percLayerName)
+			unitTest:assertEquals(percLayerInfo.name, percLayerName)
+			unitTest:assertEquals(percLayerInfo.type, "POSTGIS")
+			unitTest:assertEquals(percLayerInfo.rep, "polygon")
+			unitTest:assertEquals(percLayerInfo.host, host)
+			unitTest:assertEquals(percLayerInfo.port, port)
+			unitTest:assertEquals(percLayerInfo.user, user)
+			unitTest:assertEquals(percLayerInfo.password, password)
+			unitTest:assertEquals(percLayerInfo.database, database)
+			unitTest:assertEquals(percLayerInfo.table, string.lower(percLayerName))
+
+			-- FILL CELLULAR SPACE WITH STANDART DERIVATION OPERATION
+			local stdevLayerName = clName.."_"..layerName3.."_Stdev"
+
+			pgData.table = string.lower(stdevLayerName)
+			TerraLib().dropPgTable(pgData)
+
+			operation = "stdev"
+			attribute = "stdev"
+			select = "POPULACAO_"
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName3,
+				to = percLayerName,
+				out = stdevLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
+
+			local stdevSet = TerraLib().getDataSet{project = proj, layer = stdevLayerName, missing = 0}
+
+			unitTest:assertEquals(getn(stdevSet), 9)
+
+			for k, v in pairs(stdevSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
+								(k == "presence") or (k == "area_percent") or (k == "count") or
+								(k == "distance") or (k == "minimum") or (k == "maximum") or
+								(string.match(k, "perc_") ~= nil) or (k == "stdev"))
+				unitTest:assertNotNil(v)
+			end
+
+			local stdevLayerInfo = TerraLib().getLayerInfo(proj, stdevLayerName)
+			unitTest:assertEquals(stdevLayerInfo.name, stdevLayerName)
+			unitTest:assertEquals(stdevLayerInfo.type, "POSTGIS")
+			unitTest:assertEquals(stdevLayerInfo.rep, "polygon")
+			unitTest:assertEquals(stdevLayerInfo.host, host)
+			unitTest:assertEquals(stdevLayerInfo.port, port)
+			unitTest:assertEquals(stdevLayerInfo.user, user)
+			unitTest:assertEquals(stdevLayerInfo.password, password)
+			unitTest:assertEquals(stdevLayerInfo.database, database)
+			unitTest:assertEquals(stdevLayerInfo.table, string.lower(stdevLayerName))
+
+			-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION
+			local meanLayerName = clName.."_"..layerName3.."_AvrgMean"
+
+			pgData.table = string.lower(meanLayerName)
+			TerraLib().dropPgTable(pgData)
+
+			operation = "average"
+			attribute = "mean"
+			select = "POPULACAO_"
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName3,
+				to = stdevLayerName,
+				out = meanLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
+
+			local meanSet = TerraLib().getDataSet{project = proj, layer = meanLayerName, missing = 0}
+
+			unitTest:assertEquals(getn(meanSet), 9)
+
+			for k, v in pairs(meanSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
+								(k == "presence") or (k == "area_percent") or (k == "count") or
+								(k == "distance") or (k == "minimum") or (k == "maximum") or
+								(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean"))
+				unitTest:assertNotNil(v)
+			end
+
+			local meanLayerInfo = TerraLib().getLayerInfo(proj, meanLayerName)
+			unitTest:assertEquals(meanLayerInfo.name, meanLayerName)
+			unitTest:assertEquals(meanLayerInfo.type, "POSTGIS")
+			unitTest:assertEquals(meanLayerInfo.rep, "polygon")
+			unitTest:assertEquals(meanLayerInfo.host, host)
+			unitTest:assertEquals(meanLayerInfo.port, port)
+			unitTest:assertEquals(meanLayerInfo.user, user)
+			unitTest:assertEquals(meanLayerInfo.password, password)
+			unitTest:assertEquals(meanLayerInfo.database, database)
+			unitTest:assertEquals(meanLayerInfo.table, string.lower(meanLayerName))
+
+			-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION
+			local weighLayerName = clName.."_"..layerName3.."_AvrgWeighted"
+
+			pgData.table = string.lower(weighLayerName)
+			TerraLib().dropPgTable(pgData)
+
+			operation = "average"
+			attribute = "weighted"
+			select = "POPULACAO_"
+			local area = true
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName3,
+				to = meanLayerName,
+				out = weighLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select,
+				area = area
+			}
+
+			local weighSet = TerraLib().getDataSet{project = proj, layer = weighLayerName, missing = 0}
+
+			unitTest:assertEquals(getn(weighSet), 9)
+
+			for k, v in pairs(weighSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
+								(k == "presence") or (k == "area_percent") or (k == "count") or
+								(k == "distance") or (k == "minimum") or (k == "maximum") or
+								(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
+								(k == "weighted"))
+				unitTest:assertNotNil(v)
+			end
+
+			local weighLayerInfo = TerraLib().getLayerInfo(proj, weighLayerName)
+			unitTest:assertEquals(weighLayerInfo.name, weighLayerName)
+			unitTest:assertEquals(weighLayerInfo.type, "POSTGIS")
+			unitTest:assertEquals(weighLayerInfo.rep, "polygon")
+			unitTest:assertEquals(weighLayerInfo.host, host)
+			unitTest:assertEquals(weighLayerInfo.port, port)
+			unitTest:assertEquals(weighLayerInfo.user, user)
+			unitTest:assertEquals(weighLayerInfo.password, password)
+			unitTest:assertEquals(weighLayerInfo.database, database)
+			unitTest:assertEquals(weighLayerInfo.table, string.lower(weighLayerName))
+
+			-- FILL CELLULAR SPACE WITH MAJORITY INTERSECTION OPERATION
+			local interLayerName = clName.."_"..layerName3.."_Intersection"
+
+			pgData.table = string.lower(interLayerName)
+			TerraLib().dropPgTable(pgData)
+
+			operation = "mode"
+			attribute = "mode_int"
+			select = "POPULACAO_"
+			area = true
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName3,
+				to = weighLayerName,
+				out = interLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select,
+				area = area
+			}
+
+			local interSet = TerraLib().getDataSet{project = proj, layer = interLayerName, missing = 0}
+
+			unitTest:assertEquals(getn(interSet), 9)
+
+			for k, v in pairs(interSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
+								(k == "presence") or (k == "area_percent") or (k == "count") or
+								(k == "distance") or (k == "minimum") or (k == "maximum") or
+								(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
+								(k == "weighted") or (k == "mode_int"))
+				unitTest:assertNotNil(v)
+			end
+
+			local interLayerInfo = TerraLib().getLayerInfo(proj, interLayerName)
+			unitTest:assertEquals(interLayerInfo.name, interLayerName)
+			unitTest:assertEquals(interLayerInfo.type, "POSTGIS")
+			unitTest:assertEquals(interLayerInfo.rep, "polygon")
+			unitTest:assertEquals(interLayerInfo.host, host)
+			unitTest:assertEquals(interLayerInfo.port, port)
+			unitTest:assertEquals(interLayerInfo.user, user)
+			unitTest:assertEquals(interLayerInfo.password, password)
+			unitTest:assertEquals(interLayerInfo.database, database)
+			unitTest:assertEquals(interLayerInfo.table, string.lower(interLayerName))
+
+			-- FILL CELLULAR SPACE WITH MAJORITY OCCURRENCE OPERATION
+			local occurLayerName = clName.."_"..layerName3.."_Occurence"
+
+			pgData.table = string.lower(occurLayerName)
+			TerraLib().dropPgTable(pgData)
+
+			operation = "mode"
+			attribute = "mode_occur"
+			select = "POPULACAO_"
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName3,
+				to = interLayerName,
+				out = occurLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
+
+			local occurSet = TerraLib().getDataSet{project = proj, layer = occurLayerName, missing = 0}
+
+			unitTest:assertEquals(getn(occurSet), 9)
+
+			for k, v in pairs(occurSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
+								(k == "presence") or (k == "area_percent") or (k == "count") or
+								(k == "distance") or (k == "minimum") or (k == "maximum") or
+								(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
+								(k == "weighted") or (k == "mode_int") or (k == "mode_occur"))
+				unitTest:assertNotNil(v)
+			end
+
+			local occurLayerInfo = TerraLib().getLayerInfo(proj, occurLayerName)
+			unitTest:assertEquals(occurLayerInfo.name, occurLayerName)
+			unitTest:assertEquals(occurLayerInfo.type, "POSTGIS")
+			unitTest:assertEquals(occurLayerInfo.rep, "polygon")
+			unitTest:assertEquals(occurLayerInfo.host, host)
+			unitTest:assertEquals(occurLayerInfo.port, port)
+			unitTest:assertEquals(occurLayerInfo.user, user)
+			unitTest:assertEquals(occurLayerInfo.password, password)
+			unitTest:assertEquals(occurLayerInfo.database, database)
+			unitTest:assertEquals(occurLayerInfo.table, string.lower(occurLayerName))
+
+			-- FILL CELLULAR SPACE WITH SUM OPERATION
+			local sumLayerName = clName.."_"..layerName3.."_Sum"
+
+			pgData.table = string.lower(sumLayerName)
+			TerraLib().dropPgTable(pgData)
+
+			operation = "sum"
+			attribute = "sum"
+			select = "POPULACAO_"
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName3,
+				to = occurLayerName,
+				out = sumLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
+
+			local sumSet = TerraLib().getDataSet{project = proj, layer = sumLayerName, missing = 0}
+
+			unitTest:assertEquals(getn(sumSet), 9)
+
+			for k, v in pairs(sumSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
+								(k == "presence") or (k == "area_percent") or (k == "count") or
+								(k == "distance") or (k == "minimum") or (k == "maximum") or
+								(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
+								(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
+								(k == "sum"))
+				unitTest:assertNotNil(v)
+			end
+
+			local sumLayerInfo = TerraLib().getLayerInfo(proj, sumLayerName)
+			unitTest:assertEquals(sumLayerInfo.name, sumLayerName)
+			unitTest:assertEquals(sumLayerInfo.type, "POSTGIS")
+			unitTest:assertEquals(sumLayerInfo.rep, "polygon")
+			unitTest:assertEquals(sumLayerInfo.host, host)
+			unitTest:assertEquals(sumLayerInfo.port, port)
+			unitTest:assertEquals(sumLayerInfo.user, user)
+			unitTest:assertEquals(sumLayerInfo.password, password)
+			unitTest:assertEquals(sumLayerInfo.database, database)
+			unitTest:assertEquals(sumLayerInfo.table, string.lower(sumLayerName))
+
+			-- FILL CELLULAR SPACE WITH WEIGHTED SUM OPERATION
+			local wsumLayerName = clName.."_"..layerName3.."_Wsum"
+
+			pgData.table = string.lower(wsumLayerName)
+			TerraLib().dropPgTable(pgData)
+
+			operation = "sum"
+			attribute = "wsum"
+			select = "POPULACAO_"
+			area = true
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName3,
+				to = sumLayerName,
+				out = wsumLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select,
+				area = area
+			}
+
+			local wsumSet = TerraLib().getDataSet{project = proj, layer = wsumLayerName, missing = 0}
+
+			unitTest:assertEquals(getn(wsumSet), 9)
+
+			for k, v in pairs(wsumSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
+								(k == "presence") or (k == "area_percent") or (k == "count") or
+								(k == "distance") or (k == "minimum") or (k == "maximum") or
+								(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
+								(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
+								(k == "sum") or (k == "wsum"))
+				unitTest:assertNotNil(v)
+			end
+
+			local wsumLayerInfo = TerraLib().getLayerInfo(proj, wsumLayerName)
+			unitTest:assertEquals(wsumLayerInfo.name, wsumLayerName)
+			unitTest:assertEquals(wsumLayerInfo.type, "POSTGIS")
+			unitTest:assertEquals(wsumLayerInfo.rep, "polygon")
+			unitTest:assertEquals(wsumLayerInfo.host, host)
+			unitTest:assertEquals(wsumLayerInfo.port, port)
+			unitTest:assertEquals(wsumLayerInfo.user, user)
+			unitTest:assertEquals(wsumLayerInfo.password, password)
+			unitTest:assertEquals(wsumLayerInfo.database, database)
+			unitTest:assertEquals(wsumLayerInfo.table, string.lower(wsumLayerName))
+
+			-- RASTER TESTS WITH POSTGIS
+			-- FILL CELLULAR SPACE WITH PERCENTAGE OPERATION USING TIF
+			local layerName4 = "Prodes_PA"
+			local layerFile4 = filePath("test/prodes_polyc_10k.tif", "gis")
+			TerraLib().addGdalLayer(proj, layerName4, layerFile4, wsumLayerInfo.srid)
+
+			local percTifLayerName = clName.."_"..layerName4.."_RPercentage"
+
+			pgData.table = string.lower(percTifLayerName)
+			TerraLib().dropPgTable(pgData)
+
+			operation = "coverage"
+			attribute = "rperc"
+			select = 0
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName4,
+				to = wsumLayerName,
+				out = percTifLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
+
+			percentSet = TerraLib().getDataSet{project = proj, layer = percTifLayerName, missing = 0}
+
+			unitTest:assertEquals(getn(percentSet), 9)
+
+			for k, v in pairs(percentSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
+								(k == "presence") or (k == "area_percent") or (k == "count") or
+								(k == "distance") or (k == "minimum") or (k == "maximum") or
+								(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
+								(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
+								(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil))
+				unitTest:assertNotNil(v)
+			end
+
+			local percTifLayerInfo = TerraLib().getLayerInfo(proj, percTifLayerName)
+			unitTest:assertEquals(percTifLayerInfo.name, percTifLayerName)
+			unitTest:assertEquals(percTifLayerInfo.type, "POSTGIS")
+			unitTest:assertEquals(percTifLayerInfo.rep, "polygon")
+			unitTest:assertEquals(percTifLayerInfo.host, host)
+			unitTest:assertEquals(percTifLayerInfo.port, port)
+			unitTest:assertEquals(percTifLayerInfo.user, user)
+			unitTest:assertEquals(percTifLayerInfo.password, password)
+			unitTest:assertEquals(percTifLayerInfo.database, database)
+			unitTest:assertEquals(percTifLayerInfo.table, string.lower(percTifLayerName))
+
+			-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION FROM RASTER
+			local rmeanLayerName = clName.."_"..layerName4.."_RMean"
+
+			pgData.table = string.lower(rmeanLayerName)
+			TerraLib().dropPgTable(pgData)
+
+			operation = "average"
+			attribute = "rmean"
+			select = 0
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName4,
+				to = percTifLayerName,
+				out = rmeanLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
+
+			local rmeanSet = TerraLib().getDataSet{project = proj, layer = rmeanLayerName, missing = 0}
+
+			unitTest:assertEquals(getn(rmeanSet), 9)
+
+			for k, v in pairs(rmeanSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
+								(k == "presence") or (k == "area_percent") or (k == "count") or
+								(k == "distance") or (k == "minimum") or (k == "maximum") or
+								(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
+								(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
+								(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
+								(k == "rmean"))
+				unitTest:assertNotNil(v)
+			end
+
+			local rmeanLayerInfo = TerraLib().getLayerInfo(proj, rmeanLayerName)
+			unitTest:assertEquals(rmeanLayerInfo.name, rmeanLayerName)
+			unitTest:assertEquals(rmeanLayerInfo.type, "POSTGIS")
+			unitTest:assertEquals(rmeanLayerInfo.rep, "polygon")
+			unitTest:assertEquals(rmeanLayerInfo.host, host)
+			unitTest:assertEquals(rmeanLayerInfo.port, port)
+			unitTest:assertEquals(rmeanLayerInfo.user, user)
+			unitTest:assertEquals(rmeanLayerInfo.password, password)
+			unitTest:assertEquals(rmeanLayerInfo.database, database)
+			unitTest:assertEquals(rmeanLayerInfo.table, string.lower(rmeanLayerName))
+
+			-- FILL CELLULAR SPACE WITH MINIMUM OPERATION FROM RASTER
+			local rminLayerName = clName.."_"..layerName4.."_RMinimum"
+
+			pgData.table = string.lower(rminLayerName)
+			TerraLib().dropPgTable(pgData)
+
+			operation = "minimum"
+			attribute = "rmin"
+			select = 0
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName4,
+				to = rmeanLayerName,
+				out = rminLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
+
+			local rminSet = TerraLib().getDataSet{project = proj, layer = rminLayerName, missing = 0}
+
+			unitTest:assertEquals(getn(rminSet), 9)
+
+			for k, v in pairs(rminSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
+								(k == "presence") or (k == "area_percent") or (k == "count") or
+								(k == "distance") or (k == "minimum") or (k == "maximum") or
+								(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
+								(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
+								(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
+								(k == "rmean") or (k == "rmin"))
+				unitTest:assertNotNil(v)
+			end
+
+			local rminLayerInfo = TerraLib().getLayerInfo(proj, rminLayerName)
+			unitTest:assertEquals(rminLayerInfo.name, rminLayerName)
+			unitTest:assertEquals(rminLayerInfo.type, "POSTGIS")
+			unitTest:assertEquals(rminLayerInfo.rep, "polygon")
+			unitTest:assertEquals(rminLayerInfo.host, host)
+			unitTest:assertEquals(rminLayerInfo.port, port)
+			unitTest:assertEquals(rminLayerInfo.user, user)
+			unitTest:assertEquals(rminLayerInfo.password, password)
+			unitTest:assertEquals(rminLayerInfo.database, database)
+			unitTest:assertEquals(rminLayerInfo.table, string.lower(rminLayerName))
+
+			-- FILL CELLULAR SPACE WITH MAXIMUM OPERATION FROM RASTER
+			local rmaxLayerName = clName.."_"..layerName4.."_RMaximum"
+
+			pgData.table = string.lower(rmaxLayerName)
+			TerraLib().dropPgTable(pgData)
+
+			operation = "maximum"
+			attribute = "rmax"
+			select = 0
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName4,
+				to = rminLayerName,
+				out = rmaxLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
+
+			local rmaxSet = TerraLib().getDataSet{project = proj, layer = rmaxLayerName, missing = 0}
+
+			unitTest:assertEquals(getn(rmaxSet), 9)
+
+			for k, v in pairs(rmaxSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
+								(k == "presence") or (k == "area_percent") or (k == "count") or
+								(k == "distance") or (k == "minimum") or (k == "maximum") or
+								(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
+								(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
+								(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
+								(k == "rmean") or (k == "rmin") or (k == "rmax"))
+				unitTest:assertNotNil(v)
+			end
+
+			local rmaxLayerInfo = TerraLib().getLayerInfo(proj, rmaxLayerName)
+			unitTest:assertEquals(rmaxLayerInfo.name, rmaxLayerName)
+			unitTest:assertEquals(rmaxLayerInfo.type, "POSTGIS")
+			unitTest:assertEquals(rmaxLayerInfo.rep, "polygon")
+			unitTest:assertEquals(rmaxLayerInfo.host, host)
+			unitTest:assertEquals(rmaxLayerInfo.port, port)
+			unitTest:assertEquals(rmaxLayerInfo.user, user)
+			unitTest:assertEquals(rmaxLayerInfo.password, password)
+			unitTest:assertEquals(rmaxLayerInfo.database, database)
+			unitTest:assertEquals(rmaxLayerInfo.table, string.lower(rmaxLayerName))
+
+			-- FILL CELLULAR SPACE WITH STANDART DERIVATION OPERATION FROM RASTER
+			local rstdevLayerName = clName.."_"..layerName4.."_RStdev"
+
+			pgData.table = string.lower(rstdevLayerName)
+			TerraLib().dropPgTable(pgData)
+
+			operation = "stdev"
+			attribute = "rstdev"
+			select = 0
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName4,
+				to = rmaxLayerName,
+				out = rstdevLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
+
+			local rstdevSet = TerraLib().getDataSet{project = proj, layer = rstdevLayerName, missing = 0}
+
+			unitTest:assertEquals(getn(rstdevSet), 9)
+
+			for k, v in pairs(rstdevSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
+								(k == "presence") or (k == "area_percent") or (k == "count") or
+								(k == "distance") or (k == "minimum") or (k == "maximum") or
+								(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
+								(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
+								(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
+								(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev"))
+				unitTest:assertNotNil(v)
+			end
+
+			local rstdevLayerInfo = TerraLib().getLayerInfo(proj, rstdevLayerName)
+			unitTest:assertEquals(rstdevLayerInfo.name, rstdevLayerName)
+			unitTest:assertEquals(rstdevLayerInfo.type, "POSTGIS")
+			unitTest:assertEquals(rstdevLayerInfo.rep, "polygon")
+			unitTest:assertEquals(rstdevLayerInfo.host, host)
+			unitTest:assertEquals(rstdevLayerInfo.port, port)
+			unitTest:assertEquals(rstdevLayerInfo.user, user)
+			unitTest:assertEquals(rstdevLayerInfo.password, password)
+			unitTest:assertEquals(rstdevLayerInfo.database, database)
+			unitTest:assertEquals(rstdevLayerInfo.table, string.lower(rstdevLayerName))
+
+			-- FILL CELLULAR SPACE WITH SUM OPERATION FROM RASTER
+			local rsumLayerName = clName.."_"..layerName4.."_RSum"
+
+			pgData.table = string.lower(rsumLayerName)
+			TerraLib().dropPgTable(pgData)
+
+			operation = "sum"
+			attribute = "rsum"
+			select = 0
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName4,
+				to = rstdevLayerName,
+				out = rsumLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
+
+			local rsumSet = TerraLib().getDataSet{project = proj, layer = rsumLayerName, missing = 0}
+
+			unitTest:assertEquals(getn(rsumSet), 9)
+
+			for k, v in pairs(rsumSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
+								(k == "presence") or (k == "area_percent") or (k == "count") or
+								(k == "distance") or (k == "minimum") or (k == "maximum") or
+								(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
+								(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
+								(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
+								(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev") or
+								(k == "rsum"))
+				unitTest:assertNotNil(v)
+			end
+
+			local rsumLayerInfo = TerraLib().getLayerInfo(proj, rsumLayerName)
+			unitTest:assertEquals(rsumLayerInfo.name, rsumLayerName)
+			unitTest:assertEquals(rsumLayerInfo.type, "POSTGIS")
+			unitTest:assertEquals(rsumLayerInfo.rep, "polygon")
+			unitTest:assertEquals(rsumLayerInfo.host, host)
+			unitTest:assertEquals(rsumLayerInfo.port, port)
+			unitTest:assertEquals(rsumLayerInfo.user, user)
+			unitTest:assertEquals(rsumLayerInfo.password, password)
+			unitTest:assertEquals(rsumLayerInfo.database, database)
+			unitTest:assertEquals(rsumLayerInfo.table, string.lower(rsumLayerName))
+
+			-- OVERWRITE OUTPUT
+			operation = "sum"
+			attribute = "rsum_over"
+			select = 0
+			default = 0
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName4,
+				to = rsumLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select,
+				default = default
+			}
+
+			local rsumOverSet = TerraLib().getDataSet{project = proj, layer = rsumLayerName, missing = 0}
+
+			unitTest:assertEquals(getn(rsumOverSet), 9)
+
+			for k, v in pairs(rsumOverSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
+								(k == "presence") or (k == "area_percent") or (k == "count") or
+								(k == "distance") or (k == "minimum") or (k == "maximum") or
+								(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
+								(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
+								(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
+								(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev") or
+								(k == "rsum") or (k == "rsum_over"))
+				unitTest:assertNotNil(v)
+			end
+
+			local rsumOverLayerInfo = TerraLib().getLayerInfo(proj, rsumLayerName)
+			unitTest:assertEquals(rsumOverLayerInfo.name, rsumLayerName)
+			unitTest:assertEquals(rsumOverLayerInfo.type, "POSTGIS")
+			unitTest:assertEquals(rsumOverLayerInfo.rep, "polygon")
+			unitTest:assertEquals(rsumOverLayerInfo.host, host)
+			unitTest:assertEquals(rsumOverLayerInfo.port, port)
+			unitTest:assertEquals(rsumOverLayerInfo.user, user)
+			unitTest:assertEquals(rsumOverLayerInfo.password, password)
+			unitTest:assertEquals(rsumOverLayerInfo.database, database)
+			unitTest:assertEquals(rsumOverLayerInfo.table, string.lower(rsumLayerName))
+
+			-- FILL CELLULAR SPACE WITH COUNT OPERATION FROM RASTER
+			local rcountLayerName = clName.."_"..layerName4.."_RCount"
+
+			pgData.table = string.lower(rcountLayerName)
+			TerraLib().dropPgTable(pgData)
+
+			operation = "count"
+			attribute = "rcount"
+			select = 0
+
+			TerraLib().attributeFill{
+				project = proj,
+				from = layerName4,
+				to = rsumLayerName,
+				out = rcountLayerName,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
+
+			local rcountSet = TerraLib().getDataSet{project = proj, layer = rcountLayerName, missing = 0}
+
+			unitTest:assertEquals(getn(rcountSet), 9)
+
+			for k, v in pairs(rcountSet[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
+								(k == "presence") or (k == "area_percent") or (k == "count") or
+								(k == "distance") or (k == "minimum") or (k == "maximum") or
+								(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
+								(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
+								(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
+								(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev") or
+								(k == "rsum") or (k == "rsum_over") or (k == "rcount"))
+				unitTest:assertNotNil(v)
+			end
+
+			local rcountLayerInfo = TerraLib().getLayerInfo(proj, rcountLayerName)
+			unitTest:assertEquals(rcountLayerInfo.name, rcountLayerName)
+			unitTest:assertEquals(rcountLayerInfo.type, "POSTGIS")
+			unitTest:assertEquals(rcountLayerInfo.rep, "polygon")
+			unitTest:assertEquals(rcountLayerInfo.host, host)
+			unitTest:assertEquals(rcountLayerInfo.port, port)
+			unitTest:assertEquals(rcountLayerInfo.user, user)
+			unitTest:assertEquals(rcountLayerInfo.password, password)
+			unitTest:assertEquals(rcountLayerInfo.database, database)
+			unitTest:assertEquals(rcountLayerInfo.table, string.lower(rcountLayerName))
+
+			-- END
+			pgData.table = string.lower(clName)
+			TerraLib().dropPgTable(pgData)
+			pgData.table = string.lower(presLayerName)
+			TerraLib().dropPgTable(pgData)
+			pgData.table = string.lower(areaLayerName)
+			TerraLib().dropPgTable(pgData)
+			pgData.table = string.lower(countLayerName)
+			TerraLib().dropPgTable(pgData)
+			pgData.table = string.lower(distLayerName)
+			TerraLib().dropPgTable(pgData)
+			pgData.table = string.lower(minLayerName)
+			TerraLib().dropPgTable(pgData)
+			pgData.table = string.lower(maxLayerName)
+			TerraLib().dropPgTable(pgData)
+			pgData.table = string.lower(percLayerName)
+			TerraLib().dropPgTable(pgData)
+			pgData.table = string.lower(stdevLayerName)
+			TerraLib().dropPgTable(pgData)
+			pgData.table = string.lower(meanLayerName)
+			TerraLib().dropPgTable(pgData)
+			pgData.table = string.lower(weighLayerName)
+			TerraLib().dropPgTable(pgData)
+			pgData.table = string.lower(interLayerName)
+			TerraLib().dropPgTable(pgData)
+			pgData.table = string.lower(occurLayerName)
+			TerraLib().dropPgTable(pgData)
+			pgData.table = string.lower(sumLayerName)
+			TerraLib().dropPgTable(pgData)
+			pgData.table = string.lower(wsumLayerName)
+			TerraLib().dropPgTable(pgData)
+			pgData.table = string.lower(percTifLayerName)
+			TerraLib().dropPgTable(pgData)
+			pgData.table = string.lower(rmeanLayerName)
+			TerraLib().dropPgTable(pgData)
+			pgData.table = string.lower(rminLayerName)
+			TerraLib().dropPgTable(pgData)
+			pgData.table = string.lower(rmaxLayerName)
+			TerraLib().dropPgTable(pgData)
+			pgData.table = string.lower(rstdevLayerName)
+			TerraLib().dropPgTable(pgData)
+			pgData.table = string.lower(rsumLayerName)
+			TerraLib().dropPgTable(pgData)
+			pgData.table = string.lower(rcountLayerName)
+			TerraLib().dropPgTable(pgData)
+			-- END POSTGIS TESTS
+
+			proj.file:delete()
 		end
 
-		unitTest:assertEquals(missCount, 2)
+		local medianOperation = function()
+			local proj = {
+				file = "attrfill_pg_basic.tview",
+				title = "TerraLib Tests",
+				author = "Avancini Rodrigo"
+			}
+			File(proj.file):deleteIfExists()
+			TerraLib().createProject(proj, {})
 
-		local percLayerInfo = TerraLib().getLayerInfo(proj, percLayerName)
-		unitTest:assertEquals(percLayerInfo.name, percLayerName)
-		unitTest:assertEquals(percLayerInfo.type, "POSTGIS")
-		unitTest:assertEquals(percLayerInfo.rep, "polygon")
-		unitTest:assertEquals(percLayerInfo.host, host)
-		unitTest:assertEquals(percLayerInfo.port, port)
-		unitTest:assertEquals(percLayerInfo.user, user)
-		unitTest:assertEquals(percLayerInfo.password, password)
-		unitTest:assertEquals(percLayerInfo.database, database)
-		unitTest:assertEquals(percLayerInfo.table, string.lower(percLayerName))
+			local l1Name = "ES_Limit"
+			local l1File = filePath("test/limit_es_sirgas2000_5880.shp", "gis")
+			TerraLib().addShpLayer(proj, l1Name, l1File)
 
-		-- FILL CELLULAR SPACE WITH STANDART DERIVATION OPERATION
-		local stdevLayerName = clName.."_"..layerName3.."_Stdev"
+			local l2Name = "ES_Protected"
+			local l2File = filePath("test/es-protected_areas_sirgas2000_5880.shp", "gis")
+			TerraLib().addShpLayer(proj, l2Name, l2File)
 
-		pgData.table = string.lower(stdevLayerName)
-		TerraLib().dropPgTable(pgData)
+			local pgData = {
+				host = "localhost",
+				port = "5432",
+				user = "postgres",
+				password = "postgres",
+				database = "postgis_22_sample",
+				encoding = "LATIN1"
+			}
 
-		operation = "stdev"
-		attribute = "stdev"
-		select = "POPULACAO_"
+			local csTable = "cells"
+			pgData.table = csTable
+			TerraLib().dropPgTable(pgData)
 
-		TerraLib().attributeFill{
-			project = proj,
-			from = layerName3,
-			to = percLayerName,
-			out = stdevLayerName,
-			attribute = attribute,
-			operation = operation,
-			select = select
-		}
+			local csName = "Cells"
+			local resolution = 20e3
+			local mask = true
+			TerraLib().addPgCellSpaceLayer(proj, l1Name, csName, resolution, pgData, mask)
 
-		local stdevSet = TerraLib().getDataSet{project = proj, layer = stdevLayerName, missing = 0}
+			local medianTable = "cells_median"
+			pgData.table = medianTable
+			TerraLib().dropPgTable(pgData)
 
-		unitTest:assertEquals(getn(stdevSet), 9)
+			local l3Name = csName.."_Median"
+			local operation = "median"
+			local attribute = "median"
+			local select = "Shape_Area"
 
-		for k, v in pairs(stdevSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
-							(k == "presence") or (k == "area_percent") or (k == "count") or
-							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc_") ~= nil) or (k == "stdev"))
-			unitTest:assertNotNil(v)
+			TerraLib().attributeFill{
+				project = proj,
+				from = l2Name,
+				to = csName,
+				out = l3Name,
+				attribute = attribute,
+				operation = operation,
+				select = select
+			}
+
+			local l3Set = TerraLib().getDataSet{project = proj, layer = l3Name, missing = 0}
+
+			for k, v in pairs(l3Set[0]) do
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or (k == "fid") or -- SKIP
+								(k == "median"))
+
+				unitTest:assertNotNil(v) -- SKIP
+			end
+
+			local ptPropsInfo = TerraLib().getPropertyInfos(proj, l3Name)
+			unitTest:assertEquals(ptPropsInfo[4].name, "median") -- SKIP
+			unitTest:assertEquals(ptPropsInfo[4].type, "double") -- SKIP
+
+			TerraLib().dropPgTable(pgData)
+			pgData.table = csTable
+			TerraLib().dropPgTable(pgData)
+			proj.file:delete()
 		end
 
-		local stdevLayerInfo = TerraLib().getLayerInfo(proj, stdevLayerName)
-		unitTest:assertEquals(stdevLayerInfo.name, stdevLayerName)
-		unitTest:assertEquals(stdevLayerInfo.type, "POSTGIS")
-		unitTest:assertEquals(stdevLayerInfo.rep, "polygon")
-		unitTest:assertEquals(stdevLayerInfo.host, host)
-		unitTest:assertEquals(stdevLayerInfo.port, port)
-		unitTest:assertEquals(stdevLayerInfo.user, user)
-		unitTest:assertEquals(stdevLayerInfo.password, password)
-		unitTest:assertEquals(stdevLayerInfo.database, database)
-		unitTest:assertEquals(stdevLayerInfo.table, string.lower(stdevLayerName))
-
-		-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION
-		local meanLayerName = clName.."_"..layerName3.."_AvrgMean"
-
-		pgData.table = string.lower(meanLayerName)
-		TerraLib().dropPgTable(pgData)
-
-		operation = "average"
-		attribute = "mean"
-		select = "POPULACAO_"
-
-		TerraLib().attributeFill{
-			project = proj,
-			from = layerName3,
-			to = stdevLayerName,
-			out = meanLayerName,
-			attribute = attribute,
-			operation = operation,
-			select = select
-		}
-
-		local meanSet = TerraLib().getDataSet{project = proj, layer = meanLayerName, missing = 0}
-
-		unitTest:assertEquals(getn(meanSet), 9)
-
-		for k, v in pairs(meanSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
-							(k == "presence") or (k == "area_percent") or (k == "count") or
-							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean"))
-			unitTest:assertNotNil(v)
+		unitTest:assert(allSupportedOperationTogether)
+		if _Gtme.sessionInfo().system ~= "linux" then -- TODO(#2311)
+			unitTest:assert(medianOperation) -- SKIP
 		end
-
-		local meanLayerInfo = TerraLib().getLayerInfo(proj, meanLayerName)
-		unitTest:assertEquals(meanLayerInfo.name, meanLayerName)
-		unitTest:assertEquals(meanLayerInfo.type, "POSTGIS")
-		unitTest:assertEquals(meanLayerInfo.rep, "polygon")
-		unitTest:assertEquals(meanLayerInfo.host, host)
-		unitTest:assertEquals(meanLayerInfo.port, port)
-		unitTest:assertEquals(meanLayerInfo.user, user)
-		unitTest:assertEquals(meanLayerInfo.password, password)
-		unitTest:assertEquals(meanLayerInfo.database, database)
-		unitTest:assertEquals(meanLayerInfo.table, string.lower(meanLayerName))
-
-		-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION
-		local weighLayerName = clName.."_"..layerName3.."_AvrgWeighted"
-
-		pgData.table = string.lower(weighLayerName)
-		TerraLib().dropPgTable(pgData)
-
-		operation = "average"
-		attribute = "weighted"
-		select = "POPULACAO_"
-		local area = true
-
-		TerraLib().attributeFill{
-			project = proj,
-			from = layerName3,
-			to = meanLayerName,
-			out = weighLayerName,
-			attribute = attribute,
-			operation = operation,
-			select = select,
-			area = area
-		}
-
-		local weighSet = TerraLib().getDataSet{project = proj, layer = weighLayerName, missing = 0}
-
-		unitTest:assertEquals(getn(weighSet), 9)
-
-		for k, v in pairs(weighSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
-							(k == "presence") or (k == "area_percent") or (k == "count") or
-							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
-							(k == "weighted"))
-			unitTest:assertNotNil(v)
-		end
-
-		local weighLayerInfo = TerraLib().getLayerInfo(proj, weighLayerName)
-		unitTest:assertEquals(weighLayerInfo.name, weighLayerName)
-		unitTest:assertEquals(weighLayerInfo.type, "POSTGIS")
-		unitTest:assertEquals(weighLayerInfo.rep, "polygon")
-		unitTest:assertEquals(weighLayerInfo.host, host)
-		unitTest:assertEquals(weighLayerInfo.port, port)
-		unitTest:assertEquals(weighLayerInfo.user, user)
-		unitTest:assertEquals(weighLayerInfo.password, password)
-		unitTest:assertEquals(weighLayerInfo.database, database)
-		unitTest:assertEquals(weighLayerInfo.table, string.lower(weighLayerName))
-
-		-- FILL CELLULAR SPACE WITH MAJORITY INTERSECTION OPERATION
-		local interLayerName = clName.."_"..layerName3.."_Intersection"
-
-		pgData.table = string.lower(interLayerName)
-		TerraLib().dropPgTable(pgData)
-
-		operation = "mode"
-		attribute = "mode_int"
-		select = "POPULACAO_"
-		area = true
-
-		TerraLib().attributeFill{
-			project = proj,
-			from = layerName3,
-			to = weighLayerName,
-			out = interLayerName,
-			attribute = attribute,
-			operation = operation,
-			select = select,
-			area = area
-		}
-
-		local interSet = TerraLib().getDataSet{project = proj, layer = interLayerName, missing = 0}
-
-		unitTest:assertEquals(getn(interSet), 9)
-
-		for k, v in pairs(interSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
-							(k == "presence") or (k == "area_percent") or (k == "count") or
-							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
-							(k == "weighted") or (k == "mode_int"))
-			unitTest:assertNotNil(v)
-		end
-
-		local interLayerInfo = TerraLib().getLayerInfo(proj, interLayerName)
-		unitTest:assertEquals(interLayerInfo.name, interLayerName)
-		unitTest:assertEquals(interLayerInfo.type, "POSTGIS")
-		unitTest:assertEquals(interLayerInfo.rep, "polygon")
-		unitTest:assertEquals(interLayerInfo.host, host)
-		unitTest:assertEquals(interLayerInfo.port, port)
-		unitTest:assertEquals(interLayerInfo.user, user)
-		unitTest:assertEquals(interLayerInfo.password, password)
-		unitTest:assertEquals(interLayerInfo.database, database)
-		unitTest:assertEquals(interLayerInfo.table, string.lower(interLayerName))
-
-		-- FILL CELLULAR SPACE WITH MAJORITY OCCURRENCE OPERATION
-		local occurLayerName = clName.."_"..layerName3.."_Occurence"
-
-		pgData.table = string.lower(occurLayerName)
-		TerraLib().dropPgTable(pgData)
-
-		operation = "mode"
-		attribute = "mode_occur"
-		select = "POPULACAO_"
-
-		TerraLib().attributeFill{
-			project = proj,
-			from = layerName3,
-			to = interLayerName,
-			out = occurLayerName,
-			attribute = attribute,
-			operation = operation,
-			select = select
-		}
-
-		local occurSet = TerraLib().getDataSet{project = proj, layer = occurLayerName, missing = 0}
-
-		unitTest:assertEquals(getn(occurSet), 9)
-
-		for k, v in pairs(occurSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
-							(k == "presence") or (k == "area_percent") or (k == "count") or
-							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
-							(k == "weighted") or (k == "mode_int") or (k == "mode_occur"))
-			unitTest:assertNotNil(v)
-		end
-
-		local occurLayerInfo = TerraLib().getLayerInfo(proj, occurLayerName)
-		unitTest:assertEquals(occurLayerInfo.name, occurLayerName)
-		unitTest:assertEquals(occurLayerInfo.type, "POSTGIS")
-		unitTest:assertEquals(occurLayerInfo.rep, "polygon")
-		unitTest:assertEquals(occurLayerInfo.host, host)
-		unitTest:assertEquals(occurLayerInfo.port, port)
-		unitTest:assertEquals(occurLayerInfo.user, user)
-		unitTest:assertEquals(occurLayerInfo.password, password)
-		unitTest:assertEquals(occurLayerInfo.database, database)
-		unitTest:assertEquals(occurLayerInfo.table, string.lower(occurLayerName))
-
-		-- FILL CELLULAR SPACE WITH SUM OPERATION
-		local sumLayerName = clName.."_"..layerName3.."_Sum"
-
-		pgData.table = string.lower(sumLayerName)
-		TerraLib().dropPgTable(pgData)
-
-		operation = "sum"
-		attribute = "sum"
-		select = "POPULACAO_"
-
-		TerraLib().attributeFill{
-			project = proj,
-			from = layerName3,
-			to = occurLayerName,
-			out = sumLayerName,
-			attribute = attribute,
-			operation = operation,
-			select = select
-		}
-
-		local sumSet = TerraLib().getDataSet{project = proj, layer = sumLayerName, missing = 0}
-
-		unitTest:assertEquals(getn(sumSet), 9)
-
-		for k, v in pairs(sumSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
-							(k == "presence") or (k == "area_percent") or (k == "count") or
-							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
-							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
-							(k == "sum"))
-			unitTest:assertNotNil(v)
-		end
-
-		local sumLayerInfo = TerraLib().getLayerInfo(proj, sumLayerName)
-		unitTest:assertEquals(sumLayerInfo.name, sumLayerName)
-		unitTest:assertEquals(sumLayerInfo.type, "POSTGIS")
-		unitTest:assertEquals(sumLayerInfo.rep, "polygon")
-		unitTest:assertEquals(sumLayerInfo.host, host)
-		unitTest:assertEquals(sumLayerInfo.port, port)
-		unitTest:assertEquals(sumLayerInfo.user, user)
-		unitTest:assertEquals(sumLayerInfo.password, password)
-		unitTest:assertEquals(sumLayerInfo.database, database)
-		unitTest:assertEquals(sumLayerInfo.table, string.lower(sumLayerName))
-
-		-- FILL CELLULAR SPACE WITH WEIGHTED SUM OPERATION
-		local wsumLayerName = clName.."_"..layerName3.."_Wsum"
-
-		pgData.table = string.lower(wsumLayerName)
-		TerraLib().dropPgTable(pgData)
-
-		operation = "sum"
-		attribute = "wsum"
-		select = "POPULACAO_"
-		area = true
-
-		TerraLib().attributeFill{
-			project = proj,
-			from = layerName3,
-			to = sumLayerName,
-			out = wsumLayerName,
-			attribute = attribute,
-			operation = operation,
-			select = select,
-			area = area
-		}
-
-		local wsumSet = TerraLib().getDataSet{project = proj, layer = wsumLayerName, missing = 0}
-
-		unitTest:assertEquals(getn(wsumSet), 9)
-
-		for k, v in pairs(wsumSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
-							(k == "presence") or (k == "area_percent") or (k == "count") or
-							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
-							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
-							(k == "sum") or (k == "wsum"))
-			unitTest:assertNotNil(v)
-		end
-
-		local wsumLayerInfo = TerraLib().getLayerInfo(proj, wsumLayerName)
-		unitTest:assertEquals(wsumLayerInfo.name, wsumLayerName)
-		unitTest:assertEquals(wsumLayerInfo.type, "POSTGIS")
-		unitTest:assertEquals(wsumLayerInfo.rep, "polygon")
-		unitTest:assertEquals(wsumLayerInfo.host, host)
-		unitTest:assertEquals(wsumLayerInfo.port, port)
-		unitTest:assertEquals(wsumLayerInfo.user, user)
-		unitTest:assertEquals(wsumLayerInfo.password, password)
-		unitTest:assertEquals(wsumLayerInfo.database, database)
-		unitTest:assertEquals(wsumLayerInfo.table, string.lower(wsumLayerName))
-
-		-- RASTER TESTS WITH POSTGIS
-		-- FILL CELLULAR SPACE WITH PERCENTAGE OPERATION USING TIF
-		local layerName4 = "Prodes_PA"
-		local layerFile4 = filePath("test/prodes_polyc_10k.tif", "gis")
-		TerraLib().addGdalLayer(proj, layerName4, layerFile4, wsumLayerInfo.srid)
-
-		local percTifLayerName = clName.."_"..layerName4.."_RPercentage"
-
-		pgData.table = string.lower(percTifLayerName)
-		TerraLib().dropPgTable(pgData)
-
-		operation = "coverage"
-		attribute = "rperc"
-		select = 0
-
-		TerraLib().attributeFill{
-			project = proj,
-			from = layerName4,
-			to = wsumLayerName,
-			out = percTifLayerName,
-			attribute = attribute,
-			operation = operation,
-			select = select
-		}
-
-		percentSet = TerraLib().getDataSet{project = proj, layer = percTifLayerName, missing = 0}
-
-		unitTest:assertEquals(getn(percentSet), 9)
-
-		for k, v in pairs(percentSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
-							(k == "presence") or (k == "area_percent") or (k == "count") or
-							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
-							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
-							(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil))
-			unitTest:assertNotNil(v)
-		end
-
-		local percTifLayerInfo = TerraLib().getLayerInfo(proj, percTifLayerName)
-		unitTest:assertEquals(percTifLayerInfo.name, percTifLayerName)
-		unitTest:assertEquals(percTifLayerInfo.type, "POSTGIS")
-		unitTest:assertEquals(percTifLayerInfo.rep, "polygon")
-		unitTest:assertEquals(percTifLayerInfo.host, host)
-		unitTest:assertEquals(percTifLayerInfo.port, port)
-		unitTest:assertEquals(percTifLayerInfo.user, user)
-		unitTest:assertEquals(percTifLayerInfo.password, password)
-		unitTest:assertEquals(percTifLayerInfo.database, database)
-		unitTest:assertEquals(percTifLayerInfo.table, string.lower(percTifLayerName))
-
-		-- FILL CELLULAR SPACE WITH EVERAGE MEAN OPERATION FROM RASTER
-		local rmeanLayerName = clName.."_"..layerName4.."_RMean"
-
-		pgData.table = string.lower(rmeanLayerName)
-		TerraLib().dropPgTable(pgData)
-
-		operation = "average"
-		attribute = "rmean"
-		select = 0
-
-		TerraLib().attributeFill{
-			project = proj,
-			from = layerName4,
-			to = percTifLayerName,
-			out = rmeanLayerName,
-			attribute = attribute,
-			operation = operation,
-			select = select
-		}
-
-		local rmeanSet = TerraLib().getDataSet{project = proj, layer = rmeanLayerName, missing = 0}
-
-		unitTest:assertEquals(getn(rmeanSet), 9)
-
-		for k, v in pairs(rmeanSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
-							(k == "presence") or (k == "area_percent") or (k == "count") or
-							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
-							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
-							(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
-							(k == "rmean"))
-			unitTest:assertNotNil(v)
-		end
-
-		local rmeanLayerInfo = TerraLib().getLayerInfo(proj, rmeanLayerName)
-		unitTest:assertEquals(rmeanLayerInfo.name, rmeanLayerName)
-		unitTest:assertEquals(rmeanLayerInfo.type, "POSTGIS")
-		unitTest:assertEquals(rmeanLayerInfo.rep, "polygon")
-		unitTest:assertEquals(rmeanLayerInfo.host, host)
-		unitTest:assertEquals(rmeanLayerInfo.port, port)
-		unitTest:assertEquals(rmeanLayerInfo.user, user)
-		unitTest:assertEquals(rmeanLayerInfo.password, password)
-		unitTest:assertEquals(rmeanLayerInfo.database, database)
-		unitTest:assertEquals(rmeanLayerInfo.table, string.lower(rmeanLayerName))
-
-		-- FILL CELLULAR SPACE WITH MINIMUM OPERATION FROM RASTER
-		local rminLayerName = clName.."_"..layerName4.."_RMinimum"
-
-		pgData.table = string.lower(rminLayerName)
-		TerraLib().dropPgTable(pgData)
-
-		operation = "minimum"
-		attribute = "rmin"
-		select = 0
-
-		TerraLib().attributeFill{
-			project = proj,
-			from = layerName4,
-			to = rmeanLayerName,
-			out = rminLayerName,
-			attribute = attribute,
-			operation = operation,
-			select = select
-		}
-
-		local rminSet = TerraLib().getDataSet{project = proj, layer = rminLayerName, missing = 0}
-
-		unitTest:assertEquals(getn(rminSet), 9)
-
-		for k, v in pairs(rminSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
-							(k == "presence") or (k == "area_percent") or (k == "count") or
-							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
-							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
-							(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
-							(k == "rmean") or (k == "rmin"))
-			unitTest:assertNotNil(v)
-		end
-
-		local rminLayerInfo = TerraLib().getLayerInfo(proj, rminLayerName)
-		unitTest:assertEquals(rminLayerInfo.name, rminLayerName)
-		unitTest:assertEquals(rminLayerInfo.type, "POSTGIS")
-		unitTest:assertEquals(rminLayerInfo.rep, "polygon")
-		unitTest:assertEquals(rminLayerInfo.host, host)
-		unitTest:assertEquals(rminLayerInfo.port, port)
-		unitTest:assertEquals(rminLayerInfo.user, user)
-		unitTest:assertEquals(rminLayerInfo.password, password)
-		unitTest:assertEquals(rminLayerInfo.database, database)
-		unitTest:assertEquals(rminLayerInfo.table, string.lower(rminLayerName))
-
-		-- FILL CELLULAR SPACE WITH MAXIMUM OPERATION FROM RASTER
-		local rmaxLayerName = clName.."_"..layerName4.."_RMaximum"
-
-		pgData.table = string.lower(rmaxLayerName)
-		TerraLib().dropPgTable(pgData)
-
-		operation = "maximum"
-		attribute = "rmax"
-		select = 0
-
-		TerraLib().attributeFill{
-			project = proj,
-			from = layerName4,
-			to = rminLayerName,
-			out = rmaxLayerName,
-			attribute = attribute,
-			operation = operation,
-			select = select
-		}
-
-		local rmaxSet = TerraLib().getDataSet{project = proj, layer = rmaxLayerName, missing = 0}
-
-		unitTest:assertEquals(getn(rmaxSet), 9)
-
-		for k, v in pairs(rmaxSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
-							(k == "presence") or (k == "area_percent") or (k == "count") or
-							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
-							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
-							(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
-							(k == "rmean") or (k == "rmin") or (k == "rmax"))
-			unitTest:assertNotNil(v)
-		end
-
-		local rmaxLayerInfo = TerraLib().getLayerInfo(proj, rmaxLayerName)
-		unitTest:assertEquals(rmaxLayerInfo.name, rmaxLayerName)
-		unitTest:assertEquals(rmaxLayerInfo.type, "POSTGIS")
-		unitTest:assertEquals(rmaxLayerInfo.rep, "polygon")
-		unitTest:assertEquals(rmaxLayerInfo.host, host)
-		unitTest:assertEquals(rmaxLayerInfo.port, port)
-		unitTest:assertEquals(rmaxLayerInfo.user, user)
-		unitTest:assertEquals(rmaxLayerInfo.password, password)
-		unitTest:assertEquals(rmaxLayerInfo.database, database)
-		unitTest:assertEquals(rmaxLayerInfo.table, string.lower(rmaxLayerName))
-
-		-- FILL CELLULAR SPACE WITH STANDART DERIVATION OPERATION FROM RASTER
-		local rstdevLayerName = clName.."_"..layerName4.."_RStdev"
-
-		pgData.table = string.lower(rstdevLayerName)
-		TerraLib().dropPgTable(pgData)
-
-		operation = "stdev"
-		attribute = "rstdev"
-		select = 0
-
-		TerraLib().attributeFill{
-			project = proj,
-			from = layerName4,
-			to = rmaxLayerName,
-			out = rstdevLayerName,
-			attribute = attribute,
-			operation = operation,
-			select = select
-		}
-
-		local rstdevSet = TerraLib().getDataSet{project = proj, layer = rstdevLayerName, missing = 0}
-
-		unitTest:assertEquals(getn(rstdevSet), 9)
-
-		for k, v in pairs(rstdevSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
-							(k == "presence") or (k == "area_percent") or (k == "count") or
-							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
-							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
-							(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
-							(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev"))
-			unitTest:assertNotNil(v)
-		end
-
-		local rstdevLayerInfo = TerraLib().getLayerInfo(proj, rstdevLayerName)
-		unitTest:assertEquals(rstdevLayerInfo.name, rstdevLayerName)
-		unitTest:assertEquals(rstdevLayerInfo.type, "POSTGIS")
-		unitTest:assertEquals(rstdevLayerInfo.rep, "polygon")
-		unitTest:assertEquals(rstdevLayerInfo.host, host)
-		unitTest:assertEquals(rstdevLayerInfo.port, port)
-		unitTest:assertEquals(rstdevLayerInfo.user, user)
-		unitTest:assertEquals(rstdevLayerInfo.password, password)
-		unitTest:assertEquals(rstdevLayerInfo.database, database)
-		unitTest:assertEquals(rstdevLayerInfo.table, string.lower(rstdevLayerName))
-
-		-- FILL CELLULAR SPACE WITH SUM OPERATION FROM RASTER
-		local rsumLayerName = clName.."_"..layerName4.."_RSum"
-
-		pgData.table = string.lower(rsumLayerName)
-		TerraLib().dropPgTable(pgData)
-
-		operation = "sum"
-		attribute = "rsum"
-		select = 0
-
-		TerraLib().attributeFill{
-			project = proj,
-			from = layerName4,
-			to = rstdevLayerName,
-			out = rsumLayerName,
-			attribute = attribute,
-			operation = operation,
-			select = select
-		}
-
-		local rsumSet = TerraLib().getDataSet{project = proj, layer = rsumLayerName, missing = 0}
-
-		unitTest:assertEquals(getn(rsumSet), 9)
-
-		for k, v in pairs(rsumSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
-							(k == "presence") or (k == "area_percent") or (k == "count") or
-							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
-							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
-							(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
-							(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev") or
-							(k == "rsum"))
-			unitTest:assertNotNil(v)
-		end
-
-		local rsumLayerInfo = TerraLib().getLayerInfo(proj, rsumLayerName)
-		unitTest:assertEquals(rsumLayerInfo.name, rsumLayerName)
-		unitTest:assertEquals(rsumLayerInfo.type, "POSTGIS")
-		unitTest:assertEquals(rsumLayerInfo.rep, "polygon")
-		unitTest:assertEquals(rsumLayerInfo.host, host)
-		unitTest:assertEquals(rsumLayerInfo.port, port)
-		unitTest:assertEquals(rsumLayerInfo.user, user)
-		unitTest:assertEquals(rsumLayerInfo.password, password)
-		unitTest:assertEquals(rsumLayerInfo.database, database)
-		unitTest:assertEquals(rsumLayerInfo.table, string.lower(rsumLayerName))
-
-		-- OVERWRITE OUTPUT
-		operation = "sum"
-		attribute = "rsum_over"
-		select = 0
-		default = 0
-
-		TerraLib().attributeFill{
-			project = proj,
-			from = layerName4,
-			to = rsumLayerName,
-			attribute = attribute,
-			operation = operation,
-			select = select,
-			default = default
-		}
-
-		local rsumOverSet = TerraLib().getDataSet{project = proj, layer = rsumLayerName, missing = 0}
-
-		unitTest:assertEquals(getn(rsumOverSet), 9)
-
-		for k, v in pairs(rsumOverSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
-							(k == "presence") or (k == "area_percent") or (k == "count") or
-							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
-							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
-							(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
-							(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev") or
-							(k == "rsum") or (k == "rsum_over"))
-			unitTest:assertNotNil(v)
-		end
-
-		local rsumOverLayerInfo = TerraLib().getLayerInfo(proj, rsumLayerName)
-		unitTest:assertEquals(rsumOverLayerInfo.name, rsumLayerName)
-		unitTest:assertEquals(rsumOverLayerInfo.type, "POSTGIS")
-		unitTest:assertEquals(rsumOverLayerInfo.rep, "polygon")
-		unitTest:assertEquals(rsumOverLayerInfo.host, host)
-		unitTest:assertEquals(rsumOverLayerInfo.port, port)
-		unitTest:assertEquals(rsumOverLayerInfo.user, user)
-		unitTest:assertEquals(rsumOverLayerInfo.password, password)
-		unitTest:assertEquals(rsumOverLayerInfo.database, database)
-		unitTest:assertEquals(rsumOverLayerInfo.table, string.lower(rsumLayerName))
-
-		-- FILL CELLULAR SPACE WITH COUNT OPERATION FROM RASTER
-		local rcountLayerName = clName.."_"..layerName4.."_RCount"
-
-		pgData.table = string.lower(rcountLayerName)
-		TerraLib().dropPgTable(pgData)
-
-		operation = "count"
-		attribute = "rcount"
-		select = 0
-
-		TerraLib().attributeFill{
-			project = proj,
-			from = layerName4,
-			to = rsumLayerName,
-			out = rcountLayerName,
-			attribute = attribute,
-			operation = operation,
-			select = select
-		}
-
-		local rcountSet = TerraLib().getDataSet{project = proj, layer = rcountLayerName, missing = 0}
-
-		unitTest:assertEquals(getn(rcountSet), 9)
-
-		for k, v in pairs(rcountSet[0]) do
-			unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or
-							(k == "presence") or (k == "area_percent") or (k == "count") or
-							(k == "distance") or (k == "minimum") or (k == "maximum") or
-							(string.match(k, "perc_") ~= nil) or (k == "stdev") or (k == "mean") or
-							(k == "weighted") or (k == "mode_int") or (k == "mode_occur") or
-							(k == "sum") or (k == "wsum") or (string.match(k, "rperc_") ~= nil) or
-							(k == "rmean") or (k == "rmin") or (k == "rmax") or (k == "rstdev") or
-							(k == "rsum") or (k == "rsum_over") or (k == "rcount"))
-			unitTest:assertNotNil(v)
-		end
-
-		local rcountLayerInfo = TerraLib().getLayerInfo(proj, rcountLayerName)
-		unitTest:assertEquals(rcountLayerInfo.name, rcountLayerName)
-		unitTest:assertEquals(rcountLayerInfo.type, "POSTGIS")
-		unitTest:assertEquals(rcountLayerInfo.rep, "polygon")
-		unitTest:assertEquals(rcountLayerInfo.host, host)
-		unitTest:assertEquals(rcountLayerInfo.port, port)
-		unitTest:assertEquals(rcountLayerInfo.user, user)
-		unitTest:assertEquals(rcountLayerInfo.password, password)
-		unitTest:assertEquals(rcountLayerInfo.database, database)
-		unitTest:assertEquals(rcountLayerInfo.table, string.lower(rcountLayerName))
-
-		-- END
-		pgData.table = string.lower(clName)
-		TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(presLayerName)
-		TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(areaLayerName)
-		TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(countLayerName)
-		TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(distLayerName)
-		TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(minLayerName)
-		TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(maxLayerName)
-		TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(percLayerName)
-		TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(stdevLayerName)
-		TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(meanLayerName)
-		TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(weighLayerName)
-		TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(interLayerName)
-		TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(occurLayerName)
-		TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(sumLayerName)
-		TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(wsumLayerName)
-		TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(percTifLayerName)
-		TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(rmeanLayerName)
-		TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(rminLayerName)
-		TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(rmaxLayerName)
-		TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(rstdevLayerName)
-		TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(rsumLayerName)
-		TerraLib().dropPgTable(pgData)
-		pgData.table = string.lower(rcountLayerName)
-		TerraLib().dropPgTable(pgData)
-		-- END POSTGIS TESTS
-
-		proj.file:delete()
 	end,
 	getDataSet = function(unitTest)
 		-- see in saveDataSet() test --

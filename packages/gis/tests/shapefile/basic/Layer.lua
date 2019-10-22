@@ -928,9 +928,65 @@ return {
 			proj.file:delete()
 		end
 
+		local medianOperation = function()
+			local proj = Project{
+				file = "layer_shape_basic.tview",
+				clean = true
+			}
+
+			local l1 = Layer{
+				project = proj,
+				name = "limit",
+				file = filePath("test/limit_es_sirgas2000_5880.shp", "gis")
+			}
+
+			local l2 = Layer{
+				project = proj,
+				name = "layer2",
+				file = filePath("test/es-protected_areas_sirgas2000_5880.shp", "gis")
+			}
+
+			local cl = Layer{
+				project = proj,
+				source = "shp",
+				name = "cs",
+				input = l1.name,
+				resolution = 20000,
+				file = "cs.shp",
+				clean = true,
+				progress = false
+			}
+
+			cl:fill{
+				layer = l2.name,
+				select = "Shape_Area",
+				operation = "median",
+				attribute = "median",
+				progress = false
+			}
+
+			local cs = CellularSpace{
+				project = proj,
+				layer = cl.name
+			}
+
+			local map = Map{
+				target = cs,
+				select = "median",
+				slices = 10,
+				color = "YlOrRd"
+			}
+
+			unitTest:assertSnapshot(map, "fill_shape_median.png")
+
+			cl:delete()
+			proj.file:delete()
+		end
+
 		unitTest:assert(allSupportedOperation)
 		unitTest:assert(distanceWithMissing)
 		unitTest:assert(averageInvalidGeometries)
+		unitTest:assert(medianOperation)
 	end,
 	projection = function(unitTest)
 		local proj = Project {
