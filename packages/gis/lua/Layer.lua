@@ -558,8 +558,7 @@ Layer_ = {
 	-- "average", "mode", "coverage", "sum" \
 	-- Raster & (none) &
 	-- "average", "mode", "maximum", "minimum", "coverage", "stdev", "sum", "count",
-	-- "median" &
-	-- (none) \
+	-- "median" & (none) \
 	-- @arg data.operation The way to compute the attribute of each cell. When using raster
 	-- data, a pixel is considered within a given geometry if there is some intersection
 	-- between the pixel and the geometry. This means that the same pixel might belong to
@@ -620,7 +619,7 @@ Layer_ = {
 	-- computes the sum based on the proportions of intersection area. Useful to preserve the total
 	-- sum in both layers, such as population size.
 	-- & attribute, layer, select & area, missing, band, dummy, pixel, progress, split \
-	-- "median" & Median is the midpoint of a frequency distribution of observed values.
+	-- "median" & Median is the midpoint of a frequency distribution of observed values. &
 	-- attribute, layer, select & missing, band, dummy, pixel, progress, split \
 	-- @arg data.attribute The name of the new attribute to be created.
 	-- @arg data.area Whether the calculation will be based on the intersection area (true),
