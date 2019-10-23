@@ -1276,8 +1276,14 @@ local function getRasterFromLayer(project, layer)
 end
 
 local function isValidDataSourceUri(uri, type)
-	local ds = binding.te.da.DataSourceFactory.make(type, uri)
-	return ds:isValid()
+	local valid
+	do
+		local ds = binding.te.da.DataSourceFactory.make(type, uri)
+		valid = ds:isValid()
+		ds:close()
+	end
+	collectgarbage("collect")
+	return valid
 end
 
 local function toWfsUrl(url)
