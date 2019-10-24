@@ -890,7 +890,7 @@ return {
 		unitTest:assert(not belong("attr", TerraLib().getPropertyNames(projTemporal, "layer_split")))
 		unitTest:assert(not belong("attr2", TerraLib().getPropertyNames(projTemporal, "layer_split")))
 
-		File("temporal.tview"):delete()
+		File("temporal.qgs"):delete()
 		projTemporal = Project{
 			file = "temporal.tview",
 			clean = true,
@@ -931,7 +931,7 @@ return {
 		File("layer_split_1961.shp"):delete()
 		File("layer_split_1974.shp"):delete()
 		File("layer_split_1979.shp"):delete()
-		File("temporal.qgs"):delete()
+		File("temporal.tview"):delete()
 	end,
 	representation = function(unitTest)
 		local projName = "cellular_layer_representation.tview"
