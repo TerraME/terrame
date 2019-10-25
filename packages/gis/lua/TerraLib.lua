@@ -1276,8 +1276,14 @@ local function getRasterFromLayer(project, layer)
 end
 
 local function isValidDataSourceUri(uri, type)
-	local ds = binding.te.da.DataSourceFactory.make(type, uri)
-	return ds:isValid()
+	local valid
+	do
+		local ds = binding.te.da.DataSourceFactory.make(type, uri)
+		valid = ds:isValid()
+		ds:close()
+	end
+	collectgarbage("collect")
+	return valid
 end
 
 local function toWfsUrl(url)
@@ -2480,10 +2486,10 @@ TerraLib_ = {
 		local connInfo = createFileConnInfo(tostring(file))
 		local _, dSetName = file:split()
 		local srid = inputLayer:getSRID()
+		local encoding = binding.CharEncoding.getEncodingName(inputLayer:getEncoding())
 
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 
-		local encoding = binding.CharEncoding.getEncodingName(inputLayer:getEncoding())
 		instance.addGeoJSONLayer(project, name, file, srid, encoding)
 	end,
 	--- Add a new PostgreSQL layer to a given project.
@@ -2568,10 +2574,9 @@ TerraLib_ = {
 		local connInfo = createFileConnInfo(tostring(file))
 		local _, dSetName = file:split()
 		local srid = inputLayer:getSRID()
+		local encoding = binding.CharEncoding.getEncodingName(inputLayer:getEncoding())
 
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
-
-		local encoding = binding.CharEncoding.getEncodingName(inputLayer:getEncoding())
 
 		instance.addShpLayer(project, name, file, addSpatialIdx, srid, encoding)
 	end,

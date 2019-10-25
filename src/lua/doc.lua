@@ -130,7 +130,8 @@ local function getProjects(package, doc_report)
 			end
 		else
 			local cs = CellularSpace{
-				file = value
+				file = value,
+				missing = 0
 			}
 
 			local quantity = #cs
@@ -282,7 +283,8 @@ local function getProjects(package, doc_report)
 
 			local cs = CellularSpace{
 				project = data.project,
-				layer = data.name
+				layer = data.name,
+				missing = 0
 			}
 
 			local quantity = #cs
@@ -980,7 +982,8 @@ function _Gtme.executeDoc(package)
 				end)
 
 				local cs = CellularSpace{
-					layer = layer
+					layer = layer,
+					missing = 0
 				}
 
 				forEachElement(value.attributes, function(idx, mvalue)

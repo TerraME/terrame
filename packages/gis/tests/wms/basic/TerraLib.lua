@@ -43,7 +43,7 @@ return {
 
 		local layerName = "WMS-Layer"
 		local url = "http://terrabrasilis.dpi.inpe.br/geoserver/ows"
-		local dataset = "prodes-cerrado:temporal_mosaic_cerrado"
+		local dataset = "prodes-cerrado:temporal_mosaic_cerrado_2000_2019"
 		local directory = currentDir()
 		local srid = 29901
 
