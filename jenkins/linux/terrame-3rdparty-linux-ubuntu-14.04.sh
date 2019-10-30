@@ -30,14 +30,14 @@ if [ -z "$_TERRAME_TARGET_3RDPARTY_DIR" ]; then
 fi
 
 if [ -z "$_TERRALIB_3RDPARTY_NAME" ]; then
-  export _TERRALIB_3RDPARTY_NAME="terralib-3rdparty-linux-ubuntu-14.04.tar.gz"
+  export _TERRALIB_3RDPARTY_NAME="terralib-3rdparty-linux-ubuntu-14.04"
 fi
 
 if [ -z "$_TERRALIB_TARGET_URL" ]; then
   if [ -z "$_TERRALIB_VERSION" ]; then
-    export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/$_TERRALIB_3RDPARTY_NAME"
+    export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/$_TERRALIB_3RDPARTY_NAME.tar.gz"
   else
-	export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/$_TERRALIB_VERSION/$_TERRALIB_3RDPARTY_NAME"
+	export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/$_TERRALIB_VERSION/$_TERRALIB_3RDPARTY_NAME.tar.gz"
   fi
 fi
 
@@ -76,14 +76,14 @@ git clone -b $_TERRALIB_BRANCH https://gitlab.dpi.inpe.br/rodrigo.avancini/terra
 valid $? "Error. Could not clone TerraLib $_TERRALIB_BRANCH"
 
 # Configuring TerraLib 3rdparty compilation
-cp terralib/install/install-3rdparty-linux-ubuntu-14.04.sh .
+cp terralib/install/$_TERRALIB_3RDPARTY_NAME.sh .
 
 # Configuring TerraME dependencies compilation
 cp terrame/build/scripts/linux/terrame-deps-conf.sh $_TERRAME_TARGET_3RDPARTY_DIR
 
 tree -D -L 2
 
-TERRALIB_DEPENDENCIES_DIR="$_TERRALIB_TARGET_3RDPARTY_DIR" ./install-3rdparty-linux-ubuntu-14.04.sh
+TERRALIB_DEPENDENCIES_DIR="$_TERRALIB_TARGET_3RDPARTY_DIR" ./$_TERRALIB_3RDPARTY_NAME.sh
 valid $? "Error: Could not finish TerraLib 3rdparty compilation."
 
 echo ""
