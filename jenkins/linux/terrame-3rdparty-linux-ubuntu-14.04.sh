@@ -92,11 +92,11 @@ echo ""
 cd $_TERRAME_TARGET_3RDPARTY_DIR
 
 echo -ne "Downloading Protobuf ... "
-curl -L -O https://github.com/google/protobuf/releases/download/v3.1.0/protobuf-cpp-3.1.0.tar.gz --silent
+wget --quiet https://github.com/google/protobuf/releases/download/v3.1.0/protobuf-cpp-3.1.0.tar.gz
 valid $? "Error. Could not download 3rdparty"
 
 echo -ne "Downloading Luacheck ... "
-curl -L -O https://github.com/mpeterv/luacheck/archive/0.17.0.tar.gz --silent
+wget --quiet https://github.com/mpeterv/luacheck/archive/0.17.0.tar.gz
 valid $? "Error: Could not download LuaCheck"
 
 echo ""
