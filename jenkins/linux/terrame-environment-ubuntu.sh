@@ -56,6 +56,8 @@ cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-git-notify-ubuntu.sh $_TERR
 valid $? "Error: Copying fail"
 cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-installer-ubuntu.sh $_TERRAME_BUILD_BASE/solution
 valid $? "Error: Copying fail"
+cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-terralib-ubuntu.sh $_TERRAME_BUILD_BASE/solution
+valid $? "Error: Copying fail"
 
 echo ""
 echo ""
