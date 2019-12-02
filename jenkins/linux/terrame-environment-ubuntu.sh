@@ -50,11 +50,11 @@ valid $? "Error: Creating fail"
 echo "Copying TerraME compilation scripts to TerraME Solution directory"
 cp --verbose $_TERRAME_GIT_DIR/build/scripts/linux/terrame-conf.* $_TERRAME_BUILD_BASE/solution
 valid $? "Error: Copying fail"
-cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-build-linux-ubuntu-14.04.sh $_TERRAME_BUILD_BASE/solution
+cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-build-ubuntu.sh $_TERRAME_BUILD_BASE/solution
 valid $? "Error: Copying fail"
-cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-git-notify-linux-ubuntu-14.04.sh $_TERRAME_BUILD_BASE/solution
+cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-git-notify-ubuntu.sh $_TERRAME_BUILD_BASE/solution
 valid $? "Error: Copying fail"
-cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-installer-linux-ubuntu-14.04.sh $_TERRAME_BUILD_BASE/solution
+cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-installer-ubuntu.sh $_TERRAME_BUILD_BASE/solution
 valid $? "Error: Copying fail"
 
 echo ""
@@ -84,24 +84,24 @@ if [ ! -z "$ghprbActualCommit" ]; then
 	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Execution Test" -2 ""
 fi
 
-cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-repository-test-linux-ubuntu-14.04.sh $_TERRAME_REPOSITORY_DIR
+cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-repository-test-ubuntu.sh $_TERRAME_REPOSITORY_DIR
 valid $? "Error: Copying fail"
 
-cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-test-execution-linux-ubuntu-14.04.sh $_TERRAME_EXECUTION_DIR
+cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-cmd-test-ubuntu.sh $_TERRAME_EXECUTION_DIR
 valid $? "Error: Copying fail"
 
 echo "Copying TerraME test and config file to Test folder"
 cp --verbose $_TERRAME_GIT_DIR/jenkins/all/*.lua $_TERRAME_TEST_DIR
 valid $? "Error: Copying fail"
-cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-unittest-linux-ubuntu-14.04.sh $_TERRAME_TEST_DIR
+cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-package-test-ubuntu.sh $_TERRAME_TEST_DIR
 valid $? "Error: Copying fail"
-cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-code-analysis-linux-ubuntu-14.04.sh $_TERRAME_TEST_DIR
+cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-package-check-ubuntu.sh $_TERRAME_TEST_DIR
 valid $? "Error: Copying fail"
-cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-doc-linux-ubuntu-14.04.sh $_TERRAME_TEST_DIR
+cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-package-doc-ubuntu.sh $_TERRAME_TEST_DIR
 valid $? "Error: Copying fail"
-cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-unittest-cpp-linux-ubuntu-14.04.sh $_TERRAME_TEST_DIR
+cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-cpp-test-ubuntu.sh $_TERRAME_TEST_DIR
 valid $? "Error: Copying fail"
-cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-syntaxcheck-cpp-linux-ubuntu-14.04.sh $_TERRAME_TEST_DIR
+cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-cpp-linter-ubuntu.sh $_TERRAME_TEST_DIR
 valid $? "Error: Copying fail"
 
 echo ""

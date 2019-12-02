@@ -22,23 +22,23 @@
 # of this software and its documentation.
 
 if [ -z "$_TERRALIB_TARGET_3RDPARTY_DIR" ]; then
-  export _TERRALIB_TARGET_3RDPARTY_DIR="$HOME/MyDevel/terrame/terralib/3rdparty/libs"
+	export _TERRALIB_TARGET_3RDPARTY_DIR="$HOME/MyDevel/terrame/terralib/3rdparty/libs"
 fi
 
 if [ -z "$_TERRAME_TARGET_3RDPARTY_DIR" ]; then
-  export _TERRAME_TARGET_3RDPARTY_DIR="$HOME/MyDevel/terrame/3rdparty"
+	export _TERRAME_TARGET_3RDPARTY_DIR="$HOME/MyDevel/terrame/3rdparty"
 fi
 
 if [ -z "$_TERRALIB_3RDPARTY_NAME" ]; then
-  export _TERRALIB_3RDPARTY_NAME="3rdparty-linux-ubuntu-14.04"
+	export _TERRALIB_3RDPARTY_NAME="3rdparty-linux-ubuntu-14.04"
 fi
 
 if [ -z "$_TERRALIB_TARGET_URL" ]; then
-  if [ -z "$_TERRALIB_VERSION" ]; then
-    export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/terralib-$_TERRALIB_3RDPARTY_NAME.tar.gz"
-  else
-	export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/$_TERRALIB_VERSION/terralib-$_TERRALIB_3RDPARTY_NAME.tar.gz"
-  fi
+	if [ -z "$_TERRALIB_VERSION" ]; then
+		export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/terralib-$_TERRALIB_3RDPARTY_NAME.tar.gz"
+	else
+		export _TERRALIB_TARGET_URL="http://www.dpi.inpe.br/terralib5-devel/3rdparty/src/$_TERRALIB_VERSION/terralib-$_TERRALIB_3RDPARTY_NAME.tar.gz"
+	fi
 fi
 
 #
@@ -46,17 +46,17 @@ fi
 #
 function valid()
 {
-  if [ $1 -ne 0 ]; then
-    echo $2
-    echo ""
-    exit $1
-  else
-    echo "done."
-  fi
+	if [ $1 -ne 0 ]; then
+		echo $2
+		echo ""
+		exit $1
+	else
+		echo "done."
+	fi
 }
 
 echo ""
-echo "#### TerraME Dependencies Compilation on Linux Ubuntu 14.04 ####"
+echo "#### TerraME Dependencies Compilation on Linux Ubuntu ####"
 echo ""
 
 echo -ne "Cleaning up old builds ... "
