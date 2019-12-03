@@ -63,25 +63,25 @@ echo ""
 ####################### GitHub Triggers
 if [ ! -z "$ghprbActualCommit" ]; then
 	echo "Triggering All Builds"
-	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "C++ Syntax" -2 ""
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-ubuntu.sh $ghprbActualCommit "C++ Syntax" -2 ""
 	sleep 1s
-	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Linux Compilation" -2 ""
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-ubuntu.sh $ghprbActualCommit "Linux Compilation" -2 ""
 	sleep 1s
-	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "C++ Testing" -2 ""
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-ubuntu.sh $ghprbActualCommit "C++ Testing" -2 ""
 	sleep 1s
-	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Code analysis of package base" -2 ""
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-ubuntu.sh $ghprbActualCommit "Code analysis of package base" -2 ""
 	sleep 1s
-	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Code analysis of package gis" -2 ""
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-ubuntu.sh $ghprbActualCommit "Code analysis of package gis" -2 ""
 	sleep 1s
-	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Documentation of package base" -2 ""
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-ubuntu.sh $ghprbActualCommit "Documentation of package base" -2 ""
 	sleep 1s
-	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Documentation of package gis" -2 ""
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-ubuntu.sh $ghprbActualCommit "Documentation of package gis" -2 ""
 	sleep 1s
-	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Functional test of package base" -2 ""
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-ubuntu.sh $ghprbActualCommit "Functional test of package base" -2 ""
 	sleep 1s
-	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Functional test of package gis" -2 ""
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-ubuntu.sh $ghprbActualCommit "Functional test of package gis" -2 ""
 	sleep 1s
-	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-linux-ubuntu-14.04.sh $ghprbActualCommit "Execution Test" -2 ""
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-ubuntu.sh $ghprbActualCommit "Execution Test" -2 ""
 fi
 
 cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-repository-test-ubuntu.sh $_TERRAME_REPOSITORY_DIR

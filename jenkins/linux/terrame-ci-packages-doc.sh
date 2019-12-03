@@ -25,7 +25,7 @@ PACKAGE=$2
 CONTEXT="Documentation of package $PACKAGE"
 TARGET_URL="$BUILD_URL/consoleFull"
 
-$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $COMMIT "$CONTEXT" "-1" "$TARGET_URL" "$PACKAGE"
+$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-ubuntu.sh $COMMIT "$CONTEXT" "-1" "$TARGET_URL" "$PACKAGE"
 
 echo "Check if TerraME is running"
 if pgrep -x "terrame" > /dev/null; then
@@ -39,11 +39,11 @@ fi
 
 cd $TERRAME_PACKAGE_PATH
 
-rm -rf terrame-doc-linux-ubuntu-14.04.sh
-cp $TERRAME_JENKINS_SCRIPTS_PATH/terrame-doc-linux-ubuntu-14.04.sh .
-./terrame-doc-linux-ubuntu-14.04.sh $PACKAGE
+rm -rf terrame-package-doc-ubuntu.sh
+cp $TERRAME_JENKINS_SCRIPTS_PATH/terrame-package-doc-ubuntu.sh .
+./terrame-package-doc-ubuntu.sh $PACKAGE
 RESULT=$?
 
-$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $COMMIT "$CONTEXT" "$RESULT" "$TARGET_URL" "$PACKAGE"
+$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-ubuntu.sh $COMMIT "$CONTEXT" "$RESULT" "$TARGET_URL" "$PACKAGE"
 
 exit $RESULT

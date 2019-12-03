@@ -30,11 +30,11 @@ DEPENDS=$2
 COMMIT=$ghprbActualCommit
 
 echo "Triggering All Builds"
-$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $COMMIT "Code analysis of package $PACKAGE" "-2" "$BUILD_URL/consoleFull" "$PACKAGE"
+$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-ubuntu.sh $COMMIT "Code analysis of package $PACKAGE" "-2" "$BUILD_URL/consoleFull" "$PACKAGE"
 sleep 1s
-$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $COMMIT "Documentation of package $PACKAGE" "-2" "$BUILD_URL/consoleFull" "$PACKAGE"
+$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-ubuntu.sh $COMMIT "Documentation of package $PACKAGE" "-2" "$BUILD_URL/consoleFull" "$PACKAGE"
 sleep 1s
-$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $COMMIT "Functional tests of package $PACKAGE" "-2" "$BUILD_URL/consoleFull" "$PACKAGE"
+$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-ubuntu.sh $COMMIT "Functional tests of package $PACKAGE" "-2" "$BUILD_URL/consoleFull" "$PACKAGE"
 sleep 1s
 
 echo "Check if TerraME is running"
@@ -54,15 +54,15 @@ cp -rap git/* $TERRAME_PACKAGE_PATH/$PACKAGE
 CONTEXT="Code analysis of package $PACKAGE"
 TARGET_URL="$BUILD_URL/consoleFull"
 
-$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $COMMIT "$CONTEXT" "-1" "$TARGET_URL" "$PACKAGE"
+$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-ubuntu.sh $COMMIT "$CONTEXT" "-1" "$TARGET_URL" "$PACKAGE"
 
 cd $TERRAME_PACKAGE_PATH
 
-rm -rf terrame-code-analysis-linux-ubuntu-14.04.sh
-cp $TERRAME_JENKINS_SCRIPTS_PATH/terrame-code-analysis-linux-ubuntu-14.04.sh .
-./terrame-code-analysis-linux-ubuntu-14.04.sh $PACKAGE $DEPENDS
+rm -rf terrame-package-check-ubuntu.sh
+cp $TERRAME_JENKINS_SCRIPTS_PATH/terrame-package-check-ubuntu.sh .
+./terrame-package-check-ubuntu.sh $PACKAGE $DEPENDS
 RESULT=$?
 
-$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-linux-ubuntu-14.04.sh $COMMIT "$CONTEXT" "$RESULT" "$TARGET_URL" "$PACKAGE"
+$TERRAME_JENKINS_SCRIPTS_PATH/terrame-git-notify-ubuntu.sh $COMMIT "$CONTEXT" "$RESULT" "$TARGET_URL" "$PACKAGE"
 
 exit $RESULT
