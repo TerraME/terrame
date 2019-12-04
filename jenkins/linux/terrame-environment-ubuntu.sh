@@ -80,7 +80,7 @@ if [ ! -z "$ghprbActualCommit" ]; then
 	sleep 1s
 	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-ubuntu.sh $ghprbActualCommit "Tests of package base" -2 ""
 	sleep 1s
-	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-ubuntu.sh $ghprbActualCommit "Tests test of package gis" -2 ""
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-ubuntu.sh $ghprbActualCommit "Tests of package gis" -2 ""
 	sleep 1s
 	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-ubuntu.sh $ghprbActualCommit "Execution Test" -2 ""
 fi
