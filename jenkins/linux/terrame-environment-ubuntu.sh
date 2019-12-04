@@ -63,7 +63,8 @@ echo ""
 ####################### GitHub Triggers
 if [ ! -z "$ghprbActualCommit" ]; then
 	echo "Triggering All Builds"
-	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-ubuntu.sh $ghprbActualCommit "C++ Syntax" -2 ""
+	# The name of jobs must be the same of Jenkins _TERRAME_GITHUB_STATUS_CONTEXT job variable
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-ubuntu.sh $ghprbActualCommit "C++ Linter" -2 ""
 	sleep 1s
 	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-ubuntu.sh $ghprbActualCommit "Linux Compilation" -2 ""
 	sleep 1s
@@ -77,9 +78,9 @@ if [ ! -z "$ghprbActualCommit" ]; then
 	sleep 1s
 	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-ubuntu.sh $ghprbActualCommit "Documentation of package gis" -2 ""
 	sleep 1s
-	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-ubuntu.sh $ghprbActualCommit "Functional test of package base" -2 ""
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-ubuntu.sh $ghprbActualCommit "Tests of package base" -2 ""
 	sleep 1s
-	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-ubuntu.sh $ghprbActualCommit "Functional test of package gis" -2 ""
+	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-ubuntu.sh $ghprbActualCommit "Tests test of package gis" -2 ""
 	sleep 1s
 	$_TERRAME_BUILD_BASE/solution/terrame-git-notify-ubuntu.sh $ghprbActualCommit "Execution Test" -2 ""
 fi
