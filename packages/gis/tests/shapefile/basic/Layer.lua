@@ -888,16 +888,31 @@ return {
 			unitTest:assertEquals(#cs, 221)
 			unitTest:assertEquals(missCount, 67)
 
-			local checkWarn = function()
-				unitTest:assert(not l1:check(true, false))
+			local customWarningBkp = customWarning
+			local warnMsg
+			customWarning = function(msg)
+				warnMsg = msg
 			end
 
-		unitTest:assertWarning(checkWarn, [[The following problems were found in the geometries:
+			unitTest:assert(not l1:check(true, false))
+
+			if string.find(warnMsg, "5502300.9611873") then
+				unitTest:assertEquals(warnMsg, [[The following problems were found in the geometries:
 1. FID 404: Self-intersection (5502300.9611873, 8212207.8945397).
 2. FID 448: Self-intersection (5499667.9683502, 8209876.5162455).
 3. FID 607: Self-intersection (5495108.3147666, 8215278.0127216).
 4. FID 640: Self-intersection (5494485.5853231, 8210317.9905857).
 5. FID 763: Self-intersection (5488464.5058169, 8212262.4394308).]])
+			else -- ubuntu 18
+				unitTest:assertEquals(warnMsg, [[The following problems were found in the geometries:
+1. FID 404: Self-intersection (5502436.5275601, 8211973.5861861).
+2. FID 448: Self-intersection (5499667.9683502, 8209876.5162455).
+3. FID 607: Self-intersection (5495108.3147666, 8215278.0127216).
+4. FID 640: Self-intersection (5494485.5853231, 8210317.9905857).
+5. FID 763: Self-intersection (5488466.0305929, 8212219.2367292).]])
+			end
+
+			customWarning = customWarningBkp
 
 			cl:delete()
 			csFile:copy(currentDir())
@@ -1241,16 +1256,31 @@ return {
 			file = "biomassa.shp"
 		}
 
-		local checkWarn = function()
-			unitTest:assert(not l1:check(true, false))
+		local customWarningBkp = customWarning
+		local warnMsg
+		customWarning = function(msg)
+			warnMsg = msg
 		end
 
-		unitTest:assertWarning(checkWarn, [[The following problems were found in the geometries:
+		unitTest:assert(not l1:check(true, false))
+
+		if string.find(warnMsg, "5502300.9611873") then
+			unitTest:assertEquals(warnMsg, [[The following problems were found in the geometries:
 1. FID 404: Self-intersection (5502300.9611873, 8212207.8945397).
 2. FID 448: Self-intersection (5499667.9683502, 8209876.5162455).
 3. FID 607: Self-intersection (5495108.3147666, 8215278.0127216).
 4. FID 640: Self-intersection (5494485.5853231, 8210317.9905857).
 5. FID 763: Self-intersection (5488464.5058169, 8212262.4394308).]])
+		else -- ubuntu 18
+			unitTest:assertEquals(warnMsg, [[The following problems were found in the geometries:
+1. FID 404: Self-intersection (5502436.5275601, 8211973.5861861).
+2. FID 448: Self-intersection (5499667.9683502, 8209876.5162455).
+3. FID 607: Self-intersection (5495108.3147666, 8215278.0127216).
+4. FID 640: Self-intersection (5494485.5853231, 8210317.9905857).
+5. FID 763: Self-intersection (5488466.0305929, 8212219.2367292).]])
+		end
+
+		customWarning = customWarningBkp
 
 		unitTest:assert(l1:check(true, false))
 
