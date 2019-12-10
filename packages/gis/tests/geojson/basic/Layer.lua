@@ -262,7 +262,7 @@ return {
 				color = {"red", "green"}
 			}
 
-			unitTest:assertSnapshot(map, "polygons-area-geojson.png")
+			unitTest:assertSnapshot(map, "polygons-area-geojson.png", 0.02)
 
 			local roads = Layer{
 				project = proj,
