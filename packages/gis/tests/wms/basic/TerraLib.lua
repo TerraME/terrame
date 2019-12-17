@@ -87,7 +87,7 @@ return {
 
 			local layerName = "LayerWMS"
 			local url = "http://terrabrasilis.dpi.inpe.br/geoserver/ows"
-			local dataset = "prodes-legal-amz:temporal_mosaic_legal_amazon"
+			local dataset = "prodes-legal-amz:temporal_mosaic_legal_amazon_2000_2018"
 			local srid = 29901
 			local directory = currentDir()
 			local conn = {

@@ -38,7 +38,7 @@ return {
 
 		local layerName = "WMS-Layer"
 		local service = "http://terrabrasilis.dpi.inpe.br/geoserver/ows"
-		local map = "prodes-legal-amz:temporal_mosaic_legal_amazon"
+		local map = "prodes-legal-amz:yearly_deforestation_2013_2018"
 		local epsg = 29901
 
 		local layer = Layer {
@@ -73,4 +73,3 @@ return {
 		wmsDir:delete()
 	end
 }
-
