@@ -82,6 +82,7 @@ echo.
 
 :: Enter directory containing codebase of the third parties.
 cd %_TERRALIB_3RDPARTY_NAME%
+cd %_TERRALIB_3RDPARTY_NAME%
 
 dir
 echo.
