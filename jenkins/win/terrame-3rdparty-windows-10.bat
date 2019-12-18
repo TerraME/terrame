@@ -58,6 +58,7 @@ echo.
 echo.
 
 echo | set /p="Cofiguring Install Variables ... "<nul
+
 :: Where to install the third-parties
 set "TERRALIB_DEPENDENCIES_DIR=%_TERRALIB_TARGET_3RDPARTY_DIR%\libs"
 
@@ -73,6 +74,9 @@ set "CMAKE_FILEPATH=%PROGRAMFILES(x86)%\CMake\bin"
 
 :: Where is the TerraLib5 codebase
 set TERRALIB5_CODEBASE_PATH=%_TERRALIB_GIT_DIR%
+
+:: Perl is used for some libs
+set PERL_EXE=C:\Strawberry\perl\bin\perl.exe
 
 echo done.
 echo.
