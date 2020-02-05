@@ -651,9 +651,6 @@ local function addFileLayer(project, name, file, type, addSpatialIdx, srid, enco
 		dSetName = fn
 	elseif type == "GDAL" then
 		dSetName = file:name()
-	elseif type == "GeoJSON" then
-		type = "OGR"
-		dSetName = "OGRGeoJSON"
 	end
 
 	local layer = createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid, encoding)
@@ -780,7 +777,7 @@ local function fixNameTo10Characters(name, property)
 	return string.gsub(name, property.."_", prop.."_")
 end
 
-local function renameEachClass(ds, dSetName, dsType, select, property)
+local function renameEachClass(ds, dSetName, dsType, select, property, fileExt)
 	local dSet = ds:getDataSet(dSetName)
 	local numProps = dSet:getNumProperties()
 	local propsRenamed = {}
@@ -807,7 +804,7 @@ local function renameEachClass(ds, dSetName, dsType, select, property)
 			end
 
 			if (string.len(newName) > 10) and (dsType ~= "POSTGIS")
-					and (dSetName ~= "OGRGeoJSON") then
+					and (fileExt ~= "geojson") then
 				newName = fixNameTo10Characters(newName, property)
 			end
 
@@ -817,7 +814,7 @@ local function renameEachClass(ds, dSetName, dsType, select, property)
 
 			propsRenamed[newName] = newName
 
-		elseif (dsType == "OGR") and (string.len(select) == 10) then
+		elseif (fileExt == "shp") and (string.len(select) == 10) then
 			local idx = string.find(currentProp, "_")
 			if idx then
 				local propSub = string.sub(currentProp, 1, idx - 1)
@@ -1679,11 +1676,9 @@ local function createFromDataInfoToSaveAsByFile(file)
 	local fileExt = file:extension()
 	info.type = SourceTypeMapper[fileExt]
 
-	if fileExt == "shp" then
+	if (fileExt == "shp") or (fileExt == "geojson") then
 		local _, fileName = file:split()
 		info.dataset = fileName
-	elseif fileExt == "geojson" then
-		info.dataset = "OGRGeoJSON"
 	else
 		info.dataset = file:name()
 	end
@@ -2153,12 +2148,8 @@ local function getDataSetFromFile(file)
 		local dSetName
 
 		if dsType == "OGR" then
-			if fileExt == "geojson" then
-				dSetName = "OGRGeoJSON"
-			else
-				local _, name = file:split()
-				dSetName = name
-			end
+			local _, name = file:split()
+			dSetName = name
 		else --< GDAL
 			dSetName = file:name(true)
 		end
@@ -2284,7 +2275,7 @@ TerraLib_ = {
 
 		loadProject(project, project.file)
 		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
-
+		local typefunc = type
 		local type = dsInfo:getType()
 		info.type = type
 		local connInfo = dsInfo:getConnInfo()
@@ -2383,7 +2374,7 @@ TerraLib_ = {
 	-- TerraLib().createProject("project.tview", {})
 	-- TerraLib().addGeoJSONLayer(proj, "GeoJSONLayer", filePath("Setores_Censitarios_2000_pol.geojson", "gis"))
 	addGeoJSONLayer = function(project, name, file, srid, encoding)
-		addFileLayer(project, name, file, "GeoJSON", nil, srid, encoding)
+		addFileLayer(project, name, file, "OGR", nil, srid, encoding)
 	end,
 	--- Validates if the URL is a valid WFS server.
 	-- @arg url The URL of the WFS server.
@@ -2491,6 +2482,7 @@ TerraLib_ = {
 		createCellSpaceLayer(inputLayer, name, dSetName, resolution, connInfo, "OGR", mask)
 
 		instance.addGeoJSONLayer(project, name, file, srid, encoding)
+		collectgarbage("collect")
 	end,
 	--- Add a new PostgreSQL layer to a given project.
 	-- @arg project A table that represents a project.
@@ -2801,7 +2793,7 @@ TerraLib_ = {
 			local outDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(toLayer:getDataSourceId())
 			local outType = outDsInfo:getType()
 			local outConnInfo = outDsInfo:getConnInfo()
-			local outFileExt
+			local outFileExt = ""
 
 			if outType == "OGR" then
 				outFileExt = string.lower(getFileByUri(outConnInfo):extension())
@@ -2852,13 +2844,7 @@ TerraLib_ = {
 				out = to.."_"..rand
 			end
 
-			local outDSetName
-			if outFileExt == "geojson" then
-				outDSetName = "OGRGeoJSON"
-			else
-				outDSetName = out
-			end
-
+			local outDSetName = out
 			local outDs
 			local propCreatedName
 
@@ -2904,7 +2890,7 @@ TerraLib_ = {
 			local attrsRenamed = {}
 
 			if (operation == "coverage") or (operation == "total") then
-				attrsRenamed = renameEachClass(outDs, outDSetName, outType, select, attribute)
+				attrsRenamed = renameEachClass(outDs, outDSetName, outType, select, attribute, outFileExt)
 			else
 				outDs:renameProperty(outDSetName, propCreatedName, attribute)
 				attrsRenamed[attribute] = attribute
@@ -3072,11 +3058,7 @@ TerraLib_ = {
 				if not error then
 					local toConnInfo = createConnInfoToSave(connInfo, toSetName, fromType)
 					local toLayer
-					if dseName == "OGRGeoJSON" then
-						toLayer = createLayer(toLayerName, dseName, toConnInfo, fromType, addSpatialIdx, fromLayer:getSRID())
-					else
-						toLayer = createLayer(toLayerName, toSetName, toConnInfo, fromType, addSpatialIdx, fromLayer:getSRID())
-					end
+					toLayer = createLayer(toLayerName, toSetName, toConnInfo, fromType, addSpatialIdx, fromLayer:getSRID())
 					project.layers[toLayerName] = toLayer
 					saveProject(project, project.layers)
 				end
