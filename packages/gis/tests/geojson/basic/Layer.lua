@@ -249,12 +249,13 @@ return {
 				progress = false
 			}
 
-			cs = CellularSpace{
+			local cs = CellularSpace{
 				project = proj,
-				layer = cl1.name
+				layer = cl1.name,
+				missing = 0 -- TODO(#2324)
 			}
 
-			map = Map{
+			local map = Map{
 				target = cs,
 				select = "marea",
 				min = 0,
@@ -291,7 +292,8 @@ return {
 
 			cs = CellularSpace{
 				project = proj,
-				layer = cl1.name
+				layer = cl1.name,
+				missing = 0 -- TODO(#2324)
 			}
 
 			map = Map{
@@ -314,7 +316,8 @@ return {
 
 			cs = CellularSpace{
 				project = proj,
-				layer = cl1.name
+				layer = cl1.name,
+				missing = 0 -- TODO(#2324)
 			}
 
 			map = Map{
@@ -338,7 +341,8 @@ return {
 
 			cs = CellularSpace{
 				project = proj,
-				layer = cl1.name
+				layer = cl1.name,
+				missing = 0 -- TODO(#2324)
 			}
 
 			map = Map{
@@ -359,7 +363,8 @@ return {
 
 			cs = CellularSpace{
 				project = proj,
-				layer = cl1.name
+				layer = cl1.name,
+				missing = 0 -- TODO(#2324)
 			}
 
 			map = Map{
@@ -394,7 +399,8 @@ return {
 
 			cs = CellularSpace{
 				project = proj,
-				layer = cl2.name
+				layer = cl2.name,
+				missing = 0 -- TODO(#2324)
 			}
 
 			map = Map{
@@ -417,7 +423,8 @@ return {
 
 			cs = CellularSpace{
 				project = proj,
-				layer = cl2.name
+				layer = cl2.name,
+				missing = 0 -- TODO(#2324)
 			}
 
 			map = Map{
@@ -440,7 +447,8 @@ return {
 
 			cs = CellularSpace{
 				project = proj,
-				layer = cl1.name
+				layer = cl1.name,
+				missing = 0 -- TODO(#2324)
 			}
 
 			map = Map{
@@ -465,7 +473,8 @@ return {
 
 			cs = CellularSpace{
 				project = proj,
-				layer = cl1.name
+				layer = cl1.name,
+				missing = 0 -- TODO(#2324)
 			}
 
 			map = Map{
@@ -490,7 +499,8 @@ return {
 
 			cs = CellularSpace{
 				project = proj,
-				layer = cl1.name
+				layer = cl1.name,
+				missing = 0 -- TODO(#2324)
 			}
 
 			map = Map{
@@ -515,7 +525,8 @@ return {
 
 			cs = CellularSpace{
 				project = proj,
-				layer = cl1.name
+				layer = cl1.name,
+				missing = 0 -- TODO(#2324)
 			}
 
 			map = Map{
@@ -554,7 +565,8 @@ return {
 
 			cs = CellularSpace{
 				project = proj,
-				layer = countiesGjson.name
+				layer = countiesGjson.name,
+				missing = 0 -- TODO(#2324)
 			}
 
 			local sum1 = 0
@@ -564,7 +576,8 @@ return {
 
 			cs = CellularSpace{
 				project = proj,
-				layer = cl3.name
+				layer = cl3.name,
+				missing = 0 -- TODO(#2324)
 			}
 
 			local sum2 = 0
@@ -626,7 +639,8 @@ return {
 
 			cs = CellularSpace{
 				project = proj,
-				layer = cl4.name
+				layer = cl4.name,
+				missing = 0 -- TODO(#2324)
 			}
 
 			map = Map{
@@ -743,7 +757,8 @@ return {
 
 			cs = CellularSpace{
 				project = proj,
-				layer = cl6.name
+				layer = cl6.name,
+				missing = 0 -- TODO(#2324)
 			}
 
 			map = Map{
@@ -767,7 +782,8 @@ return {
 
 			cs = CellularSpace{
 				project = proj,
-				layer = cl6.name
+				layer = cl6.name,
+				missing = 0 -- TODO(#2324)
 			}
 
 			map = Map{
@@ -789,7 +805,8 @@ return {
 
 			cs = CellularSpace{
 				project = proj,
-				layer = cl6.name
+				layer = cl6.name,
+				missing = 0 -- TODO(#2324)
 			}
 
 			map = Map{
