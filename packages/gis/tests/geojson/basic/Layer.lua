@@ -640,53 +640,54 @@ return {
 
 			unitTest:assertSnapshot(map, "polygons-average-area-geojson.png")
 
-			local cl5 = Layer{
-				project = proj,
-				resolution = 200000,
-				clean = true,
-				file = "CountiesCells.geojson",
-				name = "CountiesCells",
-				input = countiesGjson.name,
-				progress = false
-			}
+			-- TODO(#2326)
+			-- local cl5 = Layer{
+				-- project = proj,
+				-- resolution = 200000,
+				-- clean = true,
+				-- file = "CountiesCells.geojson",
+				-- name = "CountiesCells",
+				-- input = countiesGjson.name,
+				-- progress = false
+			-- }
 
-			table.insert(files, cl5.file)
+			-- table.insert(files, cl5.file)
 
-			local warn = function()
-				cl5:fill{
-					operation = "coverage",
-					layer = countiesGjson,
-					dummy = -1,
-					select = "CODMESO",
-					attribute = "meso",
-					progress = false
-				}
-			end
+			-- local warn = function()
+				-- cl5:fill{
+					-- operation = "coverage",
+					-- layer = countiesGjson,
+					-- dummy = -1,
+					-- select = "CODMESO",
+					-- attribute = "meso",
+					-- progress = false
+				-- }
+			-- end
 
-			unitTest:assertWarning(warn, unnecessaryArgumentMsg("dummy"))
+			-- unitTest:assertWarning(warn, unnecessaryArgumentMsg("dummy")) --SKIP
 
-			cs = CellularSpace{
-				project = proj,
-				layer = cl5.name
-			}
+			-- cs = CellularSpace{
+				-- project = proj,
+				-- layer = cl5.name
+			-- }
 
-			map = Map{
-				target = cs,
-				select = "meso_2",
-				color = "RdPu",
-				slices = 5
-			}
+			-- map = Map{
+				-- target = cs,
+				-- select = "meso_2",
+				-- color = "RdPu",
+				-- slices = 5
+			-- }
 
-			unitTest:assertSnapshot(map, "polygons-coverage-1-geojson.png")
+			-- unitTest:assertSnapshot(map, "polygons-coverage-1-geojson.png") --SKIP
 
-			map = Map{
-				target = cs,
-				select = "meso_3",
-				color = "RdPu",
-				slices = 5
-			}
+			-- map = Map{
+				-- target = cs,
+				-- select = "meso_3",
+				-- color = "RdPu",
+				-- slices = 5
+			-- }
 
-			unitTest:assertSnapshot(map, "polygons-coverage-2-geojson.png", 0.005)
+			-- unitTest:assertSnapshot(map, "polygons-coverage-2-geojson.png", 0.005) --SKIP
 
 			local amz = Layer{
 				project = proj,

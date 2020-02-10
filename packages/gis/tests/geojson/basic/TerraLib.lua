@@ -558,33 +558,34 @@ return {
 			unitTest:assertEquals(dset[149].FID, 149)
 
 			-- PERCENTAGE EACH CLASS
-			local covLayerName = clName.."_"..layerName2.."_Coverage"
-			table.insert(files, File(covLayerName..".geojson"):deleteIfExists())
-			operation = "coverage"
-			attribute = "coverage"
-			select = "ESFERA5"
+			local covLayerName = maxLayerName -- TODO(#2326)
+			-- local covLayerName = clName.."_"..layerName2.."_Coverage"
+			-- table.insert(files, File(covLayerName..".geojson"):deleteIfExists())
+			-- operation = "coverage"
+			-- attribute = "coverage"
+			-- select = "ESFERA5"
 
-			TerraLib().attributeFill{
-				project = proj,
-				from = layerName2,
-				to = maxLayerName,
-				out = covLayerName,
-				attribute = attribute,
-				operation = operation,
-				select = select
-			}
+			-- TerraLib().attributeFill{
+				-- project = proj,
+				-- from = layerName2,
+				-- to = maxLayerName,
+				-- out = covLayerName,
+				-- attribute = attribute,
+				-- operation = operation,
+				-- select = select
+			-- }
 
-			dset = TerraLib().getDataSet{project = proj, layer = covLayerName, missing = 0}
+			-- dset = TerraLib().getDataSet{project = proj, layer = covLayerName, missing = 0}
 
-			unitTest:assertEquals(csSize, getn(dset))
-			unitTest:assertEquals(dset[3][attribute.."_municipal"], 0.00035664738308004, 1e-17)
-			unitTest:assertEquals(dset[3][attribute.."_estadual"], 0)
-			unitTest:assertEquals(dset[3][attribute.."_federal"], 0)
-			unitTest:assertNotNil(dset[3].OGR_GEOMETRY)
-			unitTest:assertEquals(dset[3].col, 4)
-			unitTest:assertEquals(dset[3].row, 0)
-			unitTest:assertEquals(dset[3].id, "C04L00")
-			unitTest:assertEquals(dset[3].FID, 3)
+			-- unitTest:assertEquals(csSize, getn(dset))
+			-- unitTest:assertEquals(dset[3][attribute.."_municipal"], 0.00035664738308004, 1e-17) --SKIP
+			-- unitTest:assertEquals(dset[3][attribute.."_estadual"], 0) --SKIP
+			-- unitTest:assertEquals(dset[3][attribute.."_federal"], 0) --SKIP
+			-- unitTest:assertNotNil(dset[3].OGR_GEOMETRY) --SKIP
+			-- unitTest:assertEquals(dset[3].col, 4) --SKIP
+			-- unitTest:assertEquals(dset[3].row, 0) --SKIP
+			-- unitTest:assertEquals(dset[3].id, "C04L00") --SKIP
+			-- unitTest:assertEquals(dset[3].FID, 3) --SKIP
 
 			-- STANDARD DEVIATION
 			local stdevLayerName = clName.."_"..layerName2.."_Stdev"
