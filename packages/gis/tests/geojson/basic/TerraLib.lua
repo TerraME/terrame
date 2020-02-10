@@ -305,9 +305,10 @@ return {
 		unitTest:assertEquals("FID", attrNames[0])
 		unitTest:assertEquals("OBSERVACAO", attrNames[3])
 		unitTest:assertEquals("PRODUTOS", attrNames[6])
-		unitTest:assertEquals("OPERADORA", attrNames[9])
-		unitTest:assertEquals("Bitola_Ext", attrNames[12])
-		unitTest:assertEquals("COD_PNV", attrNames[14])
+		-- TODO(#2328)
+		-- unitTest:assertEquals("OPERADORA", attrNames[9]) --SKIP
+		-- unitTest:assertEquals("Bitola_Ext", attrNames[12]) --SKIP
+		-- unitTest:assertEquals("COD_PNV", attrNames[14]) --SKIP
 
 		dpFile:delete()
 		lnFile:delete()
