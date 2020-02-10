@@ -2275,7 +2275,6 @@ TerraLib_ = {
 
 		loadProject(project, project.file)
 		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(layer:getDataSourceId())
-		local typefunc = type
 		local type = dsInfo:getType()
 		info.type = type
 		local connInfo = dsInfo:getConnInfo()
@@ -2937,9 +2936,22 @@ TerraLib_ = {
 					outDs:close()
 
 					if outFileExt == "geojson" then -- TODO(#2224)
-						local toFile = getFileByUri(toConnInfo):deleteIfExists()
+						local temp = {
+							project = project,
+							layer = out
+						}
+
+						local geojson = {
+							file = getFileByUri(toConnInfo),
+							type = "geojson"
+						}
+
+						instance.saveDataAs(temp, geojson, true)
+
 						local outFile = getFileByUri(outConnInfo)
-						os.execute("mv "..outFile.." "..toFile) -- SKIP
+						outFile:delete()
+
+						File(outFile..".tmp"):deleteIfExists()
 					else
 						overwriteLayer(project, out, to, toSetName, default)
 					end
