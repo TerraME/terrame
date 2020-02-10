@@ -176,53 +176,54 @@ return {
 			}
 
 			-- MODE
-			cl1:fill{
-				operation = "mode",
-				layer = countiesGjson.name,
-				attribute = "polmode",
-				select = "POPULACAO_",
-				progress = false
-			}
+			-- TODO(#2327)
+			-- cl1:fill{
+				-- operation = "mode",
+				-- layer = countiesGjson.name,
+				-- attribute = "polmode",
+				-- select = "POPULACAO_",
+				-- progress = false
+			-- }
 
-			local cs = CellularSpace{
-				project = proj,
-				layer = cl1.name
-			}
+			-- local cs = CellularSpace{
+				-- project = proj,
+				-- layer = cl1.name
+			-- }
 
-			local map = Map{
-				target = cs,
-				select = "polmode",
-				value = {"0", "53217", "37086", "14302"},
-				color = {"red", "green", "blue", "yellow"}
-			}
+			-- local map = Map{
+				-- target = cs,
+				-- select = "polmode",
+				-- value = {"0", "53217", "37086", "14302"},
+				-- color = {"red", "green", "blue", "yellow"}
+			-- }
 
-			unitTest:assertSnapshot(map, "polygons-mode-geojson.png", 0.01)
+			-- unitTest:assertSnapshot(map, "polygons-mode-geojson.png", 0.01) --SKIP
 
-			-- MODE (area = true)
-			cl1:fill{
-				operation = "mode",
-				layer = countiesGjson.name,
-				attribute = "polmode2",
-				select = "POPULACAO_",
-				area = true,
-				progress = false
-			}
+			-- -- MODE (area = true)
+			-- cl1:fill{
+				-- operation = "mode",
+				-- layer = countiesGjson.name,
+				-- attribute = "polmode2",
+				-- select = "POPULACAO_",
+				-- area = true,
+				-- progress = false
+			-- }
 
-			cs = CellularSpace{
-				project = proj,
-				layer = cl1.name
-			}
+			-- cs = CellularSpace{
+				-- project = proj,
+				-- layer = cl1.name
+			-- }
 
-			map = Map{
-				target = cs,
-				select = "polmode2",
-				min = 0,
-				max = 1410000,
-				slices = 8,
-				color = {"red", "green"}
-			}
+			-- map = Map{
+				-- target = cs,
+				-- select = "polmode2",
+				-- min = 0,
+				-- max = 1410000,
+				-- slices = 8,
+				-- color = {"red", "green"}
+			-- }
 
-			unitTest:assertSnapshot(map, "polygons-mode-2-geojson.png")
+			-- unitTest:assertSnapshot(map, "polygons-mode-2-geojson.png") --SKIP
 
 			local protect = Layer{
 				project = proj,
