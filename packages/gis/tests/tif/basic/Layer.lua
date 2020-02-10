@@ -571,7 +571,8 @@ return {
 			local cl = Layer {
 				project = proj,
 				name = "Cells",
-				file = "cs_cerrado_clip_29101.shp"
+				file = "cs_cerrado_clip_29101.shp",
+				epsg = 29101 -- TODO(#2331)
 			}
 
 			cl:fill{
