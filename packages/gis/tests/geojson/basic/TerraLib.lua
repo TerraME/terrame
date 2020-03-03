@@ -578,7 +578,7 @@ return {
 
 			-- dset = TerraLib().getDataSet{project = proj, layer = covLayerName, missing = 0}
 
-			-- unitTest:assertEquals(csSize, getn(dset))
+			-- unitTest:assertEquals(csSize, getn(dset)) --SKIP
 			-- unitTest:assertEquals(dset[3][attribute.."_municipal"], 0.00035664738308004, 1e-17) --SKIP
 			-- unitTest:assertEquals(dset[3][attribute.."_estadual"], 0) --SKIP
 			-- unitTest:assertEquals(dset[3][attribute.."_federal"], 0) --SKIP
