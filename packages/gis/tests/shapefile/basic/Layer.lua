@@ -1078,29 +1078,30 @@ return {
 
 		local overwrite = true
 
-		local geojson = "setores.geojson"
-		local data1 = {
-			file = geojson,
-			overwrite = overwrite,
-			progress = false
-		}
+		-- TODO(#2328)
+		-- local geojson = "setores.geojson"
+		-- local data1 = {
+			-- file = geojson,
+			-- overwrite = overwrite,
+			-- progress = false
+		-- }
 
-		layer:export(data1)
-		unitTest:assert(File(geojson):exists())
+		-- layer:export(data1)
+		-- unitTest:assert(File(geojson):exists())
 
 		-- OVERWRITE AND CHANGE EPSG
-		data1.epsg = 4326
-		layer:export(data1)
+		-- data1.epsg = 4326
+		-- layer:export(data1)
 
-		local layerName2 = "GJ"
-		local layer2 = Layer{
-			project = proj,
-			name = layerName2,
-			file = geojson
-		}
+		-- local layerName2 = "GJ"
+		-- local layer2 = Layer{
+			-- project = proj,
+			-- name = layerName2,
+			-- file = geojson
+		-- }
 
-		unitTest:assertEquals(layer2.epsg, data1.epsg)
-		unitTest:assert(layer.epsg ~= data1.epsg)
+		-- unitTest:assertEquals(layer2.epsg, data1.epsg)
+		-- unitTest:assert(layer.epsg ~= data1.epsg)
 
 		local shp = "setores.shp"
 		local data2 = {
@@ -1125,15 +1126,16 @@ return {
 
 		unitTest:assertEquals(layer3.epsg, data2.epsg)
 		unitTest:assert(layer.epsg ~= data2.epsg)
-
+		
+		-- TODO(#2328)
 		-- SELECT ONE ATTRIBUTE TO GEOJSON
-		data1.select = "population"
-		layer:export(data1)
-		local attrs1 = layer2:attributes()
+		-- data1.select = "population"
+		-- layer:export(data1)
+		-- local attrs1 = layer2:attributes()
 
-		unitTest:assertEquals(attrs1[1].name, "FID")
-		unitTest:assertEquals(attrs1[2].name, "population")
-		unitTest:assertNil(attrs1[3])
+		-- unitTest:assertEquals(attrs1[1].name, "FID")
+		-- unitTest:assertEquals(attrs1[2].name, "population")
+		-- unitTest:assertNil(attrs1[3])
 
 		-- SELECT ONE ATTRIBUTE TO SHAPE
 		data2.select = "dens_pop"
@@ -1144,7 +1146,7 @@ return {
 		unitTest:assertEquals(attrs2[2].name, "dens_pop")
 		unitTest:assertNil(attrs2[3])
 
-		File(geojson):delete()
+		-- File(geojson):delete() -- TODO(#2328)
 		File(shp):delete()
 		proj.file:delete()
 	end,

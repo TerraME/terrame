@@ -136,26 +136,27 @@ return {
 
 		toData.file:delete()
 
-		-- GEOJSON
-		toData.file = File("postgis2geojson.geojson")
-		toData.type = "geojson"
-		toData.file:deleteIfExists()
+		-- TODO(#2328)
+		-- -- GEOJSON
+		-- toData.file = File("postgis2geojson.geojson")
+		-- toData.type = "geojson"
+		-- toData.file:deleteIfExists()
 
-		TerraLib().saveDataAs(fromData, toData, overwrite)
+		-- TerraLib().saveDataAs(fromData, toData, overwrite)
 
-		local overwriteGeojsonError = function()
-			TerraLib().saveDataAs(fromData, toData, overwrite)
-		end
-		unitTest:assertError(overwriteGeojsonError, "File 'postgis2geojson.geojson' already exists.")
+		-- local overwriteGeojsonError = function()
+			-- TerraLib().saveDataAs(fromData, toData, overwrite)
+		-- end
+		-- unitTest:assertError(overwriteGeojsonError, "File 'postgis2geojson.geojson' already exists.")
 
-		fromData.layer = layerName1
+		-- fromData.layer = layerName1
 
-		local overwritePgError = function()
-			TerraLib().saveDataAs(fromData, pgData, overwrite)
-		end
-		unitTest:assertError(overwritePgError, "Table 'limite_es_poly_wgs84' already exists in postgis database 'postgis_22_sample'.")
+		-- local overwritePgError = function()
+			-- TerraLib().saveDataAs(fromData, pgData, overwrite)
+		-- end
+		-- unitTest:assertError(overwritePgError, "Table 'limite_es_poly_wgs84' already exists in postgis database 'postgis_22_sample'.")
 
-		toData.file:delete()
+		-- toData.file:delete()
 
 		TerraLib().dropPgTable(pgData)
 		proj.file:delete()
