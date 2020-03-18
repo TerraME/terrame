@@ -1409,12 +1409,12 @@ return {
 				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "geom") or (k == "fid") or -- SKIP
 								(k == "median"))
 
-				unitTest:assertNotNil(v) -- SKIP
+				unitTest:assertNotNil(v)
 			end
 
 			local ptPropsInfo = TerraLib().getPropertyInfos(proj, l3Name)
-			unitTest:assertEquals(ptPropsInfo[4].name, "median") -- SKIP
-			unitTest:assertEquals(ptPropsInfo[4].type, "double") -- SKIP
+			unitTest:assertEquals(ptPropsInfo[4].name, "median")
+			unitTest:assertEquals(ptPropsInfo[4].type, "double")
 
 			TerraLib().dropPgTable(pgData)
 			pgData.table = csTable
@@ -1423,9 +1423,7 @@ return {
 		end
 
 		unitTest:assert(allSupportedOperationTogether)
-		if _Gtme.sessionInfo().system ~= "linux" then -- TODO(#2311)
-			unitTest:assert(medianOperation) -- SKIP
-		end
+		unitTest:assert(medianOperation)
 	end,
 	getDataSet = function(unitTest)
 		-- see in saveDataSet() test --
