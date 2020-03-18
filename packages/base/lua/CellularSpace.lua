@@ -547,7 +547,7 @@ local function loadPGM(self)
 	self.ydim = self.yMax
 end
 
-local function setCellsByTerraLibDataSet(self, dSet)
+local function setCellsByTerraLibDataSet(self, dSet, geom)
 	self.xMax = 0
 	self.yMin = 0
 	self.yMax = 0
@@ -617,7 +617,7 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
 
 		for k, v in pairs(dSet[i]) do
-			if (k == "OGR_GEOMETRY") or (k == "geom") or (k == "ogr_geometry") then
+			if (k == geom.name) then
 				if self.geometry then
 					cell.geom = gis.TerraLib().castGeomToSubtype(v)
 				end
@@ -648,7 +648,14 @@ local function loadDataSet(self)
 		self.cObj_:setLayer(self.layer)
 	end
 
-	setCellsByTerraLibDataSet(self, dset)
+	local data = {
+		project = self.project,
+		layer = self.layer.name,
+		file = self.file
+	}
+	local geom = gis.TerraLib().getGeometryInfo(data)
+
+	setCellsByTerraLibDataSet(self, dset, geom)
 end
 
 local function loadVector(self)

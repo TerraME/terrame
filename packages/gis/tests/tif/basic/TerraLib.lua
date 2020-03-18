@@ -208,7 +208,8 @@ return {
 		TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
 
 		local dSet = TerraLib().getDataSet{project = proj, layer = clName}
-		local dist = TerraLib().getDistance(dSet[0].OGR_GEOMETRY, dSet[getn(dSet) - 1].OGR_GEOMETRY)
+		local clInfo = TerraLib().getLayerInfo(proj, clName)
+		local dist = TerraLib().getDistance(dSet[0][clInfo.geometry], dSet[getn(dSet) - 1][clInfo.geometry])
 
 		unitTest:assertEquals(dist, 3883297.5677895, 1.0e-7) -- SKIP
 
@@ -671,9 +672,11 @@ return {
 			}
 
 			local l3Set = TerraLib().getDataSet{project = proj, layer = l3Name}
+			local l3Info = TerraLib().getLayerInfo(proj, l3Name)
+			local geomAttrName = l3Info.geometry
 
 			for k, v in pairs(l3Set[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "median"))
 				unitTest:assertNotNil(v)
 			end

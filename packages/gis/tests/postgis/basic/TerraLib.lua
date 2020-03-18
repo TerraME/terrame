@@ -2051,6 +2051,7 @@ return {
 		TerraLib().addPgLayer(proj, layerName2, pgData, nil, encoding)
 
 		local propInfos = TerraLib().getPropertyInfos(proj, layerName2)
+		local layerInfo2 = TerraLib().getLayerInfo(proj, layerName2)
 
 		unitTest:assertEquals(getn(propInfos), 4)
 		unitTest:assertEquals(propInfos[0].name, "fid")
@@ -2059,7 +2060,7 @@ return {
 		unitTest:assertEquals(propInfos[1].type, "double")
 		unitTest:assertEquals(propInfos[2].name, "dens_pop")
 		unitTest:assertEquals(propInfos[2].type, "double")
-		unitTest:assertEquals(propInfos[3].name, "ogr_geometry")
+		unitTest:assertEquals(propInfos[3].name, layerInfo2.geometry)
 		unitTest:assertEquals(propInfos[3].type, "geometry")
 
 		proj.file:delete()
@@ -2300,11 +2301,13 @@ return {
 			local layerName6 = "SHP2PG"
 			TerraLib().addPgLayer(proj, layerName6, pgData, nil, encoding)
 			local dset6 = TerraLib().getDataSet{project = proj, layer = layerName6}
+			local layerInfo6 = TerraLib().getLayerInfo(proj, layerName6)
+			local geomAttrName = layerInfo6.geometry
 
 			unitTest:assertEquals(getn(dset6), 63)
 
 			for k, v in pairs(dset6[0]) do
-				unitTest:assert(((k == "fid") and (v == 0)) or ((k == "ogr_geometry") and (v ~= nil) ) or
+				unitTest:assert(((k == "fid") and (v == 0)) or ((k == geomAttrName) and (v ~= nil) ) or
 								((k == "nm_micro") and (v == "VOTUPORANGA")))
 			end
 
@@ -2360,10 +2363,13 @@ return {
 				end
 			end
 
+			local spLayerInfo = TerraLib().getLayerInfo(proj, spPgLayerName)
+			local geomAttrName = spLayerInfo.geometry
+
 			local touches = {}
 			local j = 1
 			for i = 0, getn(dset2) - 1 do
-				if sjc.ogr_geometry:touches(dset2[i].ogr_geometry) then
+				if sjc[geomAttrName]:touches(dset2[i][geomAttrName]) then
 					touches[j] = dset2[i]
 					j = j + 1
 				end

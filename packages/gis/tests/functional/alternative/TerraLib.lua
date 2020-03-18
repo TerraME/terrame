@@ -215,10 +215,14 @@ return {
 			end
 		end
 
+		local layerInfo1 = TerraLib().getLayerInfo(proj, layerName1)
+		local geomName = layerInfo1.geometry
+		local fid = layerInfo1.fid
+
 		local touches = {}
 		local j = 1
 		for i = 0, getn(dset1) - 1 do
-			if sjc.OGR_GEOMETRY:touches(dset1[i].OGR_GEOMETRY) then
+			if sjc[geomName]:touches(dset1[i][geomName]) then
 				touches[j] = dset1[i]
 				j = j + 1
 			end
@@ -228,14 +232,14 @@ return {
 		toData = {file = File("touches_sjc.shp"), type = "shp"}
 
 		for i = 1, #touches do
-			touches[i].FID = nil
+			touches[i][fid] = nil
 		end
 
 		local pkSaveError = function()
 			local overwrite = true
 			TerraLib().saveDataAs(fromData, toData, overwrite, {"NM_MICRO", "ID"}, touches)
 		end
-		unitTest:assertError(pkSaveError,  "Primary key not found (sampa.shp, FID). Please, check your subset.")
+		unitTest:assertError(pkSaveError,  "Primary key not found (sampa.shp, "..fid.."). Please, check your subset.")
 
 		proj.file:delete()
 	end,

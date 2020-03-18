@@ -110,6 +110,8 @@ return {
 	getDataSet = function(unitTest)
 		local shpFile = filePath("test/malha2015.geojson", "gis")
 		local dSet = TerraLib().getDataSet{file = shpFile}
+		local shpGeomInfo = TerraLib().getGeometryInfo{file = shpFile}
+		local geomAttrName = shpGeomInfo.name
 
 		unitTest:assertEquals(getn(dSet), 102)
 
@@ -118,7 +120,7 @@ return {
 
 			for k, v in pairs(dSet[i]) do
 				unitTest:assert((k == "FID") or (k == "NM_MUNICIP") or (k == "Proposta") or
-								(k == "UF") or (k == "OGR_GEOMETRY") or (k == "masc") or
+								(k == "UF") or (k == geomAttrName) or (k == "masc") or
 								(k == "fem") or (k == "PPA") or (k == "IBGE") or (k == "CD_GEOCMU"))
 				unitTest:assertNotNil(v)
 			end
@@ -176,11 +178,13 @@ return {
 		TerraLib().addGeoJSONLayer(proj, layerName3, layerFile3)
 
 		local dset3 = TerraLib().getDataSet{project = proj, layer = layerName3}
+		local layerInfo3 = TerraLib().getLayerInfo(proj, layerName3)
+		local geomAttrName3 = layerInfo3.geometry
 
 		unitTest:assertEquals(getn(dset3), 63)
 
 		for k, v in pairs(dset3[0]) do
-			unitTest:assert(((k == "FID") and (v == 0)) or ((k == "OGR_GEOMETRY") and (v ~= nil) ) or
+			unitTest:assert(((k == "FID") and (v == 0)) or ((k == geomAttrName3) and (v ~= nil) ) or
 							((k == "NM_MICRO") and (v == "VOTUPORANGA")))
 		end
 
@@ -196,10 +200,13 @@ return {
 			end
 		end
 
+		local layerInfo1 = TerraLib().getLayerInfo(proj, layerName1)
+		local geomAttrName1 = layerInfo1.geometry
+
 		local touches = {}
 		local j = 1
 		for i = 0, getn(dset1) - 1 do
-			if sjc.OGR_GEOMETRY:touches(dset1[i].OGR_GEOMETRY) then
+			if sjc[geomAttrName1]:touches(dset1[i][geomAttrName1]) then
 				touches[j] = dset1[i]
 				j = j + 1
 			end
@@ -393,7 +400,7 @@ return {
 			unitTest:assertEquals(csSize, 154)
 
 			local layerName2 = "Protection_Unit"
-			local layerFile2 = filePath("test/es_protected_areas_sirgas2000_5880.geojson", "gis")
+			local layerFile2 = filePath("test/es_protec1.geojson", "gis")
 			TerraLib().addGeoJSONLayer(proj, layerName2, layerFile2)
 
 			-- PRESENCE
@@ -832,6 +839,7 @@ return {
 			TerraLib().saveDataSet(proj, cl1Name, luaTable, cl2Name, {"attr1", "attr2", "attr3"})
 
 			local propInfo = TerraLib().getPropertyInfos(proj, cl2Name)
+			local layerInfo = TerraLib().getLayerInfo(proj, cl2Name)
 
 			unitTest:assertEquals(propInfo[0].name, "FID")
 			unitTest:assertEquals(propInfo[0].type, "integer 32")
@@ -847,7 +855,7 @@ return {
 			unitTest:assertEquals(propInfo[5].type, "string")
 			unitTest:assertEquals(propInfo[6].name, "attr3")
 			unitTest:assertEquals(propInfo[6].type, "string")
-			unitTest:assertEquals(propInfo[7].name, "OGR_GEOMETRY")
+			unitTest:assertEquals(propInfo[7].name, layerInfo.geometry)
 			unitTest:assertEquals(propInfo[7].type, "geometry")
 
 			-- OVERWRITE -- TODO(#2224)

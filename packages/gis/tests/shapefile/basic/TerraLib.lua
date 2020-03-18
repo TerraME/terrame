@@ -232,11 +232,13 @@ return {
 			TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, File(shp[1]), mask)
 
 			local clSet = TerraLib().getDataSet{project = proj, layer = clName}
+			local clInfo = TerraLib().getLayerInfo(proj, clName)
+			local geomAttrName = clInfo.geometry
 
 			unitTest:assertEquals(getn(clSet), 9)
 
 			for k, v in pairs(clSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID"))
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID"))
 				unitTest:assertNotNil(v)
 			end
 
@@ -278,7 +280,7 @@ return {
 			unitTest:assertEquals(getn(presSet), 9)
 
 			for k, v in pairs(presSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "presence"))
 				unitTest:assertNotNil(v)
 			end
@@ -316,7 +318,7 @@ return {
 			unitTest:assertEquals(getn(areaSet), 9)
 
 			for k, v in pairs(areaSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "presence") or (k == "area_perce"))
 				unitTest:assertNotNil(v)
 			end
@@ -354,7 +356,7 @@ return {
 			unitTest:assertEquals(getn(countSet), 9)
 
 			for k, v in pairs(countSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "presence") or (k == "area_perce") or (k == "count"))
 				unitTest:assertNotNil(v)
 			end
@@ -390,7 +392,7 @@ return {
 			unitTest:assertEquals(getn(distSet), 9)
 
 			for k, v in pairs(distSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance"))
 				unitTest:assertNotNil(v)
 			end
@@ -430,7 +432,7 @@ return {
 			unitTest:assertEquals(getn(minSet), 9)
 
 			for k, v in pairs(minSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 								(k == "minimum"))
 				unitTest:assertNotNil(v)
@@ -467,7 +469,7 @@ return {
 			unitTest:assertEquals(getn(maxSet), 9)
 
 			for k, v in pairs(maxSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 								(k == "minimum") or (k == "maximum"))
 				unitTest:assertNotNil(v)
@@ -506,7 +508,7 @@ return {
 			local missCount = 0
 
 			for k, v in pairs(percentSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 								(k == "minimum") or (k == "maximum") or (k == "perc_0") or (k == "perc_1"))
 				unitTest:assertNotNil(v)
@@ -549,7 +551,7 @@ return {
 			unitTest:assertEquals(getn(stdevSet), 9)
 
 			for k, v in pairs(stdevSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 								(k == "stdev"))
@@ -587,7 +589,7 @@ return {
 			unitTest:assertEquals(getn(meanSet), 9)
 
 			for k, v in pairs(meanSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 								(k == "stdev") or (k == "mean"))
@@ -627,7 +629,7 @@ return {
 			unitTest:assertEquals(getn(weighSet), 9)
 
 			for k, v in pairs(weighSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 								(k == "stdev") or (k == "mean") or (k == "weighted"))
@@ -667,7 +669,7 @@ return {
 			unitTest:assertEquals(getn(interSet), 9)
 
 			for k, v in pairs(interSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int"))
@@ -705,7 +707,7 @@ return {
 			unitTest:assertEquals(getn(occurSet), 9)
 
 			for k, v in pairs(occurSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
@@ -744,7 +746,7 @@ return {
 			unitTest:assertEquals(getn(sumSet), 9)
 
 			for k, v in pairs(sumSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
@@ -785,7 +787,7 @@ return {
 			unitTest:assertEquals(getn(wsumSet), 9)
 
 			for k, v in pairs(wsumSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
@@ -833,7 +835,7 @@ return {
 			unitTest:assertEquals(getn(percentSet), 9)
 
 			for k, v in pairs(percentSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
@@ -873,7 +875,7 @@ return {
 			unitTest:assertEquals(getn(rmeanSet), 9)
 
 			for k, v in pairs(rmeanSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
@@ -913,7 +915,7 @@ return {
 			unitTest:assertEquals(getn(rminSet), 9)
 
 			for k, v in pairs(rminSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
@@ -953,7 +955,7 @@ return {
 			unitTest:assertEquals(getn(rmaxSet), 9)
 
 			for k, v in pairs(rmaxSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
@@ -993,7 +995,7 @@ return {
 			unitTest:assertEquals(getn(rstdevSet), 9)
 
 			for k, v in pairs(rstdevSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
@@ -1034,7 +1036,7 @@ return {
 			unitTest:assertEquals(getn(rsumSet), 9)
 
 			for k, v in pairs(rsumSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
@@ -1071,7 +1073,7 @@ return {
 			unitTest:assertEquals(getn(rsumOverSet), 9)
 
 			for k, v in pairs(rsumOverSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
@@ -1114,7 +1116,7 @@ return {
 			unitTest:assertEquals(getn(ndSet), 9)
 
 			for k, v in pairs(ndSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
@@ -1210,7 +1212,7 @@ return {
 			unitTest:assertEquals(getn(rcountSet), 9)
 
 			for k, v in pairs(rcountSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "presence") or (k == "area_perce") or (k == "count") or (k == "distance") or
 								(k == "minimum") or (k == "maximum") or (string.match(k, "perc_") ~= nil) or
 								(k == "stdev") or (k == "mean") or (k == "weighted") or (k == "majo_int") or
@@ -1342,11 +1344,13 @@ return {
 			TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, clFile, mask)
 
 			local clSet = TerraLib().getDataSet{project = proj, layer = clName}
+			local clInfo = TerraLib().getLayerInfo(proj, clName)
+			local geomAttrName = clInfo.geometry
 
 			unitTest:assertEquals(getn(clSet), 9)
 
 			for k, v in pairs(clSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID"))
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID"))
 				unitTest:assertNotNil(v)
 			end
 
@@ -1378,7 +1382,7 @@ return {
 			unitTest:assertEquals(getn(presSet), 9)
 
 			for k, v in pairs(presSet[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "presence"))
 				unitTest:assertNotNil(v)
 			end
@@ -1423,9 +1427,11 @@ return {
 			}
 
 			local l3Set = TerraLib().getDataSet{project = proj, layer = l3Name, missing = 0}
+			local l3Info = TerraLib().getLayerInfo(proj, l3Name)
+			local geomAttrName = l3Info.geometry
 
 			for k, v in pairs(l3Set[0]) do
-				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+				unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 								(k == "median"))
 				unitTest:assertNotNil(v)
 			end
@@ -1493,12 +1499,15 @@ return {
 			TerraLib().saveDataSet(proj, clName1, luaTable, newLayerName, {"attr1", "attr2", "attr3"})
 
 			local newDSet = TerraLib().getDataSet{project = proj, layer = newLayerName}
+			local newLayerInfo = TerraLib().getLayerInfo(proj, newLayerName)
+			local geomAttrName = newLayerInfo.geometry
+
 			unitTest:assertEquals(getn(newDSet), 37)
 
 			for i = 0, getn(newDSet) - 1 do
 				unitTest:assertEquals(newDSet[i].attr1, i)
 				for k, v in pairs(newDSet[i]) do
-					unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+					unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 									(k == "attr1") or (k == "attr2") or (k == "attr3"))
 
 					if k == "attr1" then
@@ -1537,7 +1546,7 @@ return {
 			for i = 0, getn(newDSet) - 1 do
 				unitTest:assertEquals(newDSet[i].attr1, i)
 				for k, v in pairs(newDSet[i]) do
-					unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+					unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 									(k == "attr1"))
 
 					if k == "attr1" then
@@ -1570,7 +1579,7 @@ return {
 			for i = 0, getn(newDSet) - 1 do
 				unitTest:assertEquals(newDSet[i].attr1, i)
 				for k, v in pairs(newDSet[i]) do
-					unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == "OGR_GEOMETRY") or (k == "FID") or
+					unitTest:assert((k == "id") or (k == "col") or (k == "row") or (k == geomAttrName) or (k == "FID") or
 									(k == "attr1"))
 
 					if k == "attr1" then
@@ -1952,6 +1961,8 @@ return {
 	getDataSet = function(unitTest)
 		local shpFile = filePath("test/sampa.shp", "gis")
 		local dSet = TerraLib().getDataSet{file = shpFile}
+		local geomInfo = TerraLib().getGeometryInfo{file = shpFile}
+		local geomAttrName = geomInfo.name
 
 		unitTest:assertEquals(getn(dSet), 63)
 
@@ -1960,7 +1971,7 @@ return {
 
 			for k, v in pairs(dSet[i]) do
 				unitTest:assert((k == "FID") or (k == "ID") or (k == "NM_MICRO") or
-								(k == "CD_GEOCODU") or (k == "OGR_GEOMETRY"))
+								(k == "CD_GEOCODU") or (k == geomAttrName))
 				unitTest:assertNotNil(v)
 			end
 		end
@@ -1991,13 +2002,15 @@ return {
 		TerraLib().addShpCellSpaceLayer(proj, layerName1, clName1, resolution, cellsShp, mask)
 
 		local dSet = TerraLib().getDataSet{project = proj, layer = clName1}
-		local area = TerraLib().getArea(dSet[0].OGR_GEOMETRY)
+		local clInfo1 = TerraLib().getLayerInfo(proj, clName1)
+		local geomAttrName = clInfo1.geometry
+		local area = TerraLib().getArea(dSet[0][geomAttrName])
 		unitTest:assertEquals(type(area), "number")
 		unitTest:assertEquals(area, 1, 0.001)
 
 		for i = 1, #dSet do
 			for k, v in pairs(dSet[i]) do
-				if k == "OGR_GEOMETRY" then
+				if k == geomAttrName then
 					unitTest:assertEquals(area, TerraLib().getArea(v), 0.001)
 				end
 			end
@@ -2075,6 +2088,8 @@ return {
 		TerraLib().addShpLayer(proj, layerName1, layerFile1)
 
 		local propInfos = TerraLib().getPropertyInfos(proj, layerName1)
+		local layerInfo = TerraLib().getLayerInfo(proj, layerName1)
+		local geomAttrName = layerInfo.geometry
 
 		unitTest:assertEquals(getn(propInfos), 5)
 		unitTest:assertEquals(propInfos[0].name, "FID")
@@ -2085,7 +2100,7 @@ return {
 		unitTest:assertEquals(propInfos[2].type, "string")
 		unitTest:assertEquals(propInfos[3].name, "CD_GEOCODU")
 		unitTest:assertEquals(propInfos[3].type, "string")
-		unitTest:assertEquals(propInfos[4].name, "OGR_GEOMETRY")
+		unitTest:assertEquals(propInfos[4].name, geomAttrName)
 		unitTest:assertEquals(propInfos[4].type, "geometry")
 
 		proj.file:delete()
@@ -2116,7 +2131,9 @@ return {
 		TerraLib().addShpCellSpaceLayer(proj, layerName1, clName, resolution, shp1, mask)
 
 		local dSet = TerraLib().getDataSet{project = proj, layer = clName}
-		local dist = TerraLib().getDistance(dSet[0].OGR_GEOMETRY, dSet[getn(dSet) - 1].OGR_GEOMETRY)
+		local clInfo = TerraLib().getLayerInfo(proj, clName)
+		local geomAttrName = clInfo.geometry
+		local dist = TerraLib().getDistance(dSet[0][geomAttrName], dSet[getn(dSet) - 1][geomAttrName])
 
 		unitTest:assertEquals(dist, 4.1231056256177, 1.0e-13)
 
@@ -2126,7 +2143,8 @@ return {
 	castGeomToSubtype = function(unitTest)
 		local shpFile = filePath("test/sampa.shp", "gis")
 		local dSet = TerraLib().getDataSet{file = shpFile}
-		local geom = dSet[1].OGR_GEOMETRY
+		local geomInfo = TerraLib().getGeometryInfo{file = shpFile}
+		local geom = dSet[1][geomInfo.name]
 		geom = TerraLib().castGeomToSubtype(geom)
 		unitTest:assertEquals(geom:getGeometryType(), "MultiPolygon")
 		geom = TerraLib().castGeomToSubtype(geom:getGeometryN(0))
@@ -2134,7 +2152,8 @@ return {
 
 		shpFile = filePath("amazonia-roads.shp", "gis")
 		dSet = TerraLib().getDataSet{file = shpFile}
-		geom = dSet[1].OGR_GEOMETRY
+		geomInfo = TerraLib().getGeometryInfo{file = shpFile}
+		geom = dSet[1][geomInfo.name]
 		geom = TerraLib().castGeomToSubtype(geom)
 		unitTest:assertEquals(geom:getGeometryType(), "MultiLineString")
 		geom = TerraLib().castGeomToSubtype(geom:getGeometryN(0))
@@ -2142,7 +2161,8 @@ return {
 
 		shpFile = filePath("test/prodes_points_10km_PA_pt.shp", "gis")
 		dSet = TerraLib().getDataSet{file = shpFile}
-		geom = dSet[1].OGR_GEOMETRY
+		geomInfo = TerraLib().getGeometryInfo{file = shpFile}
+		geom = dSet[1][geomInfo.name]
 		geom = TerraLib().castGeomToSubtype(geom)
 		unitTest:assertEquals(geom:getGeometryType(), "MultiPoint")
 		geom = TerraLib().castGeomToSubtype(geom:getGeometryN(0))
@@ -2223,10 +2243,12 @@ return {
 			local layerName2 = "OneProp"
 			TerraLib().addShpLayer(proj, layerName2, toData.file)
 			local dset = TerraLib().getDataSet{project = proj, layer = layerName2}
+			local layerInfo = TerraLib().getLayerInfo(proj, layerName2)
+			local geomAttrName = layerInfo.geometry
 
 			unitTest:assertEquals(getn(dset), 63)
 			for k, v in pairs(dset[0]) do
-				unitTest:assert(((k == "FID") and (v == 0)) or ((k == "OGR_GEOMETRY") and (v ~= nil) ) or
+				unitTest:assert(((k == "FID") and (v == 0)) or ((k == geomAttrName) and (v ~= nil) ) or
 								((k == "NM_MICRO") and (v == "VOTUPORANGA")))
 			end
 
@@ -2245,10 +2267,13 @@ return {
 				end
 			end
 
+			local layerInfo = TerraLib().getLayerInfo(proj, sampaLayerName)
+			local geomAttrName = layerInfo.geometry
+
 			local touches = {}
 			local j = 1
 			for i = 0, getn(dset1) - 1 do
-				if sjc.OGR_GEOMETRY:touches(dset1[i].OGR_GEOMETRY) then
+				if sjc[geomAttrName]:touches(dset1[i][geomAttrName]) then
 					touches[j] = dset1[i]
 					j = j + 1
 				end

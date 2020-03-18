@@ -818,7 +818,7 @@ local function renameEachClass(ds, dSetName, dsType, select, property, fileExt)
 			local idx = string.find(currentProp, "_")
 			if idx then
 				local propSub = string.sub(currentProp, 1, idx - 1)
-				if string.match(select, propSub) then
+				if (propSub ~= "") and string.match(select, propSub) then
 					newName = string.gsub(currentProp, "(.*)_", property.."_")
 
 					if (string.len(newName) > 10) and (dsType ~= "POSTGIS") then
@@ -1323,12 +1323,6 @@ local function createConnInfoToSave(connInfo, toSetName, toType)
 	return toConnInfo
 end
 
-local function isGeometryProperty(propName)
-	return (propName == "OGR_GEOMETRY") or
-		   (propName == "ogr_geometry") or
-		   (propName == "geom")
-end
-
 local function createInvalidNamesErrorMsg(invalidNames)
 	local errorMsg
 
@@ -1388,7 +1382,7 @@ local function updateAttributeNumberByType(dataset, type, pos, value)
 	end
 end
 
-local function fillDataSetWithUpdatedData(dseToUp, dseType, newDataSet, attrsToUp)
+local function fillDataSetWithUpdatedData(dseToUp, dseType, newDataSet, attrsToUp, geomAttrName)
 	local index = 1
 	dseToUp:moveBeforeFirst()
 	while dseToUp:moveNext() do
@@ -1405,7 +1399,7 @@ local function fillDataSetWithUpdatedData(dseToUp, dseType, newDataSet, attrsToU
 					dseToUp:setString(attr, tostring(v))
 			elseif (t == "boolean") and isDataTypeBoolean(attrsToUp[i].type) then
 					dseToUp:setBool(attr, v)
-			elseif isGeometryProperty(attr) then
+			elseif attr == geomAttrName then
 					dseToUp:setGeometry(attr, v)
 			else
 				return "Attempt to set '"..attr.."' with type '"..t.."'. Please, set the correct type."
@@ -1419,11 +1413,15 @@ end
 local function createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 	local errorMsg
 	do
+		-- TODO(avancinirodrigo): getDataSourceInfoByLayer
 		local dsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromLayer:getDataSourceId())
 		local connInfo = dsInfo:getConnInfo()
 		local fromType = dsInfo:getType()
 		local ds = makeAndOpenDataSource(connInfo, fromType)
 		local dsetName = fromLayer:getDataSetName()
+		local dst = ds:getDataSetType(dsetName)
+		local gp = binding.GetFirstGeomProperty(dst)
+		local geomAttrName = gp:getName()
 
 		-- Check new attributes
 		local attrsToIn = {}
@@ -1433,9 +1431,11 @@ local function createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 			for i = 1, #attrs do
 				local propName = attrs[i]
 
-				if not ds:isPropertyNameValid(propName) then
+				if propName == geomAttrName then
+					table.insert(attrsToUp, propName)
+				elseif not ds:isPropertyNameValid(propName) then --and (propName ~= geomAttrName) then
 					table.insert(invalidNames, propName)
-				elseif ds:propertyExists(dsetName, propName) or isGeometryProperty(propName) then
+				elseif ds:propertyExists(dsetName, propName) then --or (propName == geomAttrName) then
 					table.insert(attrsToUp, propName)
 				else
 					table.insert(attrsToIn, propName)
@@ -1448,7 +1448,6 @@ local function createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 		else
 			-- Copy from dataset to new
 			local dse = ds:getDataSet(dsetName)
-			local dst = ds:getDataSetType(dsetName)
 			local newDst = ds:cloneDataSetType(dsetName)
 			newDst:setName(toSetName)
 			local newDse = binding.te.mem.DataSet(dse)
@@ -1524,7 +1523,7 @@ local function createDataSetFromLayer(fromLayer, toSetName, toSet, attrs)
 
 				if #attrsToUp > 0 then
 					attrsToUp = createAttributesInfo(dse, attrsToUp)
-					errorMsg = fillDataSetWithUpdatedData(newDse, fromType, toSet, attrsToUp)
+					errorMsg = fillDataSetWithUpdatedData(newDse, fromType, toSet, attrsToUp, geomAttrName)
 				end
 			end
 
@@ -1650,6 +1649,23 @@ local function isOperationAvailableToPropertyDataType(operation, propType)
 	return false
 end
 
+local function getDataSourceInfoByLayer(layer)
+	local info = {}
+	local fromDsId = layer:getDataSourceId()
+	local fromDsInfo = binding.te.da.DataSourceInfoManager.getInstance():getDsInfo(fromDsId)
+	info.datasource = binding.GetDs(fromDsId, true)
+	info.datasource:setEncoding(layer:getEncoding())
+	layer = castLayer(layer)
+	info.dataset = layer:getDataSetName()
+	info.type = fromDsInfo:getType()
+	info.name = layer:getTitle()
+	info.srid = layer:getSRID()
+	info.datatype = info.datasource:getDataSetType(info.dataset)
+	info.geometry = binding.GetFirstGeomProperty(info.datatype)
+
+	return info
+end
+
 local function createFromDataInfoToSaveAsByLayer(layer)
 	local info = {}
 	local fromDsId = layer:getDataSourceId()
@@ -1668,6 +1684,32 @@ end
 local function getRasterByDataSet(dataset)
 	local rpos = binding.GetFirstPropertyPos(dataset, binding.RASTER_TYPE)
 	return dataset:getRaster(rpos)
+end
+
+local function getDataSourceInfoByFile(file)
+	local info = {}
+	local connInfo = createFileConnInfo(tostring(file))
+	local fileExt = file:extension()
+	info.type = SourceTypeMapper[fileExt]
+
+	if (fileExt == "shp") or (fileExt == "geojson") then
+		local _, fileName = file:split()
+		info.dataset = fileName
+	else
+		info.dataset = file:name()
+	end
+
+	info.datasource = makeAndOpenDataSource(connInfo, info.type)
+
+	if info.type == "OGR" then
+		info.datatype = info.datasource:getDataSetType(info.dataset)
+		info.geometry = binding.GetFirstGeomProperty(info.datatype)
+		info.srid = info.geometry:getSRID()
+	end
+
+	collectgarbage("collect")
+
+	return info
 end
 
 local function createFromDataInfoToSaveAsByFile(file)
@@ -1869,11 +1911,7 @@ local function saveVectorDataAs(fromData, toData, attrs, values)
 		local pkName = ""
 		local pk = fromDSetType:getPrimaryKey()
 		if pk then
-			if fromData.type == "POSTGIS" then
-				pkName = pk:getPropertyName(0)
-			else
-				pkName = pk:getName()
-			end
+			pkName = pk:getPropertyName(0)
 		end
 
 		-- If there are attrs, keep only them, primary key and geometries
@@ -2314,6 +2352,11 @@ TerraLib_ = {
 				local gp = binding.GetFirstGeomProperty(dst)
 				local gpt = gp:getGeometryType()
 				info.rep = getGeometryTypeName(gpt)
+				info.geometry = gp:getName()
+				local pk = dst:getPrimaryKey()
+				if pk then
+					info.fid = pk:getPropertyName(0)
+				end
 			elseif dst:hasRaster() then
 				info.rep = "raster"
 			else
@@ -3681,6 +3724,38 @@ TerraLib_ = {
 		end
 
 		return problems
+	end,
+	--- Get information about the geometry attribute.
+	-- @arg data.project A project.
+	-- @arg data.layer Name of a layer.
+	-- @arg data.file A file. If a project is set, file is ignored.
+	-- @usage
+	-- local shpFile = filePath("amazonia-roads.shp", "gis")
+	-- local geomInfo = TerraLib().getGeometryInfo{file = shpFile}
+	-- print(geomInfo.fid, geomInfo.name, geomInfo.geometry)
+	getGeometryInfo = function(data)
+		local info = {}
+		do
+			local dsInfo
+			if data.project then
+				loadProject(data.project, data.project.file)
+				local layer = data.project.layers[data.layer]
+				dsInfo = getDataSourceInfoByLayer(layer)
+				releaseProject(data.project)
+			else --< file
+				dsInfo = getDataSourceInfoByFile(data.file)
+			end
+
+			info.geometry = dsInfo.geometry
+			info.name = dsInfo.geometry:getName()
+			local pk = dsInfo.datatype:getPrimaryKey()
+			if pk then
+				info.fid = pk:getName()
+			end
+		end
+		collectgarbage("collect")
+
+		return info
 	end
 }
 

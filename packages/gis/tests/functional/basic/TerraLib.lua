@@ -374,9 +374,11 @@ return {
 		TerraLib().addShpLayer(proj, layerName1, layerFile1)
 
 		local dSet = TerraLib().getDataSet{project = proj, layer = layerName1}
+		local layerInfo = TerraLib().getLayerInfo(proj, layerName1)
+		local geomAttrName = layerInfo.geometry
 
 		local areaWarn = function()
-			TerraLib().getArea(dSet[0].OGR_GEOMETRY)
+			TerraLib().getArea(dSet[0][geomAttrName])
 		end
 		unitTest:assertWarning(areaWarn, "Geometry should be a polygon to get the area.")
 
