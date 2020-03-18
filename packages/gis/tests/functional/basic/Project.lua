@@ -405,7 +405,8 @@ return {
 			spfile:copy(currentDir())
 
 			local qgp = Project {
-				file = File("create_func_v3.qgs")
+				file = File("create_func_v3.qgs"),
+				clean = true
 			}
 
 			local l1 = Layer{
