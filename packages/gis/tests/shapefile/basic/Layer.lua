@@ -1126,7 +1126,7 @@ return {
 
 		unitTest:assertEquals(layer3.epsg, data2.epsg)
 		unitTest:assert(layer.epsg ~= data2.epsg)
-		
+
 		-- TODO(#2328)
 		-- SELECT ONE ATTRIBUTE TO GEOJSON
 		-- data1.select = "population"
