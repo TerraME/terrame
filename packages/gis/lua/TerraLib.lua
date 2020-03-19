@@ -3736,21 +3736,26 @@ TerraLib_ = {
 	getGeometryInfo = function(data)
 		local info = {}
 		do
-			local dsInfo
+			local dsInfo = {}
 			if data.project then
 				loadProject(data.project, data.project.file)
 				local layer = data.project.layers[data.layer]
 				dsInfo = getDataSourceInfoByLayer(layer)
 				releaseProject(data.project)
 			else --< file
-				dsInfo = getDataSourceInfoByFile(data.file)
+				local ext = data.file:extension()
+				if SourceTypeMapper[ext] == "OGR" then
+					dsInfo = getDataSourceInfoByFile(data.file)
+				end
 			end
 
-			info.geometry = dsInfo.geometry
-			info.name = dsInfo.geometry:getName()
-			local pk = dsInfo.datatype:getPrimaryKey()
-			if pk then
-				info.fid = pk:getName()
+			if dsInfo.geometry then
+				info.geometry = dsInfo.geometry
+				info.name = dsInfo.geometry:getName()
+				local pk = dsInfo.datatype:getPrimaryKey()
+				if pk then
+					info.fid = pk:getName()
+				end
 			end
 		end
 		collectgarbage("collect")

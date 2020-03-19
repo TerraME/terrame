@@ -616,12 +616,18 @@ local function setCellsByTerraLibDataSet(self, dSet, geom)
 		local cell = Cell{id = tostring(i), x = col, y = row}
 		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
 
-		for k, v in pairs(dSet[i]) do
-			if (k == geom.name) then
-				if self.geometry then
-					cell.geom = gis.TerraLib().castGeomToSubtype(v)
+		if geom then
+			for k, v in pairs(dSet[i]) do
+				if (k == geom.name) then
+					if self.geometry then
+						cell.geom = gis.TerraLib().castGeomToSubtype(v)
+					end
+				else
+					cell[k] = v
 				end
-			else
+			end
+		else
+			for k, v in pairs(dSet[i]) do
 				cell[k] = v
 			end
 		end
