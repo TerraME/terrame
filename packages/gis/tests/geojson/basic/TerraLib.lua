@@ -384,7 +384,7 @@ return {
 			local proj = createProject()
 
 			local layerName1 = "ES"
-			local layerFile1 = filePath("test/es_limit_sirgas2000_5880.geojson", "gis")
+			local layerFile1 = filePath("test/es_limit_epsg4326.geojson", "gis")
 			TerraLib().addGeoJSONLayer(proj, layerName1, layerFile1)
 
 			local files = {}
@@ -392,15 +392,15 @@ return {
 			local clName = "ES_Cells"
 			table.insert(files, File(clName..".geojson"):deleteIfExists())
 
-			local resolution = 20e3
+			local resolution = 0.18
 			local mask = true
 			TerraLib().addGeoJSONCellSpaceLayer(proj, layerName1, clName, resolution, files[1], mask)
 
 			local csSize = TerraLib().getDataSetSize(files[1])
-			unitTest:assertEquals(csSize, 154)
+			unitTest:assertEquals(csSize, 159)
 
 			local layerName2 = "Protection_Unit"
-			local layerFile2 = filePath("test/es_protec1.geojson", "gis")
+			local layerFile2 = filePath("test/es_protected_areas_epsg4326.geojson", "gis")
 			TerraLib().addGeoJSONLayer(proj, layerName2, layerFile2)
 
 			-- PRESENCE
@@ -421,13 +421,15 @@ return {
 			}
 
 			local dset = TerraLib().getDataSet{project = proj, layer = presLayerName, missing = 0}
+			local layerInfo = TerraLib().getLayerInfo(proj, presLayerName)
+			local geomAttrName = layerInfo.geometry
 
 			unitTest:assertEquals(csSize, getn(dset))
 			unitTest:assertEquals(dset[0][attribute], 0)
-			unitTest:assertNotNil(dset[0].OGR_GEOMETRY)
-			unitTest:assertEquals(dset[0].col, 1)
+			unitTest:assertNotNil(dset[0][geomAttrName])
+			unitTest:assertEquals(dset[0].col, 0)
 			unitTest:assertEquals(dset[0].row, 0)
-			unitTest:assertEquals(dset[0].id, "C01L00")
+			unitTest:assertEquals(dset[0].id, "C00L00")
 			unitTest:assertEquals(dset[0].FID, 0)
 
 			-- PERCENTAGE TOTAL AREA
@@ -450,11 +452,11 @@ return {
 			dset = TerraLib().getDataSet{project = proj, layer = areaLayerName, missing = 0}
 
 			unitTest:assertEquals(csSize, getn(dset))
-			unitTest:assertEquals(dset[151][attribute], 0)
-			unitTest:assertNotNil(dset[151].OGR_GEOMETRY)
+			unitTest:assertEquals(dset[151][attribute], 0) -- TODO(#2325)
+			unitTest:assertNotNil(dset[151][geomAttrName])
 			unitTest:assertEquals(dset[151].col, 9)
-			unitTest:assertEquals(dset[151].row, 18)
-			unitTest:assertEquals(dset[151].id, "C09L18")
+			unitTest:assertEquals(dset[151].row, 17)
+			unitTest:assertEquals(dset[151].id, "C09L17")
 			unitTest:assertEquals(dset[151].FID, 151)
 
 			-- COUNT
@@ -478,10 +480,10 @@ return {
 
 			unitTest:assertEquals(csSize, getn(dset))
 			unitTest:assertEquals(dset[1][attribute], 0)
-			unitTest:assertNotNil(dset[1].OGR_GEOMETRY)
-			unitTest:assertEquals(dset[1].col, 2)
+			unitTest:assertNotNil(dset[1][geomAttrName])
+			unitTest:assertEquals(dset[1].col, 1)
 			unitTest:assertEquals(dset[1].row, 0)
-			unitTest:assertEquals(dset[1].id, "C02L00")
+			unitTest:assertEquals(dset[1].id, "C01L00")
 			unitTest:assertEquals(dset[1].FID, 1)
 
 			-- DISTANCE
@@ -504,11 +506,11 @@ return {
 			dset = TerraLib().getDataSet{project = proj, layer = distLayerName, missing = 0}
 
 			unitTest:assertEquals(csSize, getn(dset))
-			unitTest:assertEquals(dset[150][attribute], 49651.869711192, 1e-9)
-			unitTest:assertNotNil(dset[150].OGR_GEOMETRY)
+			unitTest:assertEquals(dset[150][attribute], 0.25177012799653, 1e-14)
+			unitTest:assertNotNil(dset[150][geomAttrName])
 			unitTest:assertEquals(dset[150].col, 8)
-			unitTest:assertEquals(dset[150].row, 18)
-			unitTest:assertEquals(dset[150].id, "C08L18")
+			unitTest:assertEquals(dset[150].row, 17)
+			unitTest:assertEquals(dset[150].id, "C08L17")
 			unitTest:assertEquals(dset[150].FID, 150)
 
 			-- MINIMUM
@@ -532,10 +534,10 @@ return {
 
 			unitTest:assertEquals(csSize, getn(dset))
 			unitTest:assertEquals(dset[2][attribute], 0)
-			unitTest:assertNotNil(dset[2].OGR_GEOMETRY)
-			unitTest:assertEquals(dset[2].col, 3)
+			unitTest:assertNotNil(dset[2][geomAttrName])
+			unitTest:assertEquals(dset[2].col, 2)
 			unitTest:assertEquals(dset[2].row, 0)
-			unitTest:assertEquals(dset[2].id, "C03L00")
+			unitTest:assertEquals(dset[2].id, "C02L00")
 			unitTest:assertEquals(dset[2].FID, 2)
 
 			-- MAXIMUM
@@ -559,10 +561,10 @@ return {
 
 			unitTest:assertEquals(csSize, getn(dset))
 			unitTest:assertEquals(dset[149][attribute], 0)
-			unitTest:assertNotNil(dset[149].OGR_GEOMETRY)
+			unitTest:assertNotNil(dset[149][geomAttrName])
 			unitTest:assertEquals(dset[149].col, 7)
-			unitTest:assertEquals(dset[149].row, 18)
-			unitTest:assertEquals(dset[149].id, "C07L18")
+			unitTest:assertEquals(dset[149].row, 17)
+			unitTest:assertEquals(dset[149].id, "C07L17")
 			unitTest:assertEquals(dset[149].FID, 149)
 
 			-- PERCENTAGE EACH CLASS
@@ -616,10 +618,10 @@ return {
 
 			unitTest:assertEquals(csSize, getn(dset))
 			unitTest:assertEquals(dset[148][attribute], 0)
-			unitTest:assertNotNil(dset[148].OGR_GEOMETRY)
+			unitTest:assertNotNil(dset[148][geomAttrName])
 			unitTest:assertEquals(dset[148].col, 6)
-			unitTest:assertEquals(dset[148].row, 18)
-			unitTest:assertEquals(dset[148].id, "C06L18")
+			unitTest:assertEquals(dset[148].row, 17)
+			unitTest:assertEquals(dset[148].id, "C06L17")
 			unitTest:assertEquals(dset[148].FID, 148)
 
 			-- MEAN
@@ -642,11 +644,11 @@ return {
 			dset = TerraLib().getDataSet{project = proj, layer = meanLayerName, missing = 0}
 
 			unitTest:assertEquals(csSize, getn(dset))
-			unitTest:assertEquals(dset[4][attribute], 431423.284555, 1e-6)
-			unitTest:assertNotNil(dset[4].OGR_GEOMETRY)
-			unitTest:assertEquals(dset[4].col, 5)
+			unitTest:assertEquals(dset[4][attribute], 0.0)
+			unitTest:assertNotNil(dset[4][geomAttrName])
+			unitTest:assertEquals(dset[4].col, 4)
 			unitTest:assertEquals(dset[4].row, 0)
-			unitTest:assertEquals(dset[4].id, "C05L00")
+			unitTest:assertEquals(dset[4].id, "C04L00")
 			unitTest:assertEquals(dset[4].FID, 4)
 
 			-- WEIGHTED AVERAGE
@@ -672,10 +674,10 @@ return {
 
 			unitTest:assertEquals(csSize, getn(dset))
 			unitTest:assertEquals(dset[147][attribute], 0)
-			unitTest:assertNotNil(dset[147].OGR_GEOMETRY)
-			unitTest:assertEquals(dset[147].col, 11)
+			unitTest:assertNotNil(dset[147][geomAttrName])
+			unitTest:assertEquals(dset[147].col, 5)
 			unitTest:assertEquals(dset[147].row, 17)
-			unitTest:assertEquals(dset[147].id, "C11L17")
+			unitTest:assertEquals(dset[147].id, "C05L17")
 			unitTest:assertEquals(dset[147].FID, 147)
 
 			-- MODE
@@ -729,10 +731,10 @@ return {
 
 			unitTest:assertEquals(csSize, getn(dset))
 			unitTest:assertEquals(dset[146][attribute], 0)
-			unitTest:assertNotNil(dset[146].OGR_GEOMETRY)
-			unitTest:assertEquals(dset[146].col, 10)
+			unitTest:assertNotNil(dset[146][geomAttrName])
+			unitTest:assertEquals(dset[146].col, 4)
 			unitTest:assertEquals(dset[146].row, 17)
-			unitTest:assertEquals(dset[146].id, "C10L17")
+			unitTest:assertEquals(dset[146].id, "C04L17")
 			unitTest:assertEquals(dset[146].FID, 146)
 
 			-- SUM
@@ -756,10 +758,10 @@ return {
 
 			unitTest:assertEquals(csSize, getn(dset))
 			unitTest:assertEquals(dset[6][attribute], 0)
-			unitTest:assertNotNil(dset[6].OGR_GEOMETRY)
-			unitTest:assertEquals(dset[6].col, 1)
+			unitTest:assertNotNil(dset[6][geomAttrName])
+			unitTest:assertEquals(dset[6].col, 0)
 			unitTest:assertEquals(dset[6].row, 1)
-			unitTest:assertEquals(dset[6].id, "C01L01")
+			unitTest:assertEquals(dset[6].id, "C00L01")
 			unitTest:assertEquals(dset[6].FID, 6)
 
 			-- WEIGHTED SUM
@@ -785,10 +787,10 @@ return {
 
 			unitTest:assertEquals(csSize, getn(dset))
 			unitTest:assertEquals(dset[145][attribute], 0)
-			unitTest:assertNotNil(dset[145].OGR_GEOMETRY)
-			unitTest:assertEquals(dset[145].col, 9)
-			unitTest:assertEquals(dset[145].row, 17)
-			unitTest:assertEquals(dset[145].id, "C09L17")
+			unitTest:assertNotNil(dset[145][geomAttrName])
+			unitTest:assertEquals(dset[145].col, 12)
+			unitTest:assertEquals(dset[145].row, 16)
+			unitTest:assertEquals(dset[145].id, "C12L16")
 			unitTest:assertEquals(dset[145].FID, 145)
 
 			proj.file:delete()
