@@ -618,7 +618,7 @@ local function setCellsByTerraLibDataSet(self, dSet, geom)
 
 		if geom then
 			for k, v in pairs(dSet[i]) do
-				if (k == geom.name) then
+				if k == geom.name then
 					if self.geometry then
 						cell.geom = gis.TerraLib().castGeomToSubtype(v)
 					end
@@ -1366,22 +1366,15 @@ CellularSpace_ = {
 			mandatoryArgument(1, "string", newLayerName)
 
 			local dset = gis.TerraLib().getDataSet{project = self.project, layer = self.layer.name, missing = self.missing}
+			local geomAttrName = self.layer.geometry
 			if not self.geometry then
 				for i = 0, #dset do
-					for k, v in pairs(dset[i]) do
-						if (k == "OGR_GEOMETRY") or (k == "geom") or (k == "ogr_geometry") then
-							self.cells[i + 1][k] = v
-						end
-					end
+					self.cells[i + 1][geomAttrName] = dset[i][geomAttrName]
 				end
-			elseif dset[0].OGR_GEOMETRY or dset[0].ogr_geometry then
+			elseif dset[0][geomAttrName] then
 				for i = 0, #dset do
-					for k, v in pairs(dset[i]) do
-						if (k == "OGR_GEOMETRY") or (k == "ogr_geometry") then
-							self.cells[i + 1].geom = nil
-							self.cells[i + 1][k] = v
-						end
-					end
+					self.cells[i + 1].geom = nil
+					self.cells[i + 1][geomAttrName] = dset[i][geomAttrName]
 				end
 			end
 
