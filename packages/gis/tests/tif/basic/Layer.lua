@@ -80,7 +80,7 @@ return {
 	end,
 	fill = function(unitTest)
 		local allSupportedOperation = function()
-			local projName = "layer_fill_tif.tview"
+			local projName = "layer_fill_all_tif.tview"
 
 			local proj = Project{
 				file = projName,

@@ -172,7 +172,7 @@ return {
 
 
 		local layerName1 = "AmazoniaTif"
-		local layerFile1 = filePath("amazonia-prodes.tif", "gis")
+		local layerFile1 = filePath("test/amazonia-prodes-noepsg.tif", "gis")
 		TerraLib().addGdalLayer(proj, layerName1, layerFile1)
 
 		local tableName = "amzcs"
