@@ -1396,9 +1396,6 @@ Layer_ = {
 	--- Checks if data layer geometries are valid.
 	-- If some invalid geometry are found, a warning is show about the problem.
 	-- Return true if no problem is found.
-	-- @arg fix A boolean value which if true tries to fix the geometries problems found.
-	-- If not set, its value will be false.
-	-- If it is not possible fix the geometries a error will be show.
 	-- @arg progress A boolean value indicating whether progress will be shown while fixing the geometries.
 	-- @usage --DONTRUN
 	-- local layer = Layer{
@@ -1410,14 +1407,12 @@ Layer_ = {
 	-- if not layer:check() then
 	--     layer:check(true)
 	-- end
-	check = function(self, fix, progress)
-		optionalArgument(2, "boolean", fix)
-		if fix == nil then fix = false end
-		optionalArgument(3, "boolean", progress)
+	check = function(self, progress)
+		optionalArgument(2, "boolean", progress)
 		if progress == nil then progress = true end
 
 		TerraLib().setProgressVisible(progress)
-		local problems = TerraLib().checkLayerGeometries(self.project, self.name, fix)
+		local problems = TerraLib().checkLayerGeometries(self.project, self.name)
 
 		if #problems > 0 then
 			customWarning(formatCheckGeometriesMsg(problems))

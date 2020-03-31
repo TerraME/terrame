@@ -245,7 +245,7 @@ return {
 			directory = packageInfo("gis").data.."test"
 		}
 
-		unitTest:assertEquals(getn(proj.layers), 27)
+		unitTest:assertEquals(getn(proj.layers), 28)
 		file:deleteIfExists()
 
 		local version = ""
@@ -312,8 +312,7 @@ return {
 			spfile:copy(currentDir())
 
 			local qgp = Project {
-				file = File("sampa_v3.qgs"),
-				clean = true
+				file = File("sampa_v3.qgs")
 			}
 
 			local l1 = Layer{

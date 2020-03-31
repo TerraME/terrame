@@ -894,7 +894,7 @@ return {
 				warnMsg = msg
 			end
 
-			unitTest:assert(not l1:check(true, false))
+			unitTest:assert(not l1:check(false))
 
 			if string.find(warnMsg, "5502300.9611873") then
 				unitTest:assertEquals(warnMsg, "The following problems were found in the geometries:\n" --SKIP
@@ -1264,7 +1264,7 @@ return {
 			warnMsg = msg
 		end
 
-		unitTest:assert(not l1:check(true, false))
+		unitTest:assert(not l1:check(false))
 
 		if string.find(warnMsg, "5502300.9611873") then
 			unitTest:assertEquals(warnMsg, "The following problems were found in the geometries:\n" --SKIP
@@ -1283,8 +1283,6 @@ return {
 		end
 
 		customWarning = customWarningBkp
-
-		unitTest:assert(l1:check(true, false))
 
 		l1:delete()
 		proj.file:delete()
