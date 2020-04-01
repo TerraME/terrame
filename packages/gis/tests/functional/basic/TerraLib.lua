@@ -265,7 +265,11 @@ return {
 
 			unitTest:assertEquals(info.name, "SP")
 			unitTest:assertEquals(info.rep, "polygon")
-			unitTest:assertEquals(info.srid, 4019)
+			if _Gtme.sessionInfo().system == "windows" then
+				unitTest:assertEquals(info.srid, 4019) --SKIP
+			else
+				unitTest:assertEquals(info.srid, 4674) --SKIP
+			end
 			unitTest:assertEquals(File(info.file):name(), "sampa.shp")
 			unitTest:assertEquals(info.source, "shp")
 			unitTest:assertEquals(info.encoding, "LATIN1")

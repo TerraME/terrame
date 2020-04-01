@@ -439,7 +439,11 @@ return {
 
 			unitTest:assertEquals(l2.name, cl1Name)
 			unitTest:assertEquals(l2.rep, "polygon")
-			unitTest:assertEquals(l2.epsg, 4019)
+			if _Gtme.sessionInfo().system == "windows" then
+				unitTest:assertEquals(l2.epsg, 4019) --SKIP
+			else
+				unitTest:assertEquals(l2.epsg, 4674) --SKIP
+			end
 			unitTest:assertEquals(File(l2.file):name(), "SPCells.shp")
 			unitTest:assertEquals(l2.source, "shp")
 			unitTest:assertEquals(l2.encoding, "latin1")
@@ -451,7 +455,11 @@ return {
 
 			unitTest:assertEquals(l3.name, "SP")
 			unitTest:assertEquals(l3.rep, "polygon")
-			unitTest:assertEquals(l3.epsg, 4019)
+			if _Gtme.sessionInfo().system == "windows" then
+				unitTest:assertEquals(l3.epsg, 4019) --SKIP
+			else
+				unitTest:assertEquals(l3.epsg, 4674) --SKIP
+			end
 			unitTest:assertEquals(File(l3.file):name(), "sampa.shp")
 			unitTest:assertEquals(l3.source, "shp")
 			unitTest:assertEquals(l3.encoding, "latin1")
