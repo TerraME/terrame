@@ -265,7 +265,7 @@ return {
 				-- color = {"red", "green"}
 			-- }
 
-			-- unitTest:assertSnapshot(map, "polygons-area-geojson.png", 0.02)
+			-- unitTest:assertSnapshot(map, "polygons-area-geojson.png", 0.02) --SKIP
 
 			-- local roads = Layer{
 				-- project = proj,
@@ -306,7 +306,7 @@ return {
 				-- color = {"green", "red"}
 			-- }
 
-			-- unitTest:assertSnapshot(map, "lines-distance-geojson.png")
+			-- unitTest:assertSnapshot(map, "lines-distance-geojson.png") --SKIP
 
 			-- cl1:fill{
 				-- operation = "distance",
@@ -330,7 +330,7 @@ return {
 				-- color = {"green", "red"}
 			-- }
 
-			-- unitTest:assertSnapshot(map, "polygons-distance-geojson.png")
+			-- unitTest:assertSnapshot(map, "polygons-distance-geojson.png") --SKIP
 
 			-- -- PRESENCE
 			-- cl1:fill{
@@ -353,7 +353,7 @@ return {
 				-- color = {"green", "red"}
 			-- }
 
-			-- unitTest:assertSnapshot(map, "lines-presence-geojson.png")
+			-- unitTest:assertSnapshot(map, "lines-presence-geojson.png") --SKIP
 
 			-- cl1:fill{
 				-- operation = "presence",
@@ -375,7 +375,7 @@ return {
 				-- color = {"green", "red"}
 			-- }
 
-			-- unitTest:assertSnapshot(map, "polygons-presence-geojson.png")
+			-- unitTest:assertSnapshot(map, "polygons-presence-geojson.png") --SKIP
 
 			-- local cl2Name = "csPALarge"
 			-- local cl2File = cl2Name..".geojson"
@@ -413,7 +413,7 @@ return {
 				-- color = {"green", "blue"}
 			-- }
 
-			-- unitTest:assertSnapshot(map, "lines-count-geojson.png")
+			-- unitTest:assertSnapshot(map, "lines-count-geojson.png") --SKIP
 
 			-- cl2:fill{
 				-- operation = "count",
@@ -435,7 +435,7 @@ return {
 				-- color = {"green", "red", "blue"}
 			-- }
 
-			-- unitTest:assertSnapshot(map, "polygons-count-geojson.png")
+			-- unitTest:assertSnapshot(map, "polygons-count-geojson.png") --SKIP
 
 			-- -- MAXIMUM
 			-- cl1:fill{
@@ -461,7 +461,7 @@ return {
 				-- color = {"red", "green"}
 			-- }
 
-			-- unitTest:assertSnapshot(map, "polygons-maximum-geojson.png")
+			-- unitTest:assertSnapshot(map, "polygons-maximum-geojson.png") --SKIP
 
 			-- -- MINIMUM
 			-- cl1:fill{
@@ -487,7 +487,7 @@ return {
 				-- color = {"red", "green"}
 			-- }
 
-			-- unitTest:assertSnapshot(map, "polygons-minimum-geojson.png")
+			-- unitTest:assertSnapshot(map, "polygons-minimum-geojson.png") --SKIP
 
 			-- -- AVERAGE
 			-- cl1:fill{
@@ -513,7 +513,7 @@ return {
 				-- color = {"red", "green"}
 			-- }
 
-			-- unitTest:assertSnapshot(map, "polygons-average-geojson.png", 0.005)
+			-- unitTest:assertSnapshot(map, "polygons-average-geojson.png", 0.005) --SKIP
 
 			-- -- STDEV
 			-- cl1:fill{
@@ -539,7 +539,7 @@ return {
 				-- color = {"red", "green"}
 			-- }
 
-			-- unitTest:assertSnapshot(map, "polygons-stdev-geojson.png")
+			-- unitTest:assertSnapshot(map, "polygons-stdev-geojson.png") --SKIP
 
 			-- local cl3Name = "CellsSet"
 			-- local cl3File = cl3Name..".geojson"
@@ -597,7 +597,7 @@ return {
 				-- color = {"red", "green"}
 			-- }
 
-			-- unitTest:assertSnapshot(map, "polygons-sum-area-geojson.png", 0.01)
+			-- unitTest:assertSnapshot(map, "polygons-sum-area-geojson.png", 0.01) --SKIP
 
 			-- local sectors = Layer{
 				-- project = proj,
@@ -653,7 +653,7 @@ return {
 				-- color = {"red", "green"}
 			-- }
 
-			-- unitTest:assertSnapshot(map, "polygons-average-area-geojson.png")
+			-- unitTest:assertSnapshot(map, "polygons-average-area-geojson.png") --SKIP
 
 			-- -- TODO(#2326)
 			-- -- local cl5 = Layer{
@@ -771,7 +771,7 @@ return {
 				-- color = {"green", "red"}
 			-- }
 
-			-- unitTest:assertSnapshot(map, "points-distance-geojson.png")
+			-- unitTest:assertSnapshot(map, "points-distance-geojson.png") --SKIP
 
 			-- -- PRESENCE
 			-- cl6:fill{
@@ -794,7 +794,7 @@ return {
 				-- color = {"green", "red"}
 			-- }
 
-			-- unitTest:assertSnapshot(map, "points-presence-geojson.png")
+			-- unitTest:assertSnapshot(map, "points-presence-geojson.png") --SKIP
 
 			-- -- COUNT
 			-- cl6:fill{
@@ -817,7 +817,7 @@ return {
 				-- color = {"green", "red", "blue"}
 			-- }
 
-			-- unitTest:assertSnapshot(map, "points-count-geojson.png")
+			-- unitTest:assertSnapshot(map, "points-count-geojson.png") --SKIP
 
 			-- for i = 1, #files do
 				-- File(files[i]):delete()
@@ -826,7 +826,7 @@ return {
 			-- proj.file:delete()
 		-- end
 
-		-- unitTest:assert(allSupportedOperation)
+		-- unitTest:assert(allSupportedOperation) --SKIP
 
 		unitTest:assert(true)
 	end

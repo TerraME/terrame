@@ -1087,7 +1087,7 @@ return {
 		-- }
 
 		-- layer:export(data1)
-		-- unitTest:assert(File(geojson):exists())
+		-- unitTest:assert(File(geojson):exists()) --SKIP
 
 		-- OVERWRITE AND CHANGE EPSG
 		-- data1.epsg = 4326
@@ -1100,8 +1100,8 @@ return {
 			-- file = geojson
 		-- }
 
-		-- unitTest:assertEquals(layer2.epsg, data1.epsg)
-		-- unitTest:assert(layer.epsg ~= data1.epsg)
+		-- unitTest:assertEquals(layer2.epsg, data1.epsg) --SKIP
+		-- unitTest:assert(layer.epsg ~= data1.epsg) --SKIP
 
 		local shp = "setores.shp"
 		local data2 = {
@@ -1133,9 +1133,9 @@ return {
 		-- layer:export(data1)
 		-- local attrs1 = layer2:attributes()
 
-		-- unitTest:assertEquals(attrs1[1].name, "FID")
-		-- unitTest:assertEquals(attrs1[2].name, "population")
-		-- unitTest:assertNil(attrs1[3])
+		-- unitTest:assertEquals(attrs1[1].name, "FID") --SKIP
+		-- unitTest:assertEquals(attrs1[2].name, "population") --SKIP
+		-- unitTest:assertNil(attrs1[3]) --SKIP
 
 		-- SELECT ONE ATTRIBUTE TO SHAPE
 		data2.select = "dens_pop"

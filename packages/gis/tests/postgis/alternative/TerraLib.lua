@@ -147,14 +147,14 @@ return {
 		-- local overwriteGeojsonError = function()
 			-- TerraLib().saveDataAs(fromData, toData, overwrite)
 		-- end
-		-- unitTest:assertError(overwriteGeojsonError, "File 'postgis2geojson.geojson' already exists.")
+		-- unitTest:assertError(overwriteGeojsonError, "File 'postgis2geojson.geojson' already exists.") --SKIP
 
 		-- fromData.layer = layerName1
 
 		-- local overwritePgError = function()
 			-- TerraLib().saveDataAs(fromData, pgData, overwrite)
 		-- end
-		-- unitTest:assertError(overwritePgError, "Table 'limite_es_poly_wgs84' already exists in postgis database 'postgis_22_sample'.")
+		-- unitTest:assertError(overwritePgError, "Table 'limite_es_poly_wgs84' already exists in postgis database 'postgis_22_sample'.") --SKIP
 
 		-- toData.file:delete()
 
