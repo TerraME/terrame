@@ -2490,5 +2490,40 @@ return {
 
 		l1File:delete()
 		proj.file:delete()
+	end,
+	getGeometryInfo = function(unitTest)
+		local getGeometryInfoFromLayer = function()
+			local proj = {
+				file = "getGeometryInfo_shp.tview",
+				title = "TerraLib Tests",
+				author = "Avancini Rodrigo"
+			}
+
+			local file = File(proj.file)
+			file:deleteIfExists()
+
+			TerraLib().createProject(proj, {})
+
+			local layerName = "ShapeLayer"
+			local layerFile = filePath("test/sampa.shp", "gis")
+			TerraLib().addShpLayer(proj, layerName, layerFile)
+			local geomInfo = TerraLib().getGeometryInfo{project = proj, layer = layerName}
+			unitTest:assertEquals(geomInfo.name, "_ogr_geometry_")
+			unitTest:assertEquals(geomInfo.fid, "fid")
+			unitTest:assertEquals(geomInfo.geometry:getGeometryType(), 6)
+
+			proj.file:delete()
+		end
+
+		local getGeometryInfoFromFile = function()
+			local shpFile = filePath("test/sampa.shp", "gis")
+			local geomInfo = TerraLib().getGeometryInfo{file = shpFile}
+			unitTest:assertEquals(geomInfo.name, "_ogr_geometry_")
+			unitTest:assertEquals(geomInfo.fid, "fid")
+			unitTest:assertEquals(geomInfo.geometry:getGeometryType(), 6)
+		end
+
+		unitTest:assert(getGeometryInfoFromLayer)
+		unitTest:assert(getGeometryInfoFromFile)
 	end
 }
