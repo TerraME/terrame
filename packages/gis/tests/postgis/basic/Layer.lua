@@ -1424,16 +1424,14 @@ return {
 				color = "YlOrRd"
 			}
 
-			unitTest:assertSnapshot(map, "fill_postgis_median.png") -- SKIP
+			unitTest:assertSnapshot(map, "fill_postgis_median.png")
 
 			cl:delete()
 			proj.file:delete()
 		end
 
 		unitTest:assert(allSupportedOperationTogether)
-		if _Gtme.sessionInfo().system ~= "linux" then -- TODO(#2311)
-			unitTest:assert(medianOperation) -- SKIP
-		end
+		unitTest:assert(medianOperation)
 	end,
 	projection = function(unitTest)
 		local projName = "layer_basic.tview"

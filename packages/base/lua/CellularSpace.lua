@@ -547,7 +547,7 @@ local function loadPGM(self)
 	self.ydim = self.yMax
 end
 
-local function setCellsByTerraLibDataSet(self, dSet)
+local function setCellsByTerraLibDataSet(self, dSet, geom)
 	self.xMax = 0
 	self.yMin = 0
 	self.yMax = 0
@@ -616,12 +616,18 @@ local function setCellsByTerraLibDataSet(self, dSet)
 		local cell = Cell{id = tostring(i), x = col, y = row}
 		self.cObj_:addCell(cell.x, cell.y, cell.cObj_)
 
-		for k, v in pairs(dSet[i]) do
-			if (k == "OGR_GEOMETRY") or (k == "geom") or (k == "ogr_geometry") then
-				if self.geometry then
-					cell.geom = gis.TerraLib().castGeomToSubtype(v)
+		if geom then
+			for k, v in pairs(dSet[i]) do
+				if k == geom.name then
+					if self.geometry then
+						cell.geom = gis.TerraLib().castGeomToSubtype(v)
+					end
+				else
+					cell[k] = v
 				end
-			else
+			end
+		else
+			for k, v in pairs(dSet[i]) do
 				cell[k] = v
 			end
 		end
@@ -648,7 +654,14 @@ local function loadDataSet(self)
 		self.cObj_:setLayer(self.layer)
 	end
 
-	setCellsByTerraLibDataSet(self, dset)
+	local data = {
+		project = self.project,
+		layer = self.layer.name,
+		file = self.file
+	}
+	local geom = gis.TerraLib().getGeometryInfo(data)
+
+	setCellsByTerraLibDataSet(self, dset, geom)
 end
 
 local function loadVector(self)
@@ -1353,22 +1366,15 @@ CellularSpace_ = {
 			mandatoryArgument(1, "string", newLayerName)
 
 			local dset = gis.TerraLib().getDataSet{project = self.project, layer = self.layer.name, missing = self.missing}
+			local geomAttrName = self.layer.geometry
 			if not self.geometry then
 				for i = 0, #dset do
-					for k, v in pairs(dset[i]) do
-						if (k == "OGR_GEOMETRY") or (k == "geom") or (k == "ogr_geometry") then
-							self.cells[i + 1][k] = v
-						end
-					end
+					self.cells[i + 1][geomAttrName] = dset[i][geomAttrName]
 				end
-			elseif dset[0].OGR_GEOMETRY or dset[0].ogr_geometry then
+			elseif dset[0][geomAttrName] then
 				for i = 0, #dset do
-					for k, v in pairs(dset[i]) do
-						if (k == "OGR_GEOMETRY") or (k == "ogr_geometry") then
-							self.cells[i + 1].geom = nil
-							self.cells[i + 1][k] = v
-						end
-					end
+					self.cells[i + 1].geom = nil
+					self.cells[i + 1][geomAttrName] = dset[i][geomAttrName]
 				end
 			end
 

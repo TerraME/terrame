@@ -265,7 +265,11 @@ return {
 
 			unitTest:assertEquals(info.name, "SP")
 			unitTest:assertEquals(info.rep, "polygon")
-			unitTest:assertEquals(info.srid, 4019)
+			if _Gtme.sessionInfo().system == "windows" then
+				unitTest:assertEquals(info.srid, 4019) --SKIP
+			else
+				unitTest:assertEquals(info.srid, 4674) --SKIP
+			end
 			unitTest:assertEquals(File(info.file):name(), "sampa.shp")
 			unitTest:assertEquals(info.source, "shp")
 			unitTest:assertEquals(info.encoding, "LATIN1")
@@ -374,9 +378,11 @@ return {
 		TerraLib().addShpLayer(proj, layerName1, layerFile1)
 
 		local dSet = TerraLib().getDataSet{project = proj, layer = layerName1}
+		local layerInfo = TerraLib().getLayerInfo(proj, layerName1)
+		local geomAttrName = layerInfo.geometry
 
 		local areaWarn = function()
-			TerraLib().getArea(dSet[0].OGR_GEOMETRY)
+			TerraLib().getArea(dSet[0][geomAttrName])
 		end
 		unitTest:assertWarning(areaWarn, "Geometry should be a polygon to get the area.")
 

@@ -1350,16 +1350,10 @@ return{
 		}
 
 		local fixTypeError = function()
-			l1:check(1, false)
+			l1:check(1)
 		end
 
 		unitTest:assertError(fixTypeError, incompatibleTypeMsg(2, "boolean", 1))
-
-		local progressTypeError = function()
-			l1:check(true, "true")
-		end
-
-		unitTest:assertError(progressTypeError, incompatibleTypeMsg(3, "boolean", "true"))
 
 		l1:delete()
 		proj.file:delete()

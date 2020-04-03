@@ -250,7 +250,7 @@ return{
 
 			forEachCell(cs, function(c)
 				unitTest:assertNil(c.geom)
-				unitTest:assertNil(c.OGR_GEOMETRY)
+				unitTest:assertNil(c[layer.geometry])
 			end)
 
 			cs = CellularSpace{
@@ -261,7 +261,7 @@ return{
 
 			forEachCell(cs, function(c)
 				unitTest:assertNil(c.geom)
-				unitTest:assertNil(c.OGR_GEOMETRY)
+				unitTest:assertNil(c[layer.geometry])
 			end)
 
 			proj.file:delete()

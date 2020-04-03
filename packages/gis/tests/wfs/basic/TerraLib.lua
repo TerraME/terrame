@@ -150,13 +150,17 @@ return {
 			local l1Props = TerraLib().getPropertyInfos(proj, l1Name)
 			local l2Props = TerraLib().getPropertyInfos(proj, l2Name)
 
+			local l1Info = TerraLib().getLayerInfo(proj, l1Name)
+			local l2Info = TerraLib().getLayerInfo(proj, l2Name)
+
 			unitTest:assertEquals(getn(l1Props), getn(l2Props))
 			unitTest:assertEquals(l1Props[0].name, l2Props[0].name)
 			unitTest:assertEquals(l1Props[1].name, l2Props[1].name)
 			unitTest:assertEquals(l1Props[2].name, l2Props[2].name)
 			unitTest:assertEquals(l1Props[3].name, l2Props[3].name)
 			unitTest:assertEquals(l1Props[4].name, l2Props[4].name)
-			unitTest:assertEquals(l1Props[5].name, l2Props[5].name)
+			unitTest:assertEquals(l1Props[5].name, l1Info.geometry)
+			unitTest:assertEquals(l2Props[5].name, l2Info.geometry)
 			unitTest:assertNil(l1Props[6])
 			unitTest:assertNil(l2Props[6])
 

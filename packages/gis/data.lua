@@ -28,7 +28,7 @@ data{
 }
 
 data{
-	file = {"amazonia-prodes.tif", "amazonia-prodes.jgw", "amazonia-prodes.xml", "amazonia-prodes.tif.aux.xml"},
+	file = {"amazonia-prodes.tif", "amazonia-prodes.jgw"},
 	summary = "PRODES data with resolution of 5km. This is a simplified version of the data and must be used only for educational purposes.",
 	source = "http://www.obt.inpe.br/prodes",
 	attributes = {
@@ -65,7 +65,7 @@ data{
 -- Emas
 
 data{
-	file = {"emas-accumulation.tif", "emas-accumulation.xml"},
+	file = "emas-accumulation.tif",
 	summary = "Land cover accumulation from November 94 to May 2000.",
 	source = "Rodolfo Almeida (see Reference)",
 	reference = "Almeida et al. (2008). Simulando padroes de incendios no Parque Nacional das Emas, Estado de Goias, Brasil. In: X Simposio Brasileiro de Geoinformatica, Rio de Janeiro, Brazil",
@@ -108,7 +108,7 @@ data{
 }
 
 data{
-	file = {"itaituba-deforestation.tif", "itaituba-deforestation.xml"},
+	file = "itaituba-deforestation.tif",
 	summary = "Deforestation in Itaituba.",
 	source = "PRODES/INPE",
 	attributes = {
@@ -117,7 +117,7 @@ data{
 }
 
 data{
-	file = {"itaituba-elevation.tif", "itaituba-elevation.xml"},
+	file = "itaituba-elevation.tif",
 	summary = "SRTM data within Itaituba.",
 	source = "HAND (derived from SRTM/NASA)",
 	attributes = {

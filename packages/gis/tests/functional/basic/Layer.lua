@@ -988,7 +988,9 @@ return {
 		local expected = [[
 encoding  string [latin1]
 epsg      number [29191]
+fid       string [FID]
 file      string [itaituba-census.shp]
+geometry  string [_ogr_geometry_]
 name      string [Setores_2000]
 project   Project
 rep       string [polygon]
