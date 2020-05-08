@@ -58,6 +58,8 @@ extern "C"
 #include "luna.h"
 #include "LuaBindingDelegate.h"
 
+#include "hpa/hpa.h"
+
 QApplication* app;
 
 //////////////////////////////////////////////////////////////////////////////
@@ -165,6 +167,7 @@ void registerClasses()
 	Luna<luaLogFile>::getInstance()->setup(L);
 	Luna<luaTcpSender>::getInstance()->setup(L);
 	Luna<luaUdpSender>::getInstance()->setup(L);
+	Luna<HPA>::getInstance()->setup(L);
 }
 
 int cpp_runcommand(lua_State *L)
@@ -472,6 +475,9 @@ int main(int argc, char *argv[])
 		lua_newtable(L);
 
 		int argument = 1;
+		HPA *HPAFlow = new HPA(argv[argument], L);
+		HPAFlow->execute();
+		delete HPAFlow;
 		while (argument < argc)
 		{
 			lua_pushnumber(L, argument);

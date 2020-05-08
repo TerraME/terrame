@@ -396,5 +396,23 @@ Luna<luaEnvironment>::RegType luaEnvironment::methods[] =
 	{0, 0}
 };
 
+//****************************** HPA ****************************************//
+
+// Tiago - alterei as linhas baixo para tornar o HPA um lightuserdata que 'e imune ao garbage collector de Lua
+const char HPA::className[] = "HPA";
+
+Luna<HPA>::RegType HPA::methods[] =
+{
+	method(HPA, joinall),
+	method(HPA, join),
+	method(HPA, parallel),
+	method(HPA, acquire),
+	method(HPA, release),
+	//method(HPA, execute),
+	method(HPA, np),
+	method(HPA, HPATests),
+	{0,0}
+};
+
 #endif // REGISTRY_OBJECT_H
 
