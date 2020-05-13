@@ -251,15 +251,30 @@ return {
 		local version = ""
 		local readQGisProject = function()
 			local qgisproj
+			local projFile = filePath("test/various"..version..".qgs", "gis")
+			local cdProjFile = File("various"..version..".qgs"):deleteIfExists()
+			projFile:copy(currentDir())
+
+			local gjFile = filePath("test/sampa.geojson", "gis")
+			local ascFile = filePath("test/biomassa-manaus.asc", "gis")
+			local ncFile = filePath("test/vegtype_2000.nc", "gis")
+
+			File("sampa.geojson"):deleteIfExists()
+			File("biomassa-manaus.asc"):deleteIfExists()
+			File("vegtype_2000.nc"):deleteIfExists()
+
+			gjFile:copy(currentDir())
+			ascFile:copy(currentDir())
+			ncFile:copy(currentDir())
 
 			if _Gtme.sessionInfo().system == "windows" then
 				qgisproj = Project {
-					file = filePath("test/various"..version..".qgs", "gis")
+					file = cdProjFile
 				}
 			else
 				local ncWarn = function()
 					qgisproj = Project {
-						file = filePath("test/various"..version..".qgs", "gis")
+						file = cdProjFile
 					}
 				end
 				unitTest:assertWarning(ncWarn, "Layer QGIS ignored 'vegtype_2000'. Type 'nc' is not supported.") -- SKIP
@@ -301,12 +316,18 @@ return {
 				unitTest:assertEquals(l3.encoding, "latin1") -- SKIP
 			end
 
-			File("various"..version..".tview"):delete()
+			qgisproj.file:delete()
+			File("sampa.geojson"):delete()
+			File("biomassa-manaus.asc"):delete()
+			File("vegtype_2000.nc"):deleteIfExists()
 		end
 
 		local insertNewLayerQgis = function()
 			local qgsfile = filePath("test/sampa_v3.qgs", "gis")
 			local spfile = filePath("test/sampa.shp", "gis")
+
+			File("sampa_v3.qgs"):deleteIfExists()
+			File("sampa.shp"):deleteIfExists()
 
 			qgsfile:copy(currentDir())
 			spfile:copy(currentDir())
@@ -601,17 +622,26 @@ title   string [The Amazonia]
 		unitTest:assertWarning(defaultValueError, defaultValueMsg("author", "No author"))
 		File("abc.tview"):delete()
 
+		local qgsfile = filePath("test/sampa.qgs", "gis")
+		local qgsfileCd = File("sampa.qgs"):deleteIfExists()
+		qgsfile:copy(currentDir())
+
+		local spfile = filePath("test/sampa.shp", "gis")
+		File("sampa.shp"):deleteIfExists()
+		spfile:copy(currentDir())
+
 		local qgisproj = Project {
-			file = filePath("test/amazonia.qgs", "gis")
+			file = qgsfileCd
 		}
 
-		unitTest:assertEquals(tostring(qgisproj), [[author  string [QGIS Project]
+		unitTest:assertEquals(tostring(qgisproj), [[author  string [Sampa QGis Project]
 clean   boolean [false]
 file    File
-layers  named table of size 3
-title   string [QGIS Project]
+layers  named table of size 1
+title   string [Sampa QGis Project]
 ]])
 
-		File("amazonia.tview"):delete()
+		File("sampa.qgs"):delete()
+		File("sampa.shp"):delete()
 	end
 }

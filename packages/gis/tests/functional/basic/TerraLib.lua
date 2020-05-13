@@ -60,9 +60,51 @@ return {
 
 		local version = ""
 		local readQGisProject = function()
+			local spQgs = filePath("test/sampa"..version..".qgs", "gis")
+			local amzQgs = filePath("test/amazonia"..version..".qgs", "gis")
+			local variousQgs = filePath("test/various"..version..".qgs", "gis")
+			local webQgs = filePath("test/webservice"..version..".qgs", "gis")
+
+			local spQgsCd = File("sampa"..version..".qgs"):deleteIfExists()
+			local variousQgsCd = File("various"..version..".qgs"):deleteIfExists()
+			local webQgsCd = File("webservice"..version..".qgs"):deleteIfExists()
+
+			spQgs:copy(currentDir())
+			variousQgs:copy(currentDir())
+			webQgs:copy(currentDir())
+
+			local amzdir = Directory(currentDir().."/amztest/")
+			if amzdir:exists() then amzdir:delete() end
+			amzdir:create()
+			amzQgs:copy(amzdir)
+			local amzQgsCd = File("amztest/amazonia"..version..".qgs")
+
+			local shpFile = filePath("test/sampa.shp", "gis")
+			local gjFile = filePath("test/sampa.geojson", "gis")
+			local ascFile = filePath("test/biomassa-manaus.asc", "gis")
+			local ncFile = filePath("test/vegtype_2000.nc", "gis")
+			File("sampa.shp"):deleteIfExists()
+			File("sampa.geojson"):deleteIfExists()
+			File("biomassa-manaus.asc"):deleteIfExists()
+			File("vegtype_2000.nc"):deleteIfExists()
+			shpFile:copy(currentDir())
+			gjFile:copy(currentDir())
+			ascFile:copy(currentDir())
+			ncFile:copy(currentDir())
+
+			local amzFile = filePath("amazonia-limit.shp", "gis")
+			local prodesFile = filePath("amazonia-prodes.tif", "gis")
+			local roadsFile = filePath("amazonia-roads.shp", "gis")
+			File("amazonia-limit.shp"):deleteIfExists()
+			File("amazonia-prodes.tif"):deleteIfExists()
+			File("amazonia-roads.shp"):deleteIfExists()
+			amzFile:copy(currentDir())
+			prodesFile:copy(currentDir())
+			roadsFile:copy(currentDir())
+
 			-- shp
 			local proj = {
-				file = filePath("test/sampa"..version..".qgs", "gis")
+				file = spQgsCd
 			}
 
 			TerraLib().createProject(proj)
@@ -82,18 +124,19 @@ return {
 			unitTest:assertEquals(layerInfo.source, "shp")
 			unitTest:assertEquals(layerInfo.encoding, "LATIN1")
 
-			File("sampa"..version..".tview"):delete()
+			spQgsCd:delete()
+			File("sampa.shp"):delete()
 
 			-- three shps
 			proj = {}
-			proj.file = filePath("test/amazonia"..version..".qgs", "gis")
+			proj.file = amzQgsCd
 
 			TerraLib().createProject(proj)
 
 			unitTest:assertEquals(proj.file:name(), "amazonia"..version..".qgs")
 			unitTest:assertEquals(proj.title, "QGIS Project")
 			unitTest:assertEquals(proj.author, "QGIS Project")
-			unitTest:assert(File("amazonia"..version..".tview"):exists())
+			unitTest:assert(File("amztest/amazonia"..version..".tview"):exists())
 			unitTest:assertEquals(getn(proj.layers), 3)
 
 			layerInfo = TerraLib().getLayerInfo(proj, "amazonia-limit")
@@ -120,11 +163,15 @@ return {
 			unitTest:assertEquals(layerInfo.source, "shp")
 			unitTest:assertEquals(layerInfo.encoding, "LATIN1")
 
-			File("amazonia"..version..".tview"):delete()
+			amzQgsCd:delete()
+			File("amazonia-limit.shp"):delete()
+			File("amazonia-prodes.tif"):delete()
+			File("amazonia-roads.shp"):delete()
+			amzdir:delete()
 
 			-- various types
 			proj = {}
-			proj.file = filePath("test/various"..version..".qgs", "gis")
+			proj.file = variousQgsCd
 
 			if _Gtme.sessionInfo().system == "windows" then
 				TerraLib().createProject(proj)
@@ -162,7 +209,10 @@ return {
 				unitTest:assertEquals(layerInfo.encoding, "LATIN1") -- SKIP
 			end
 
-			File("various"..version..".tview"):delete()
+			variousQgsCd:delete()
+			File("sampa.geojson"):delete()
+			File("biomassa-manaus.asc"):delete()
+			File("vegtype_2000.nc"):delete()
 
 			-- web services
 			local wmsDir = Directory("wms")
@@ -171,7 +221,7 @@ return {
 			end
 
 			proj = {}
-			proj.file = filePath("test/webservice"..version..".qgs", "gis")
+			proj.file = webQgsCd
 			TerraLib().createProject(proj)
 
 			layerInfo = TerraLib().getLayerInfo(proj, "Cerrado States")
@@ -195,7 +245,7 @@ return {
 			unitTest:assertEquals(layerInfo.encoding, "LATIN1")
 
 			wmsDir:delete()
-			File("webservice"..version..".tview"):delete()
+			webQgsCd:delete()
 		end
 
 		local insertNewLayerQgis = function()
@@ -340,8 +390,16 @@ return {
 		end
 
 		local openQGisProject = function()
+			local spQgs = filePath("test/sampa_v3.qgs", "gis")
+			local spQgsCd = File("sampa_v3.qgs"):deleteIfExists()
+			spQgs:copy(currentDir())
+
+			local spFile = filePath("test/sampa.shp", "gis")
+			File("sampa.shp"):deleteIfExists()
+			spFile:copy(currentDir())
+
 			local proj = {
-				file = filePath("test/sampa_v3.qgs", "gis")
+				file = spQgsCd
 			}
 
 			TerraLib().openProject(proj, proj.file)
@@ -351,7 +409,8 @@ return {
 			unitTest:assertEquals(proj.author, "Sampa QGis Project")
 			unitTest:assert(File("sampa_v3.tview"):exists())
 
-			File("sampa_v3.tview"):delete()
+			proj.file:delete()
+			File("sampa.shp"):delete()
 		end
 
 		unitTest:assert(openTviewProject)

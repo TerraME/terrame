@@ -523,10 +523,10 @@ local function castLayer(layer)
 end
 
 local function loadProject(project, file)
-	local _, fileName, ext = project.file:split()
+	local path, fileName, ext = project.file:split()
 
 	if ext == "qgs" then
-		file = File(currentDir()..fileName..".tview")
+		file = File(path..fileName..".tview")
 		if not file:exists() then
 			instance.createProject(project)
 		end
@@ -616,12 +616,12 @@ end
 
 local function saveProject(project, layers)
 	local file = tostring(project.file)
-	local _, fileName, ext = project.file:split()
+	local path, fileName, ext = project.file:split()
 	local qgsfile
 
 	if ext == "qgs" then
 		qgsfile = file
-		file = currentDir()..fileName..".tview"
+		file = path..fileName..".tview"
 	end
 
 	local layersVector = {}
@@ -2099,6 +2099,7 @@ local function createProjectFromQGis(project)
 			if uri:scheme() == "file" then
 				local file = File(fixSpaceInPath(uri:host()..uri:path()))
 				local ext = file:extension()
+
 				if ext == "shp" then
 					instance.addShpLayer(project, qgisLayer:getName(), file, true, qgisLayer:getSrid())
 				elseif ext == "tif" then
@@ -2958,8 +2959,8 @@ TerraLib_ = {
 				local projFileBkp
 				if project.file:extension() == "qgs" then
 					projFileBkp = project.file
-					local _, fn = project.file:split()
-					project.file = File(fn..".tview")
+					local path, fn = project.file:split()
+					project.file = File(path..fn..".tview")
 				end
 
 				loadProject(project, project.file) -- TODO: WHY IS IT NEEDING RELOAD? (REVIEW)
