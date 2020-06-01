@@ -2480,13 +2480,16 @@ return {
 
 		TerraLib().setProgressVisible(false)
 
-		local problems = TerraLib().checkLayerGeometries(proj, l1Name)
+		local fix = true
+		local problems = TerraLib().checkLayerGeometries(proj, l1Name, fix)
 
 		unitTest:assertEquals(problems[1].pk.value, "404")
 		unitTest:assertEquals(problems[2].pk.value, "448")
 		unitTest:assertEquals(problems[3].pk.value, "607")
-		unitTest:assertEquals(problems[4].pk.value, "640")
-		unitTest:assertEquals(problems[5].pk.value, "763")
+		unitTest:assertEquals(problems[4].pk.value, "762")
+
+		problems = TerraLib().checkLayerGeometries(proj, l1Name, fix)
+		unitTest:assertEquals(#problems, 0)
 
 		l1File:delete()
 		proj.file:delete()
