@@ -2294,7 +2294,7 @@ return {
 			}
 
 			local overwrite = true
-			TerraLib().saveDataAs(fromData, pgData, overwrite, {"nm_micro"})
+			TerraLib().saveDataAs(fromData, pgData, overwrite, {"NM_MICRO"})
 
 			local layerName6 = "SHP2PG"
 			TerraLib().addPgLayer(proj, layerName6, pgData, nil, encoding)
@@ -2332,7 +2332,7 @@ return {
 			}
 
 			local overwrite = true
-			TerraLib().saveDataAs(fromData, pgData, overwrite, {"nm_micro", "id"})
+			TerraLib().saveDataAs(fromData, pgData, overwrite, {"NM_MICRO", "ID"})
 
 			local layerName7 = "GJ2PG"
 			TerraLib().addPgLayer(proj, layerName7, pgData, nil, encoding)

@@ -541,7 +541,6 @@ elseif(WIN32)
 	                                  ${TERRALIB_3RDPARTY_DIR}/lib/hdfdll.dll
 	                                  ${TERRALIB_3RDPARTY_DIR}/lib/iconv.dll
 	                                  ${TERRALIB_3RDPARTY_DIR}/lib/libcurl.dll
-	                                  # ${TERRALIB_3RDPARTY_DIR}/lib/libeay32.dll
 	                                  ${TERRALIB_3RDPARTY_DIR}/lib/libgeotiff.dll
 	                                  ${TERRALIB_3RDPARTY_DIR}/lib/libpng15.dll
 	                                  ${TERRALIB_3RDPARTY_DIR}/lib/libpq.dll
@@ -553,7 +552,6 @@ elseif(WIN32)
 	                                  ${TERRALIB_3RDPARTY_DIR}/lib/proj_6_2.dll
 	                                  ${TERRALIB_3RDPARTY_DIR}/lib/spatialite.dll
 	                                  ${TERRALIB_3RDPARTY_DIR}/lib/sqlite3.dll
-	                                  # ${TERRALIB_3RDPARTY_DIR}/lib/ssleay32.dll
 	                                  ${TERRALIB_3RDPARTY_DIR}/lib/xdrdll.dll
 	                                  ${TERRALIB_3RDPARTY_DIR}/lib/xerces-c_3_1.dll
 	                                  ${TERRALIB_3RDPARTY_DIR}/lib/zlib.dll

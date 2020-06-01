@@ -317,7 +317,7 @@ local function genRandomString(lenght)
 end
 
 local function addSpatialIndex(ds, dseName, dst, dsType, file)
-	if dsType == "OGR" then
+	if (dsType == "OGR") and (File(file):extension() == "shp") then
 		if not hasShapeFileSpatialIndex(file) then
 			ds:execute("CREATE SPATIAL INDEX ON "..dseName)
 		end

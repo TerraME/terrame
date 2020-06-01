@@ -358,9 +358,9 @@ return {
 		unitTest:assertEquals(dsetSize, 381)
 
 		local attrNames = TerraLib().getPropertyNames(proj, polyName)
-		unitTest:assertEquals("FID", attrNames[0])
-		unitTest:assertEquals("id", attrNames[1])
-		unitTest:assertEquals("value", attrNames[2])
+		unitTest:assertEquals("id", attrNames[0])
+		unitTest:assertEquals("value", attrNames[1])
+		unitTest:assertNotNil(attrNames[2])
 
 		proj.file:delete()
 		outFile:delete()

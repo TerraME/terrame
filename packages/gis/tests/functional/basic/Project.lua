@@ -245,7 +245,7 @@ return {
 			directory = packageInfo("gis").data.."test"
 		}
 
-		unitTest:assertEquals(getn(proj.layers), 28)
+		unitTest:assertEquals(getn(proj.layers), 29)
 		file:deleteIfExists()
 
 		local version = ""
