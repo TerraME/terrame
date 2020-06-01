@@ -777,12 +777,12 @@ local function fixNameTo10Characters(name, property)
 	return string.gsub(name, property.."_", prop.."_")
 end
 
-local function renameEachClass(ds, dSetName, dsType, select, property, fileExt)
+local function renameEachClass(ds, dSetName, dsType, select, property, fileExt, startIdx)
 	local dSet = ds:getDataSet(dSetName)
 	local numProps = dSet:getNumProperties()
 	local propsRenamed = {}
 
-	for i = 0, numProps - 1 do
+	for i = startIdx, numProps - 1 do
 		local currentProp = dSet:getPropertyName(i)
 		local newName
 
@@ -798,8 +798,10 @@ local function renameEachClass(ds, dSetName, dsType, select, property, fileExt)
 					if not string.find(currentProp, "_") then
 						newName = string.gsub(currentProp, select, property.."_0")
 					end
-				else
+				elseif string.find(currentProp, "_") then
 					newName = string.gsub(currentProp, select.."_", property.."_")
+				else
+					newName = string.gsub(currentProp, select, property.."_")
 				end
 			end
 
@@ -815,11 +817,11 @@ local function renameEachClass(ds, dSetName, dsType, select, property, fileExt)
 			propsRenamed[newName] = newName
 
 		elseif (fileExt == "shp") and (string.len(select) == 10) then
-			local idx = string.find(currentProp, "_")
+			local idx = string.find(currentProp, "%d+$")
 			if idx then
 				local propSub = string.sub(currentProp, 1, idx - 1)
 				if (propSub ~= "") and string.match(select, propSub) then
-					newName = string.gsub(currentProp, "(.*)_", property.."_")
+					newName = string.gsub(currentProp, propSub, property.."_")
 
 					if (string.len(newName) > 10) and (dsType ~= "POSTGIS") then
 						newName = fixNameTo10Characters(newName, property)
@@ -1662,6 +1664,7 @@ local function getDataSourceInfoByLayer(layer)
 	info.srid = layer:getSRID()
 	info.datatype = info.datasource:getDataSetType(info.dataset)
 	info.geometry = binding.GetFirstGeomProperty(info.datatype)
+	info.geometry = binding.te.gm.GeometryProperty(info.geometry)
 
 	return info
 end
@@ -1704,6 +1707,7 @@ local function getDataSourceInfoByFile(file)
 	if info.type == "OGR" then
 		info.datatype = info.datasource:getDataSetType(info.dataset)
 		info.geometry = binding.GetFirstGeomProperty(info.datatype)
+		info.geometry = binding.te.gm.GeometryProperty(info.geometry)
 		info.srid = info.geometry:getSRID()
 	end
 
@@ -2933,7 +2937,11 @@ TerraLib_ = {
 			local attrsRenamed = {}
 
 			if (operation == "coverage") or (operation == "total") then
-				attrsRenamed = renameEachClass(outDs, outDSetName, outType, select, attribute, outFileExt)
+				local toDs = makeAndOpenDataSource(toDsInfo:getConnInfo(), toDsInfo:getType())
+				local toDSet = toDs:getDataSet(toDSetName)
+				local startIdx = toDSet:getNumProperties() - 1 -- (-1) geometry attr
+				attrsRenamed = renameEachClass(outDs, outDSetName, outType, select,
+											attribute, outFileExt, startIdx)
 			else
 				outDs:renameProperty(outDSetName, propCreatedName, attribute)
 				attrsRenamed[attribute] = attribute
