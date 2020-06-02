@@ -240,7 +240,7 @@ return {
 			unitTest:assertEquals(layerInfo.srid, 4674)
 			unitTest:assertEquals(layerInfo.type, "WFS")
 			unitTest:assertEquals(layerInfo.source, "wfs")
-			unitTest:assertEquals(layerInfo.url, "http://terrabrasilis.dpi.inpe.br/geoserver/ows?version=2.0.0&", 1)
+			unitTest:assertEquals(layerInfo.url, "http://terrabrasilis.dpi.inpe.br/geoserver/ows")
 			unitTest:assertEquals(layerInfo.dataset, "prodes-legal-amz:brazilian_legal_amazon")
 			unitTest:assertEquals(layerInfo.encoding, "LATIN1")
 
