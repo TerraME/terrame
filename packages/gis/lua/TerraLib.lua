@@ -801,7 +801,7 @@ local function renameEachClass(ds, dSetName, dsType, select, property, fileExt, 
 				elseif string.find(currentProp, "_") then
 					newName = string.gsub(currentProp, select.."_", property.."_")
 				else
-					newName = string.gsub(currentProp, select, property.."_")
+					newName = string.gsub(currentProp, select, property.."_") --SKIP
 				end
 			end
 
@@ -1699,7 +1699,7 @@ local function getDataSourceInfoByFile(file)
 		local _, fileName = file:split()
 		info.dataset = fileName
 	else
-		info.dataset = file:name()
+		info.dataset = file:name() --SKIP
 	end
 
 	info.datasource = makeAndOpenDataSource(connInfo, info.type)
@@ -2988,22 +2988,18 @@ TerraLib_ = {
 					outDs:close()
 
 					if outFileExt == "geojson" then -- TODO(#2224)
-						local temp = {
+						local temp = { --SKIP
 							project = project,
 							layer = out
 						}
-
-						local geojson = {
+						local geojson = { --SKIP
 							file = getFileByUri(toConnInfo),
 							type = "geojson"
 						}
-
-						instance.saveDataAs(temp, geojson, true)
-
-						local outFile = getFileByUri(outConnInfo)
-						outFile:delete()
-
-						File(outFile..".tmp"):deleteIfExists()
+						instance.saveDataAs(temp, geojson, true) --SKIP
+						local outFile = getFileByUri(outConnInfo) --SKIP
+						outFile:delete() --SKIP
+						File(outFile..".tmp"):deleteIfExists() --SKIP
 					else
 						overwriteLayer(project, out, to, toSetName, default)
 					end
