@@ -2989,12 +2989,12 @@ TerraLib_ = {
 
 					if outFileExt == "geojson" then -- TODO(#2224)
 						local temp = { --SKIP
-							project = project,
-							layer = out
+							project = project, --SKIP
+							layer = out --SKIP
 						}
 						local geojson = { --SKIP
-							file = getFileByUri(toConnInfo),
-							type = "geojson"
+							file = getFileByUri(toConnInfo), --SKIP
+							type = "geojson" --SKIP
 						}
 						instance.saveDataAs(temp, geojson, true) --SKIP
 						local outFile = getFileByUri(outConnInfo) --SKIP
