@@ -1398,9 +1398,9 @@ Layer_ = {
 	--- Checks if data layer geometries are valid.
 	-- If some invalid geometry are found, a warning is show about the problem.
 	-- Return true if no problem is found.
-	-- @arg fix A boolean value which if true tries to fix the geometries problems found.
+	-- @arg fix A boolean value which if true tries to fix the geometry problems found.
 	-- If not set, its value will be false.
-	-- If it is not possible fix the geometries a error will be show.
+	-- If it is not possible fix the geometries a error will be shown.
 	-- @arg progress A boolean value indicating whether progress will be shown while fixing the geometries.
 	-- @usage --DONTRUN
 	-- local layer = Layer{
@@ -1426,7 +1426,7 @@ Layer_ = {
 			if error == "fatal" then
 				local unfixables = TerraLib().checkLayerGeometries(self.project, self.name, false)
 				customError(formatCheckGeometriesMsg(unfixables, self.name)
-							.."\nThe use of this data can lead to inconsistent results.")
+							.."\nThe use of this data can produce inconsistent results.")
 			end
 
 			return false

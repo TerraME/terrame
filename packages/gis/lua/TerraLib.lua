@@ -3685,7 +3685,7 @@ TerraLib_ = {
 	-- If invalid geometries are found, it returns a list of the problems.
 	-- @arg project A project.
 	-- @arg layerName The name of the layer.
-	-- @arg fix A boolean value which if true tries to fix the geometries problems founded.
+	-- @arg fix A boolean value which if true tries to fix the geometry problems founded.
 	-- @usage --DONTRUN
 	-- local problems = TerraLib().checkLayerGeometries(self.project, self.name)
 	-- print(problems[1].error, problems[1].coord.x, problems[1].coord.y)
@@ -3712,7 +3712,7 @@ TerraLib_ = {
 			end
 
 			if fix and (#problems > 0) then
-				viewerId = createProgressViewer("Fixing '"..layerName.."' geometries")
+				viewerId = createProgressViewer("Fixing geometries of layer '"..layerName)
 				fixErrorMsg = binding.te.vp.MakeGeometryValid.makeValid(layer,
 								layer:getDataSetName(), geomError.objectIdSet)
 				finalizeProgressViewer(viewerId)
