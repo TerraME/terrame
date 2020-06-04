@@ -1279,7 +1279,6 @@ local function isValidDataSourceUri(uri, type)
 	do
 		local ds = binding.te.da.DataSourceFactory.make(type, uri)
 		valid = ds:isValid()
-		ds:close()
 	end
 	collectgarbage("collect")
 	return valid
