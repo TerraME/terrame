@@ -1400,7 +1400,7 @@ Layer_ = {
 	-- Return true if no problem is found.
 	-- @arg fix A boolean value which if true tries to fix the geometry problems found.
 	-- If not set, its value will be false.
-	-- If it is not possible fix the geometries a error will be shown.
+	-- If it is not possible fix the geometries an error will be shown.
 	-- @arg progress A boolean value indicating whether progress will be shown while fixing the geometries.
 	-- @usage --DONTRUN
 	-- local layer = Layer{

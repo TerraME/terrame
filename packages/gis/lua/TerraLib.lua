@@ -3496,7 +3496,7 @@ TerraLib_ = {
 		end
 	end,
 	--- Check if a name is valid.
-	-- Return a error message if the name is invalid, otherwise it returns a empty string.
+	-- Return an error message if the name is invalid, otherwise it returns a empty string.
 	-- @arg name A string name.
 	-- @usage -- DONTRUN
 	-- TerraLib().checkName("aname")

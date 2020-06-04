@@ -104,7 +104,7 @@ return {
 		customError = function(msg)
 			unitTest:assertEquals(msg, "The following problem was found in layer 'DefectBio' geometries:\n"
 							.."1. FID 637: Self-intersection (5494485.5853231, 8210317.9905857).\n"
-							.."The use of this data can lead to inconsistent results.")
+							.."The use of this data can produce inconsistent results.")
 		end
 
 		l1:check(true, false)
