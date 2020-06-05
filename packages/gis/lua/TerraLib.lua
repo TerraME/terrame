@@ -1662,8 +1662,10 @@ local function getDataSourceInfoByLayer(layer)
 	info.name = layer:getTitle()
 	info.srid = layer:getSRID()
 	info.datatype = info.datasource:getDataSetType(info.dataset)
-	info.geometry = binding.GetFirstGeomProperty(info.datatype)
-	info.geometry = binding.te.gm.GeometryProperty(info.geometry)
+	if info.datatype:hasGeom() then
+		info.geometry = binding.GetFirstGeomProperty(info.datatype)
+		info.geometry = binding.te.gm.GeometryProperty(info.geometry)
+	end
 
 	return info
 end
