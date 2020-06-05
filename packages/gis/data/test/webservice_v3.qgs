@@ -22,7 +22,7 @@
     <layer-tree-layer checked="Qt::Checked" providerKey="wms" expanded="0" id="Cerrado_States_d6dfa4f7_c647_48a7_a985_3b4412183d59" source="contextualWMSLegend=0&amp;crs=EPSG:4326&amp;dpiMode=7&amp;featureCount=10&amp;format=image/png&amp;layers=prodes-cerrado:estados&amp;styles&amp;url=http://terrabrasilis.dpi.inpe.br/geoserver/ows" name="Cerrado States">
       <customproperties/>
     </layer-tree-layer>
-    <layer-tree-layer checked="Qt::Checked" providerKey="WFS" expanded="1" id="prodes_legal_amz_brazilian_legal_amazon_695b46d7_868c_4d5d_a598_5fdbbfca97e0" source=" pagingEnabled='true' restrictToRequestBBOX='1' srsname='EPSG:4674' typename='prodes-legal-amz:brazilian_legal_amazon' url='http://terrabrasilis.dpi.inpe.br/geoserver/ows?version=2.0.0' version='auto' table=&quot;&quot; sql=" name="prodes-legal-amz:brazilian_legal_amazon">
+    <layer-tree-layer checked="Qt::Checked" providerKey="WFS" expanded="1" id="prodes_legal_amz_brazilian_legal_amazon_695b46d7_868c_4d5d_a598_5fdbbfca97e0" source=" pagingEnabled='true' restrictToRequestBBOX='1' srsname='EPSG:4674' typename='prodes-legal-amz:brazilian_legal_amazon' url='http://terrabrasilis.dpi.inpe.br/geoserver/ows' version='auto' table=&quot;&quot; sql=" name="prodes-legal-amz:brazilian_legal_amazon">
       <customproperties/>
     </layer-tree-layer>
     <custom-order enabled="0">
@@ -234,7 +234,7 @@
         <ymax>5.27222500000002015</ymax>
       </extent>
       <id>prodes_legal_amz_brazilian_legal_amazon_695b46d7_868c_4d5d_a598_5fdbbfca97e0</id>
-      <datasource> pagingEnabled='true' restrictToRequestBBOX='1' srsname='EPSG:4674' typename='prodes-legal-amz:brazilian_legal_amazon' url='http://terrabrasilis.dpi.inpe.br/geoserver/ows?version=2.0.0' version='auto' table="" sql=</datasource>
+      <datasource> pagingEnabled='true' restrictToRequestBBOX='1' srsname='EPSG:4674' typename='prodes-legal-amz:brazilian_legal_amazon' url='http://terrabrasilis.dpi.inpe.br/geoserver/ows' version='auto' table="" sql=</datasource>
       <keywordList>
         <value></value>
       </keywordList>

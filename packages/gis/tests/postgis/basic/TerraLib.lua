@@ -2294,7 +2294,7 @@ return {
 			}
 
 			local overwrite = true
-			TerraLib().saveDataAs(fromData, pgData, overwrite, {"nm_micro"})
+			TerraLib().saveDataAs(fromData, pgData, overwrite, {"NM_MICRO"})
 
 			local layerName6 = "SHP2PG"
 			TerraLib().addPgLayer(proj, layerName6, pgData, nil, encoding)
@@ -2332,7 +2332,7 @@ return {
 			}
 
 			local overwrite = true
-			TerraLib().saveDataAs(fromData, pgData, overwrite, {"nm_micro", "id"})
+			TerraLib().saveDataAs(fromData, pgData, overwrite, {"NM_MICRO", "ID"})
 
 			local layerName7 = "GJ2PG"
 			TerraLib().addPgLayer(proj, layerName7, pgData, nil, encoding)
@@ -2667,8 +2667,17 @@ return {
 	createProject = function(unitTest)
 		local version = ""
 		local readQGisProject = function()
+			local qgpfile = filePath("test/sampa"..version..".qgs", "gis")
+			local qgpfileCd = File("sampa"..version..".qgs"):deleteIfExists()
+			qgpfile:copy(currentDir())
+
+			local shpFile = filePath("test/sampa.shp", "gis")
+
+			File("sampa.shp"):deleteIfExists()
+			shpFile:copy(currentDir())
+
 			local proj = {
-				file = filePath("test/sampa"..version..".qgs", "gis")
+				file = qgpfileCd
 			}
 
 			TerraLib().createProject(proj)
@@ -2699,7 +2708,10 @@ return {
 			TerraLib().saveDataAs(fromData, pgData, true)
 
 			local projPg = {}
-			projPg.file = filePath("test/sampapg"..version..".qgs", "gis")
+			local qgpfilePg = filePath("test/sampapg"..version..".qgs", "gis")
+			local qgpfilePgCd = File("sampapg"..version..".qgs"):deleteIfExists()
+			qgpfilePg:copy(currentDir())
+			projPg.file = qgpfilePgCd
 
 			if version == "_v3" then
 				projPg.user = pgData.user
@@ -2730,8 +2742,8 @@ return {
 			unitTest:assertEquals(layerInfo.table, tableName)
 
 			TerraLib().dropPgTable(pgData)
-			File("sampa"..version..".tview"):delete()
-			File("sampapg"..version..".tview"):delete()
+			File("sampa"..version..".qgs"):delete()
+			File("sampapg"..version..".qgs"):delete()
 		end
 
 		local insertNewLayerQgis = function()

@@ -471,18 +471,20 @@ local function findMultiples(base, pattern, list)
 	return elements
 end
 
-local function formatCheckGeometriesMsg(problems)
+local function formatCheckGeometriesMsg(problems, layer)
 	local errMsg
 
 	if #problems == 1 then
-		errMsg = "The following problem was found in the geometries:\n" --SKIP
+		errMsg = "The following problem was found in"
 	else
-		errMsg = "The following problems were found in the geometries:\n"
+		errMsg = "The following problems were found in"
 	end
+
+	errMsg = errMsg.." layer '"..layer.."' geometries:\n"
 
 	for i = 1, #problems do
 		local p = problems[i]
-		if p.pk then
+		if p.pk and (p.pk.value ~= "") then
 			errMsg = errMsg..i..". "..p.pk.name.." "..p.pk.value..": "..p.error
 					.." ("..p.coord.x..", "..p.coord.y..")."
 		else
@@ -1396,6 +1398,9 @@ Layer_ = {
 	--- Checks if data layer geometries are valid.
 	-- If some invalid geometry are found, a warning is show about the problem.
 	-- Return true if no problem is found.
+	-- @arg fix A boolean value which if true tries to fix the geometry problems found.
+	-- If not set, its value will be false.
+	-- If it is not possible fix the geometries an error will be shown.
 	-- @arg progress A boolean value indicating whether progress will be shown while fixing the geometries.
 	-- @usage --DONTRUN
 	-- local layer = Layer{
@@ -1407,15 +1412,23 @@ Layer_ = {
 	-- if not layer:check() then
 	--     layer:check(true)
 	-- end
-	check = function(self, progress)
-		optionalArgument(2, "boolean", progress)
+	check = function(self, fix, progress)
+		optionalArgument(2, "boolean", fix)
+		if fix == nil then fix = false end
+		optionalArgument(3, "boolean", progress)
 		if progress == nil then progress = true end
 
 		TerraLib().setProgressVisible(progress)
-		local problems = TerraLib().checkLayerGeometries(self.project, self.name)
+		local problems, error = TerraLib().checkLayerGeometries(self.project, self.name, fix)
 
 		if #problems > 0 then
-			customWarning(formatCheckGeometriesMsg(problems))
+			customWarning(formatCheckGeometriesMsg(problems, self.name))
+			if error == "fatal" then
+				local unfixables = TerraLib().checkLayerGeometries(self.project, self.name, false)
+				customError(formatCheckGeometriesMsg(unfixables, self.name)
+							.."\nThe use of this data can produce inconsistent results.")
+			end
+
 			return false
 		end
 

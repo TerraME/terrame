@@ -317,7 +317,7 @@ local function genRandomString(lenght)
 end
 
 local function addSpatialIndex(ds, dseName, dst, dsType, file)
-	if dsType == "OGR" then
+	if (dsType == "OGR") and (File(file):extension() == "shp") then
 		if not hasShapeFileSpatialIndex(file) then
 			ds:execute("CREATE SPATIAL INDEX ON "..dseName)
 		end
@@ -523,10 +523,10 @@ local function castLayer(layer)
 end
 
 local function loadProject(project, file)
-	local _, fileName, ext = project.file:split()
+	local path, fileName, ext = project.file:split()
 
 	if ext == "qgs" then
-		file = File(currentDir()..fileName..".tview")
+		file = File(path..fileName..".tview")
 		if not file:exists() then
 			instance.createProject(project)
 		end
@@ -616,12 +616,12 @@ end
 
 local function saveProject(project, layers)
 	local file = tostring(project.file)
-	local _, fileName, ext = project.file:split()
+	local path, fileName, ext = project.file:split()
 	local qgsfile
 
 	if ext == "qgs" then
 		qgsfile = file
-		file = currentDir()..fileName..".tview"
+		file = path..fileName..".tview"
 	end
 
 	local layersVector = {}
@@ -777,12 +777,12 @@ local function fixNameTo10Characters(name, property)
 	return string.gsub(name, property.."_", prop.."_")
 end
 
-local function renameEachClass(ds, dSetName, dsType, select, property, fileExt)
+local function renameEachClass(ds, dSetName, dsType, select, property, fileExt, startIdx)
 	local dSet = ds:getDataSet(dSetName)
 	local numProps = dSet:getNumProperties()
 	local propsRenamed = {}
 
-	for i = 0, numProps - 1 do
+	for i = startIdx, numProps - 1 do
 		local currentProp = dSet:getPropertyName(i)
 		local newName
 
@@ -798,8 +798,10 @@ local function renameEachClass(ds, dSetName, dsType, select, property, fileExt)
 					if not string.find(currentProp, "_") then
 						newName = string.gsub(currentProp, select, property.."_0")
 					end
-				else
+				elseif string.find(currentProp, "_") then
 					newName = string.gsub(currentProp, select.."_", property.."_")
+				else
+					newName = string.gsub(currentProp, select, property.."_") --SKIP
 				end
 			end
 
@@ -815,11 +817,11 @@ local function renameEachClass(ds, dSetName, dsType, select, property, fileExt)
 			propsRenamed[newName] = newName
 
 		elseif (fileExt == "shp") and (string.len(select) == 10) then
-			local idx = string.find(currentProp, "_")
+			local idx = string.find(currentProp, "%d+$")
 			if idx then
 				local propSub = string.sub(currentProp, 1, idx - 1)
 				if (propSub ~= "") and string.match(select, propSub) then
-					newName = string.gsub(currentProp, "(.*)_", property.."_")
+					newName = string.gsub(currentProp, propSub, property.."_")
 
 					if (string.len(newName) > 10) and (dsType ~= "POSTGIS") then
 						newName = fixNameTo10Characters(newName, property)
@@ -1277,7 +1279,6 @@ local function isValidDataSourceUri(uri, type)
 	do
 		local ds = binding.te.da.DataSourceFactory.make(type, uri)
 		valid = ds:isValid()
-		ds:close()
 	end
 	collectgarbage("collect")
 	return valid
@@ -1662,6 +1663,7 @@ local function getDataSourceInfoByLayer(layer)
 	info.srid = layer:getSRID()
 	info.datatype = info.datasource:getDataSetType(info.dataset)
 	info.geometry = binding.GetFirstGeomProperty(info.datatype)
+	info.geometry = binding.te.gm.GeometryProperty(info.geometry)
 
 	return info
 end
@@ -1696,7 +1698,7 @@ local function getDataSourceInfoByFile(file)
 		local _, fileName = file:split()
 		info.dataset = fileName
 	else
-		info.dataset = file:name()
+		info.dataset = file:name() --SKIP
 	end
 
 	info.datasource = makeAndOpenDataSource(connInfo, info.type)
@@ -1704,6 +1706,7 @@ local function getDataSourceInfoByFile(file)
 	if info.type == "OGR" then
 		info.datatype = info.datasource:getDataSetType(info.dataset)
 		info.geometry = binding.GetFirstGeomProperty(info.datatype)
+		info.geometry = binding.te.gm.GeometryProperty(info.geometry)
 		info.srid = info.geometry:getSRID()
 	end
 
@@ -2099,6 +2102,7 @@ local function createProjectFromQGis(project)
 			if uri:scheme() == "file" then
 				local file = File(fixSpaceInPath(uri:host()..uri:path()))
 				local ext = file:extension()
+
 				if ext == "shp" then
 					instance.addShpLayer(project, qgisLayer:getName(), file, true, qgisLayer:getSrid())
 				elseif ext == "tif" then
@@ -2932,7 +2936,11 @@ TerraLib_ = {
 			local attrsRenamed = {}
 
 			if (operation == "coverage") or (operation == "total") then
-				attrsRenamed = renameEachClass(outDs, outDSetName, outType, select, attribute, outFileExt)
+				local toDs = makeAndOpenDataSource(toDsInfo:getConnInfo(), toDsInfo:getType())
+				local toDSet = toDs:getDataSet(toDSetName)
+				local startIdx = toDSet:getNumProperties() - 1 -- (-1) geometry attr
+				attrsRenamed = renameEachClass(outDs, outDSetName, outType, select,
+											attribute, outFileExt, startIdx)
 			else
 				outDs:renameProperty(outDSetName, propCreatedName, attribute)
 				attrsRenamed[attribute] = attribute
@@ -2958,8 +2966,8 @@ TerraLib_ = {
 				local projFileBkp
 				if project.file:extension() == "qgs" then
 					projFileBkp = project.file
-					local _, fn = project.file:split()
-					project.file = File(fn..".tview")
+					local path, fn = project.file:split()
+					project.file = File(path..fn..".tview")
 				end
 
 				loadProject(project, project.file) -- TODO: WHY IS IT NEEDING RELOAD? (REVIEW)
@@ -2979,22 +2987,18 @@ TerraLib_ = {
 					outDs:close()
 
 					if outFileExt == "geojson" then -- TODO(#2224)
-						local temp = {
-							project = project,
-							layer = out
+						local temp = { --SKIP
+							project = project, --SKIP
+							layer = out --SKIP
 						}
-
-						local geojson = {
-							file = getFileByUri(toConnInfo),
-							type = "geojson"
+						local geojson = { --SKIP
+							file = getFileByUri(toConnInfo), --SKIP
+							type = "geojson" --SKIP
 						}
-
-						instance.saveDataAs(temp, geojson, true)
-
-						local outFile = getFileByUri(outConnInfo)
-						outFile:delete()
-
-						File(outFile..".tmp"):deleteIfExists()
+						instance.saveDataAs(temp, geojson, true) --SKIP
+						local outFile = getFileByUri(outConnInfo) --SKIP
+						outFile:delete() --SKIP
+						File(outFile..".tmp"):deleteIfExists() --SKIP
 					else
 						overwriteLayer(project, out, to, toSetName, default)
 					end
@@ -3492,7 +3496,7 @@ TerraLib_ = {
 		end
 	end,
 	--- Check if a name is valid.
-	-- Return a error message if the name is invalid, otherwise it returns a empty string.
+	-- Return an error message if the name is invalid, otherwise it returns a empty string.
 	-- @arg name A string name.
 	-- @usage -- DONTRUN
 	-- TerraLib().checkName("aname")
@@ -3681,10 +3685,11 @@ TerraLib_ = {
 	-- If invalid geometries are found, it returns a list of the problems.
 	-- @arg project A project.
 	-- @arg layerName The name of the layer.
+	-- @arg fix A boolean value which if true tries to fix the geometry problems founded.
 	-- @usage --DONTRUN
 	-- local problems = TerraLib().checkLayerGeometries(self.project, self.name)
 	-- print(problems[1].error, problems[1].coord.x, problems[1].coord.y)
-	checkLayerGeometries = function(project, layerName)
+	checkLayerGeometries = function(project, layerName, fix)
 		local problems = {}
 		local fixErrorMsg = ""
 
@@ -3706,16 +3711,23 @@ TerraLib_ = {
 									coord = {x = problem.coordX, y = problem.coordY}})
 			end
 
+			if fix and (#problems > 0) then
+				viewerId = createProgressViewer("Fixing geometries of layer '"..layerName)
+				fixErrorMsg = binding.te.vp.MakeGeometryValid.makeValid(layer,
+								layer:getDataSetName(), geomError.objectIdSet)
+				finalizeProgressViewer(viewerId)
+			end
+
 			releaseProject(project)
 		end
 
 		collectgarbage("collect")
 
 		if string.len(fixErrorMsg) > 0 then
-			customError(fixErrorMsg) --SKIP
+			return problems, "fatal"
 		end
 
-		return problems
+		return problems, "warning"
 	end,
 	--- Get information about the geometry attribute.
 	-- @arg data.project A project.

@@ -2065,10 +2065,12 @@ return {
 		TerraLib().addShpLayer(proj, layerName1, layerFile1)
 
 		local propNames = TerraLib().getPropertyNames(proj, layerName1)
+		local geomInfo = TerraLib().getGeometryInfo{project = proj, layer = layerName1}
 
 		for i = 0, #propNames do
 			unitTest:assert((propNames[i] == "FID") or (propNames[i] == "ID") or
-						(propNames[i] == "NM_MICRO") or (propNames[i] == "CD_GEOCODU"))
+						(propNames[i] == "NM_MICRO") or (propNames[i] == "CD_GEOCODU")
+						or (propNames[i] == geomInfo.name))
 		end
 
 		proj.file:delete()
@@ -2480,13 +2482,16 @@ return {
 
 		TerraLib().setProgressVisible(false)
 
-		local problems = TerraLib().checkLayerGeometries(proj, l1Name)
+		local fix = true
+		local problems = TerraLib().checkLayerGeometries(proj, l1Name, fix)
 
 		unitTest:assertEquals(problems[1].pk.value, "404")
 		unitTest:assertEquals(problems[2].pk.value, "448")
 		unitTest:assertEquals(problems[3].pk.value, "607")
-		unitTest:assertEquals(problems[4].pk.value, "640")
-		unitTest:assertEquals(problems[5].pk.value, "763")
+		unitTest:assertEquals(problems[4].pk.value, "762")
+
+		problems = TerraLib().checkLayerGeometries(proj, l1Name, fix)
+		unitTest:assertEquals(#problems, 0)
 
 		l1File:delete()
 		proj.file:delete()
@@ -2508,8 +2513,9 @@ return {
 			local layerFile = filePath("test/sampa.shp", "gis")
 			TerraLib().addShpLayer(proj, layerName, layerFile)
 			local geomInfo = TerraLib().getGeometryInfo{project = proj, layer = layerName}
-			unitTest:assertEquals(geomInfo.name, "_ogr_geometry_")
-			unitTest:assertEquals(geomInfo.fid, "fid")
+			local layerInfo = TerraLib().getLayerInfo(proj, layerName)
+			unitTest:assertEquals(geomInfo.name, layerInfo.geometry)
+			unitTest:assertEquals(geomInfo.fid, layerInfo.fid)
 			unitTest:assertEquals(geomInfo.geometry:getGeometryType(), 6)
 
 			proj.file:delete()
@@ -2518,8 +2524,8 @@ return {
 		local getGeometryInfoFromFile = function()
 			local shpFile = filePath("test/sampa.shp", "gis")
 			local geomInfo = TerraLib().getGeometryInfo{file = shpFile}
-			unitTest:assertEquals(geomInfo.name, "_ogr_geometry_")
-			unitTest:assertEquals(geomInfo.fid, "fid")
+			unitTest:assertNotNil(geomInfo.name)
+			unitTest:assertNotNil(geomInfo.fid)
 			unitTest:assertEquals(geomInfo.geometry:getGeometryType(), 6)
 		end
 

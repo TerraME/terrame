@@ -53,15 +53,18 @@ return {
 			l1:export(pgData)
 
 			local qgisproj
+			local qgpfile = filePath("test/sampapg"..version..".qgs", "gis")
+			local qgpfileCd = File("sampapg"..version..".qgs"):deleteIfExists()
+			qgpfile:copy(currentDir())
 			if version == "_v3" then
 				qgisproj = Project {
-					file = filePath("test/sampapg"..version..".qgs", "gis"),
+					file = qgpfileCd,
 					user = "postgres",
 					password = "postgres"
 				}
 			else
 				qgisproj = Project {
-					file = filePath("test/sampapg"..version..".qgs", "gis")
+					file = qgpfileCd
 				}
 			end
 
@@ -78,9 +81,9 @@ return {
 			unitTest:assertEquals(l2.database, "postgis_22_sample")
 			unitTest:assertEquals(l2.table, "sampa")
 
-			File("sampapg"..version..".tview"):delete()
 			l2:delete()
 			proj.file:delete()
+			qgisproj.file:delete()
 		end
 
 		local insertNewLayerQgis = function()
