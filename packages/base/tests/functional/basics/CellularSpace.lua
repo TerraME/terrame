@@ -285,17 +285,17 @@ return{
 				layer = layerName1
 			}
 
-			unitTest:assertEquals(proj.file:name(), cs.project.file:name()) -- SKIP
-			unitTest:assertType(cs.layer, "Layer") -- SKIP
-			unitTest:assertEquals(layer.source, "tif") -- SKIP
-			unitTest:assertEquals(layer.file, tostring(filePath1)) -- SKIP
-			unitTest:assertEquals(#cs, 17928) -- SKIP
+			unitTest:assertEquals(proj.file:name(), cs.project.file:name())
+			unitTest:assertType(cs.layer, "Layer")
+			unitTest:assertEquals(layer.source, "tif")
+			unitTest:assertEquals(layer.file, tostring(filePath1))
+			unitTest:assertEquals(#cs, 17928)
 
 			cs = CellularSpace{
 				file = filePath1
 			}
 
-			unitTest:assertEquals(#cs, 17928) -- SKIP
+			unitTest:assertEquals(#cs, 17928)
 			proj.file:delete()
 		end
 
@@ -482,8 +482,8 @@ return{
 
 		unitTest:assert(basicTests)
 		unitTest:assert(shapeFileTests)
+		unitTest:assert(tifTests)
 		if _Gtme.sessionInfo().system == "windows" then
-			unitTest:assert(tifTests) -- SKIP
 			unitTest:assert(netCdfTests) -- SKIP
 			unitTest:assert(ascTests) -- SKIP
 		end
