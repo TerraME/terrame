@@ -38,7 +38,7 @@ return {
 
 		local layerName = "WMS-Layer"
 		local service = "http://terrabrasilis.dpi.inpe.br/geoserver/ows"
-		local map = "prodes-legal-amz:yearly_deforestation_2013_2018"
+		local map = "prodes-pantanal:yearly_deforestation"
 		local epsg = 29901
 
 		local layer = Layer {
