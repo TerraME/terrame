@@ -656,6 +656,8 @@ else(LINUX)
 	                   ${Qt5_DIR}/../../libkmlbase*so*
 	                   ${Qt5_DIR}/../../libminizip*so*
 	                   ${Qt5_DIR}/../../libpng*so*
+	                   ${Qt5_DIR}/../../libssl*so*
+	                   ${Qt5_DIR}/../../libcrypto*so*
 	                   ${Qt5_DIR}/../../../liburiparser*so*)
 
 	if(${TERRAME_UBUNTU_VERSION} STREQUAL "18")
