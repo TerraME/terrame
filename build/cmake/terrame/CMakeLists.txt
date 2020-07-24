@@ -407,6 +407,10 @@ if(APPLE)
 	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/share/gdal
 	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}/share
 	        COMPONENT runtime)
+			
+	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/share/proj
+	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}/share
+	        COMPONENT runtime)			
 
 	install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck
 	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}
@@ -502,10 +506,6 @@ elseif(WIN32)
 	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}
 	        COMPONENT runtime)
 
-	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/data/
-	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}/share/data
-	        COMPONENT runtime)
-
 	install(DIRECTORY ${TERRALIB_DIR}/share/terralib/json/
 	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}/share/terralib/json
 	        COMPONENT runtime)
@@ -517,6 +517,10 @@ elseif(WIN32)
 	install(DIRECTORY ${TERRALIB_DIR}/share/terralib/schemas/
 	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}/share/terralib/schemas
 	        COMPONENT runtime)
+			
+	install(DIRECTORY ${TERRALIB_DIR}/share/proj/
+	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}/share/proj
+	        COMPONENT runtime)			
 
 	install(FILES ${Qt5_DIR}/../../../plugins/platforms/qwindowsd.dll
 	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}/platforms
@@ -724,6 +728,10 @@ else(LINUX)
 	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/share/gdal
 	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}/share
 	        COMPONENT runtime)
+			
+	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/share/proj
+	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}/share
+	        COMPONENT runtime)			
 
 	install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck/
 	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}/luacheck
