@@ -37,10 +37,10 @@ echo ""
 ######################## TerraLib Environment
 echo "### TerraLib Environment ###"
 echo "Cleaning last config scripts"
-rm -rf $_TERRALIB_BUILD_BASE/solution/terralib-conf.*
+rm -rf $_TERRALIB_BUILD_BASE/solution/terralib*.*
 
 echo "Copying TerraLib compilation scripts to TerraLib Solution folder"
-cp $_TERRAME_GIT_DIR/build/scripts/mac/terralib-conf.* $_TERRALIB_BUILD_BASE/solution
+cp $_TERRAME_GIT_DIR/build/cmake/terralib-build-conf.cmake $_TERRALIB_BUILD_BASE/solution
 
 echo ""
 echo "### TerraLib Environment Finished ###"
@@ -49,7 +49,7 @@ echo ""
 # Returns a TerraLib compilation execution code in order to Jenkins be able to set build status
 echo "Compiling TerraLib"
 cd $_TERRALIB_BUILD_BASE/solution
-./terralib-conf.sh
+./terralib-build-conf.sh
 RESULT=$?
 
 echo ""

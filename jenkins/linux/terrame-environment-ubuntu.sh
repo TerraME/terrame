@@ -48,7 +48,7 @@ mkdir $_TERRAME_BUILD_BASE/solution $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR 
 valid $? "Error: Creating fail"
 
 echo "Copying TerraME compilation scripts to TerraME Solution directory"
-cp --verbose $_TERRAME_GIT_DIR/build/scripts/linux/terrame-conf.* $_TERRAME_BUILD_BASE/solution
+cp --verbose $_TERRAME_GIT_DIR/build/scripts/linux/terrame-conf.sh $_TERRAME_BUILD_BASE/solution
 valid $? "Error: Copying fail"
 cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-build-ubuntu.sh $_TERRAME_BUILD_BASE/solution
 valid $? "Error: Copying fail"

@@ -18,32 +18,20 @@
 :: In no event shall INPE and TerraLAB / UFOP be held liable to any party for direct,
 :: indirect, special, incidental, or consequential damages arising out of the use
 :: of this software and its documentation.
+::
 
-:: -----------------
-:: Script for building a TerraLib5 customized for TerraME
-:: -----------------
-
-:: -----------------
-:: Setting up the environment variables: change the values of the above
-:: variables to reflect you environment.
-:: -----------------
-:: Location of the built 3rd-parties.
-:: Checking terralib 3rdparty dir
 if "%_TERRALIB_3RDPARTY_DIR%" == "" (
   set _TERRALIB_3RDPARTY_DIR=D:\terralib\3rdparty\libs
 )
 
-:: Location to install TerraLib
 if "%_TERRALIB_INSTALL_PATH%" == "" (
   set _TERRALIB_INSTALL_PATH=%CD%\install
 )
 
-:: Build location (where is tha Makefile)
 if "%_TERRALIB_OUT_DIR%" == "" (
   set _TERRALIB_OUT_DIR=%CD%\build
 )
 
-:: Checking Terralib git dir. Path to terralib codebase
 if "%_TERRALIB_GIT_DIR%" == "" (
   set _TERRALIB_GIT_DIR=../../git/terralib
 )
@@ -56,23 +44,9 @@ if "%_TERRALIB_VLD_DIR%" == "" (
   set "_TERRALIB_VLD_DIR=C:/Program Files (x86)/Visual Leak Detector"
 )
 
-:: -----------------
-:: Configuring output folder
-:: -----------------
 mkdir %_TERRALIB_OUT_DIR%
-
-:: Copying terralib cmake cache to output dir
-copy terralib-conf.cmake %_TERRALIB_OUT_DIR%
-
-:: -----------------
-:: Entering the output folder
-:: -----------------
+copy terralib-build-conf.cmake %_TERRALIB_OUT_DIR%
 cd %_TERRALIB_OUT_DIR%
 
-:: -----------------
-:: Calling CMake
-:: -----------------
-cmake -G "Visual Studio 15 2017 Win64" -C terralib-conf.cmake %_TERRALIB_GIT_DIR%/build/cmake
-
-:: Building and installing
+cmake -G "Visual Studio 15 2017 Win64" -C terralib-build-conf.cmake %_TERRALIB_GIT_DIR%/build/cmake
 cmake --build . --target INSTALL --config %_TERRALIB_BUILD_TYPE%
