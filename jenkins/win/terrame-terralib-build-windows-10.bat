@@ -26,10 +26,11 @@ mkdir %_TERRALIB_GIT_DIR%
 git clone -b %_TERRALIB_BRANCH% https://gitlab.dpi.inpe.br/rodrigo.avancini/terralib.git %_TERRALIB_GIT_DIR% --quiet
 
 :: Copying TerraLib compilation scripts to TerraLib Solution folder
+xcopy %_TERRAME_GIT_DIR%\build\scripts\win\terralib-conf.bat .
 xcopy %_TERRAME_GIT_DIR%\build\cmake\terralib-build-conf.cmake .
 
 :: Compile TerraLib
-call terralib-build-conf.bat
+call terralib-conf.bat
 
 :: Returns a TerraLib compilation execution code in order to Jenkins be able to set build status
 exit %ERRORLEVEL%
