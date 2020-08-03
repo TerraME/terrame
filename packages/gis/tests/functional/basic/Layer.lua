@@ -996,7 +996,8 @@ project   Project
 rep       string [polygon]
 source    string [shp]
 ]]
-		unitTest:assertEquals(tostring(l), expected, 0, true)
+		-- geometry and fid is got dynamically
+		unitTest:assertEquals(tostring(l), expected, 13, true)
 		projName:deleteIfExists()
 	end,
 	box = function(unitTest)

@@ -64,6 +64,56 @@ return {
 		unitTest:assertError(vec2rasError, "Vector layer 'setores' cannot be exported as raster data.")
 
 		proj.file:delete()
+	end,
+	check = function(unitTest)
+		local proj = Project {
+			file = "check_geom.qgs",
+			clean = true
+		}
+
+		local defectFile = filePath("test/biomassa_unfixable.shp", "gis")
+		File("biomassa_unfixable.shp"):deleteIfExists()
+		defectFile:copy(currentDir())
+
+		local l1 = Layer{
+			project = proj,
+			name = "DefectBio",
+			file = "biomassa_unfixable.shp"
+		}
+
+		local customWarningBkp = customWarning
+		customWarning = function(msg)
+			if string.find(msg, "5502300.9611873") then
+				unitTest:assertEquals(warnMsg, "The following problems were found in layer 'DefectBio' geometries:\n" --SKIP
+											.."1. FID 404: Self-intersection (5502300.9611873, 8212207.8945397).\n"
+											.."2. FID 448: Self-intersection (5499667.9683502, 8209876.5162455).\n"
+											.."3. FID 607: Self-intersection (5495108.3147666, 8215278.0127216).\n"
+											.."4. FID 640: Self-intersection (5494485.5853231, 8210317.9905857).\n"
+											.."5. FID 763: Self-intersection (5488466.0305929, 8212219.2367292).")
+			else
+				unitTest:assertEquals(msg, "The following problems were found in layer 'DefectBio' geometries:\n" --SKIP
+										.."1. FID 404: Self-intersection (5502436.5275601, 8211973.5861861).\n"
+										.."2. FID 448: Self-intersection (5499667.9683502, 8209876.5162455).\n"
+										.."3. FID 607: Self-intersection (5495108.3147666, 8215278.0127216).\n"
+										.."4. FID 640: Self-intersection (5494485.5853231, 8210317.9905857).\n"
+										.."5. FID 763: Self-intersection (5488466.0305929, 8212219.2367292).")
+			end
+		end
+
+		local customErrorBkp = customError
+		customError = function(msg)
+			unitTest:assertEquals(msg, "The following problem was found in layer 'DefectBio' geometries:\n"
+							.."1. FID 637: Self-intersection (5494485.5853231, 8210317.9905857).\n"
+							.."The use of this data can produce inconsistent results.")
+		end
+
+		l1:check(true, false)
+
+		customWarning = customWarningBkp
+		customError = customErrorBkp
+
+		l1:delete()
+		proj.file:delete()
 	end
 }
 

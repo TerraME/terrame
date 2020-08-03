@@ -74,11 +74,13 @@ echo ""
 ######################## TerraLib Environment
 echo "### TerraLib Environment ###"
 echo "Cleaning last config scripts"
-rm -rf $_TERRALIB_BUILD_BASE/solution/terralib-conf.*
+rm -rf $_TERRALIB_BUILD_BASE/solution/terralib*.*
 valid $? "Error: Cleaning fail"
 
 echo "Copying TerraLib compilation scripts to TerraLib Solution folder"
 cp --verbose $_TERRAME_GIT_DIR/build/scripts/linux/terralib-conf.* $_TERRALIB_BUILD_BASE/solution
+valid $? "Error: Copying fail"
+cp --verbose $_TERRAME_GIT_DIR/build/cmake/terralib-build-conf.cmake $_TERRALIB_BUILD_BASE/solution
 valid $? "Error: Copying fail"
 
 echo ""

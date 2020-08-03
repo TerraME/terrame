@@ -414,6 +414,10 @@ if(APPLE)
 	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/share/gdal
 	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}/share
 	        COMPONENT runtime)
+			
+	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/share/proj
+	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}/share
+	        COMPONENT runtime)			
 
 	install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck
 	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}
@@ -509,10 +513,6 @@ elseif(WIN32)
 	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}
 	        COMPONENT runtime)
 
-	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/data/
-	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}/share/data
-	        COMPONENT runtime)
-
 	install(DIRECTORY ${TERRALIB_DIR}/share/terralib/json/
 	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}/share/terralib/json
 	        COMPONENT runtime)
@@ -524,6 +524,10 @@ elseif(WIN32)
 	install(DIRECTORY ${TERRALIB_DIR}/share/terralib/schemas/
 	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}/share/terralib/schemas
 	        COMPONENT runtime)
+			
+	install(DIRECTORY ${TERRALIB_DIR}/share/proj/
+	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}/share/proj
+	        COMPONENT runtime)			
 
 	install(FILES ${Qt5_DIR}/../../../plugins/platforms/qwindowsd.dll
 	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}/platforms
@@ -548,7 +552,6 @@ elseif(WIN32)
 	                                  ${TERRALIB_3RDPARTY_DIR}/lib/hdfdll.dll
 	                                  ${TERRALIB_3RDPARTY_DIR}/lib/iconv.dll
 	                                  ${TERRALIB_3RDPARTY_DIR}/lib/libcurl.dll
-	                                  # ${TERRALIB_3RDPARTY_DIR}/lib/libeay32.dll
 	                                  ${TERRALIB_3RDPARTY_DIR}/lib/libgeotiff.dll
 	                                  ${TERRALIB_3RDPARTY_DIR}/lib/libpng15.dll
 	                                  ${TERRALIB_3RDPARTY_DIR}/lib/libpq.dll
@@ -560,7 +563,6 @@ elseif(WIN32)
 	                                  ${TERRALIB_3RDPARTY_DIR}/lib/proj_6_2.dll
 	                                  ${TERRALIB_3RDPARTY_DIR}/lib/spatialite.dll
 	                                  ${TERRALIB_3RDPARTY_DIR}/lib/sqlite3.dll
-	                                  # ${TERRALIB_3RDPARTY_DIR}/lib/ssleay32.dll
 	                                  ${TERRALIB_3RDPARTY_DIR}/lib/xdrdll.dll
 	                                  ${TERRALIB_3RDPARTY_DIR}/lib/xerces-c_3_1.dll
 	                                  ${TERRALIB_3RDPARTY_DIR}/lib/zlib.dll
@@ -598,7 +600,7 @@ elseif(WIN32)
 				DESTINATION ${TERRAME_DESTINATION_RUNTIME}
 				COMPONENT runtime)
 	endif()
-else(LINUX)
+elseif(LINUX)
 	set(TERRAME_LUA_SRC_DIR ${TERRAME_SRC_DIR}/lua)
 
 	install(DIRECTORY ${TERRAME_LUA_SRC_DIR}
@@ -665,6 +667,8 @@ else(LINUX)
 	                   ${Qt5_DIR}/../../libkmlbase*so*
 	                   ${Qt5_DIR}/../../libminizip*so*
 	                   ${Qt5_DIR}/../../libpng*so*
+	                   ${Qt5_DIR}/../../libssl*so*
+	                   ${Qt5_DIR}/../../libcrypto*so*
 	                   ${Qt5_DIR}/../../../liburiparser*so*)
 
 	if(${TERRAME_UBUNTU_VERSION} STREQUAL "18")
@@ -731,6 +735,10 @@ else(LINUX)
 	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/share/gdal
 	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}/share
 	        COMPONENT runtime)
+			
+	install(DIRECTORY ${TERRALIB_3RDPARTY_DIR}/share/proj
+	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}/share
+	        COMPONENT runtime)			
 
 	install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck/
 	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}/luacheck

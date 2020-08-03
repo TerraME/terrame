@@ -19,7 +19,7 @@
 # In no event shall INPE and TerraLAB / UFOP be held liable to any party for direct,
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
-############################################################################################
+#
 
 cmake_minimum_required(VERSION 3.0)
 
@@ -32,20 +32,28 @@ project(terrame)
 # variables that control the system versioning
 set(TERRAME_VERSION_MAJOR 2)
 set(TERRAME_VERSION_MINOR 0)
-set(TERRAME_VERSION_PATCH 0)
-if(NOT DEFINED TERRAME_VERSION_PATCH)
+set(TERRAME_VERSION_PATCH 1)
+# set(TERRAME_VERSION_STATUS dev)
+if(NOT DEFINED TERRAME_VERSION_STATUS)
 	set(TERRAME_VERSION_STATUS "" CACHE STRING "Define name of installer")
+else()
+	set(TERRAME_VERSION_STATUS "-${TERRAME_VERSION_STATUS}" CACHE STRING "Define name of installer")
 endif()
 
 # for future use
 # set(TERRAME_BUILD_NUMBER "" CACHE STRING "Number of build in Jenkins")
-if(TERRAME_VERSION_STATUS STREQUAL "build")
-	set(TERRAME_VERSION_STATUS "${TERRAME_VERSION_STATUS}-${TERRAME_BUILD_NUMBER}")
-endif()
+# if(TERRAME_VERSION_STATUS STREQUAL "build")
+	# set(TERRAME_VERSION_STATUS "${TERRAME_VERSION_STATUS}-${TERRAME_BUILD_NUMBER}")
+# endif()
 
-set(TERRAME_VERSION_STRING "${TERRAME_VERSION_MAJOR}.${TERRAME_VERSION_MINOR}.${TERRAME_VERSION_PATCH}-${TERRAME_VERSION_STATUS}")
+if(DEFINED TERRAME_VERSION_PATCH)
+	set(TERRAME_VERSION_STRING "${TERRAME_VERSION_MAJOR}.${TERRAME_VERSION_MINOR}.${TERRAME_VERSION_PATCH}${TERRAME_VERSION_STATUS}")
+	set(TERRAME_PKG_VERSION ${TERRAME_VERSION_MAJOR}.${TERRAME_VERSION_MINOR}.${TERRAME_VERSION_PATCH})
+else()
+	set(TERRAME_VERSION_STRING "${TERRAME_VERSION_MAJOR}.${TERRAME_VERSION_MINOR}")	
+	set(TERRAME_PKG_VERSION ${TERRAME_VERSION_MAJOR}.${TERRAME_VERSION_MINOR})	
+endif()
 set(TERRAME_VERSION "0x020000")
-set(TERRAME_PKG_VERSION ${TERRAME_VERSION_MAJOR}.${TERRAME_VERSION_MINOR}.${TERRAME_VERSION_PATCH})
 
 # variables that controls what is built
 if(NOT DEFINED TERRAME_BUILD_AS_BUNDLE)

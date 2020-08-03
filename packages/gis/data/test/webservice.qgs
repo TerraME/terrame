@@ -8,7 +8,7 @@
     <layer-tree-layer expanded="1" providerKey="wms" checked="Qt::Checked" id="Cerrado_States20190409102911202" source="contextualWMSLegend=0&amp;crs=EPSG:4326&amp;dpiMode=7&amp;featureCount=10&amp;format=image/png&amp;layers=prodes-cerrado:estados&amp;styles=&amp;url=http://terrabrasilis.dpi.inpe.br/geoserver/ows" name="Cerrado States">
       <customproperties/>
     </layer-tree-layer>
-    <layer-tree-layer expanded="1" providerKey="WFS" checked="Qt::Checked" id="prodes_legal_amz_brazilian_legal_amazon20190409102746861" source=" restrictToRequestBBOX='1' srsname='EPSG:4674' typename='prodes-legal-amz:brazilian_legal_amazon' url='http://terrabrasilis.dpi.inpe.br/geoserver/ows?version=2.0.0&amp;' version='auto' table=&quot;&quot; sql=" name="prodes-legal-amz:brazilian_legal_amazon">
+    <layer-tree-layer expanded="1" providerKey="WFS" checked="Qt::Checked" id="prodes_legal_amz_brazilian_legal_amazon20190409102746861" source=" restrictToRequestBBOX='1' srsname='EPSG:4674' typename='prodes-legal-amz:brazilian_legal_amazon' url='http://terrabrasilis.dpi.inpe.br/geoserver/ows' version='auto' table=&quot;&quot; sql=" name="prodes-legal-amz:brazilian_legal_amazon">
       <customproperties/>
     </layer-tree-layer>
   </layer-tree-group>
@@ -113,7 +113,7 @@
         <ymax>5.27222500000002015</ymax>
       </extent>
       <id>prodes_legal_amz_brazilian_legal_amazon20190409102746861</id>
-      <datasource> restrictToRequestBBOX='1' srsname='EPSG:4674' typename='prodes-legal-amz:brazilian_legal_amazon' url='http://terrabrasilis.dpi.inpe.br/geoserver/ows?version=2.0.0&amp;' version='auto' table="" sql=</datasource>
+      <datasource> restrictToRequestBBOX='1' srsname='EPSG:4674' typename='prodes-legal-amz:brazilian_legal_amazon' url='http://terrabrasilis.dpi.inpe.br/geoserver/ows' version='auto' table="" sql=</datasource>
       <keywordList>
         <value></value>
       </keywordList>

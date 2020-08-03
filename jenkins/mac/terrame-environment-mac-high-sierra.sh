@@ -34,7 +34,7 @@ echo "Creating TerraME Test directories"
 mkdir $_TERRAME_BUILD_BASE/solution $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR
 
 echo "Copying TerraME compilation scripts to TerraME Solution directory"
-cp $_TERRAME_GIT_DIR/build/scripts/mac/terrame-conf.* $_TERRAME_BUILD_BASE/solution
+cp $_TERRAME_GIT_DIR/build/scripts/mac/terrame-conf.sh $_TERRAME_BUILD_BASE/solution
 cp $_TERRAME_GIT_DIR/jenkins/mac/terrame-build-mac-high-sierra.sh $_TERRAME_BUILD_BASE/solution
 cp $_TERRAME_GIT_DIR/jenkins/mac/terrame-installer-mac-high-sierra.sh $_TERRAME_BUILD_BASE/solution
 cp $_TERRAME_GIT_DIR/jenkins/mac/terrame-repository-test-mac-high-sierra.sh $_TERRAME_REPOSITORY_DIR

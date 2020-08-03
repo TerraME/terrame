@@ -1,0 +1,1 @@
+PROJCS["SAD69_Brazil_Polyconic",GEOGCS["GCS_SAD69",DATUM["D_South_American_1969",SPHEROID["GRS_1967_Truncated",6378160.0,298.25]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Polyconic"],PARAMETER["false_easting",5000000.0],PARAMETER["false_northing",10000000.0],PARAMETER["central_meridian",-54.0],PARAMETER["latitude_of_origin",0.0],UNIT["Meter",1.0]]

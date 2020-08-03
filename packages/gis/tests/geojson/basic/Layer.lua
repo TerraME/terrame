@@ -113,9 +113,8 @@ return {
 		}
 
 		local attrs = gjsonLayer:attributes()
-		unitTest:assertEquals("FID", attrs[1].name)
-		unitTest:assertEquals("id", attrs[2].name)
-		unitTest:assertEquals("value", attrs[3].name)
+		unitTest:assertEquals("id", attrs[1].name)
+		unitTest:assertEquals("value", attrs[2].name)
 
 		gjsonLayer:delete()
 		proj.file:delete()
