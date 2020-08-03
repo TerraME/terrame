@@ -18,47 +18,36 @@
 :: In no event shall INPE and TerraLAB / UFOP be held liable to any party for direct,
 :: indirect, special, incidental, or consequential damages arising out of the use
 :: of this software and its documentation.
+::
 
-:: -----------------
-:: Setting up the environment variables: change the values of the above
-:: variables to reflect you environment.
-:: -----------------
-:: Location of the builded 3rd-parties.
 if "%_TERRALIB_3RDPARTY_DIR%" == "" (
   set _TERRALIB_3RDPARTY_DIR=D:\terralib\3rdparty\libs
 )
 
-:: Checking terrame depends dir or setting default
 if "%_TERRAME_DEPENDS_DIR%" == "" (
   set _TERRAME_DEPENDS_DIR=D:\terrame\3rdparty\install
 )
 
-:: Checking terralib install dir or setting default
 if "%_TERRALIB_MODULES_DIR%" == "" (
   set _TERRALIB_MODULES_DIR=D:\terralib\solution\install
 )
 
-:: Checking qt5 dir or setting default
 if "%_Qt5_DIR%" == "" (
   set _Qt5_DIR=C:\Qt\5.10.1\msvc2017_64
 )
 
-:: Checking msys dir or setting default
 if "%_MSYS_DIR%" == "" (
   set _MSYS_DIR=C:\msys64\usr\bin
 )
 
-:: Location to install TerraLib
 if "%_TERRAME_INSTALL_PATH%" == "" (
   set _TERRAME_INSTALL_PATH=%CD%\install
 )
 
-:: Build location (where is the Makefile)
 if "%_TERRAME_OUT_DIR%" == "" (
   set _TERRAME_OUT_DIR=%CD%\build
 )
 
-:: Checking terrame codebase dir or setting default
 if "%_TERRAME_GIT_DIR%" == "" (
   set _TERRAME_GIT_DIR=../../git/terrame
 )
@@ -79,23 +68,8 @@ if "%_TERRAME_VLD_DIR%" == "" (
   set "_TERRAME_VLD_DIR=C:/Program Files (x86)/Visual Leak Detector"
 )
 
-:: -----------------
-:: Configuring output folder
-:: -----------------
 mkdir %_TERRAME_OUT_DIR%
-
-:: Copying terrame cmake cache to the output dir
-copy terrame-conf.cmake %_TERRAME_OUT_DIR%
-
-:: -----------------
-:: Entering the output folder
-:: -----------------
 cd %_TERRAME_OUT_DIR%
 
-:: -----------------
-:: Calling CMake
-:: -----------------
-cmake -G "Visual Studio 15 2017 Win64" -C terrame-conf.cmake %_TERRAME_GIT_DIR%/build/cmake
-
-:: Building and installing terrame
+cmake -G "Visual Studio 15 2017 Win64" -C %_TERRAME_GIT_DIR%/build/cmake/terrame-build-conf.cmake %_TERRAME_GIT_DIR%/build/cmake
 cmake --build . --target INSTALL --config %_TERRAME_BUILD_TYPE%

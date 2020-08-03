@@ -19,60 +19,35 @@
 # In no event shall INPE and TerraLAB / UFOP be held liable to any party for direct,
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
-############################################################################################
+#
 
-# -----------------
-# Script for building TerraLib5 customized for TerraAmazon
-# -----------------
-
-# -----------------
-# Setting up the environment variables: change the values of the above
-# variables to reflect you environment.
-# -----------------
-# Location of the builded 3rd-parties.
-
-# Checking Terralib 3rdparty dir
 if [ "$_TERRALIB_3RDPARTY_DIR" == "" ]; then
   _TERRALIB_3RDPARTY_DIR="/home/developer/terralib/3rdparty/libs"
 fi
 export _TERRALIB_3RDPARTY_DIR="$_TERRALIB_3RDPARTY_DIR"
 echo "$_TERRALIB_3RDPARTY_DIR"
 
-# Location to install TerraLib
 if [ "$_TERRALIB_INSTALL_PATH" == "" ]; then
   _TERRALIB_INSTALL_PATH=$(pwd)/install
 fi
 export _TERRALIB_INSTALL_PATH="$_TERRALIB_INSTALL_PATH"
 echo "$_TERRALIB_INSTALL_PATH"
 
-# Build location (where is tha Makefile)
 if [ "$_TERRALIB_OUT_DIR" == "" ]; then
   _TERRALIB_OUT_DIR=$(pwd)/build
 fi
 export _TERRALIB_OUT_DIR="$_TERRALIB_OUT_DIR"
 echo "$_TERRALIB_OUT_DIR"
 
-# Checking source code location
 if [ "$_TERRALIB_GIT_DIR" == "" ]; then
   _TERRALIB_GIT_DIR="../../git/terralib"
 fi
 export _TERRALIB_GIT_DIR="$_TERRALIB_GIT_DIR"
 echo "$_TERRALIB_GIT_DIR"
 
-# -----------------
-# Configuring output folder
-# -----------------
 mkdir $_TERRALIB_OUT_DIR
-cp terralib-conf.cmake $_TERRALIB_OUT_DIR
-
-# -----------------
-# Entering the output folder
-# -----------------
+cp terralib-build-conf.cmake $_TERRALIB_OUT_DIR
 cd $_TERRALIB_OUT_DIR
 
-# -----------------
-# Calling CMake: note that we are using a release configuration and Unix Makefiles generator
-# -----------------
-cmake -G "Unix Makefiles" -C terralib-conf.cmake $_TERRALIB_GIT_DIR/build/cmake
-
+cmake -G "Unix Makefiles" -C terralib-build-conf.cmake $_TERRALIB_GIT_DIR/build/cmake
 cmake --build . --target install --config Release 

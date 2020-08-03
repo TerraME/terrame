@@ -506,7 +506,7 @@ return {
 			dset = TerraLib().getDataSet{project = proj, layer = distLayerName, missing = 0}
 
 			unitTest:assertEquals(csSize, getn(dset))
-			unitTest:assertEquals(dset[150][attribute], 0.25177012799653, 1e-14)
+			unitTest:assertEquals(dset[150][attribute], 0.25177011210056, 1e-14)
 			unitTest:assertNotNil(dset[150][geomAttrName])
 			unitTest:assertEquals(dset[150].col, 8)
 			unitTest:assertEquals(dset[150].row, 17)
@@ -786,7 +786,7 @@ return {
 			dset = TerraLib().getDataSet{project = proj, layer = wsumLayerName, missing = 0}
 
 			unitTest:assertEquals(csSize, getn(dset))
-			unitTest:assertEquals(dset[145][attribute], 0)
+			unitTest:assertEquals(dset[145][attribute], 79542760.849094, 1e-6)
 			unitTest:assertNotNil(dset[145][geomAttrName])
 			unitTest:assertEquals(dset[145].col, 12)
 			unitTest:assertEquals(dset[145].row, 16)

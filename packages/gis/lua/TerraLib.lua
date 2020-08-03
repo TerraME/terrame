@@ -210,6 +210,9 @@ local function checkPgConnectParams(data, connInfo)
 end
 
 local function createPgDbIfNotExists(data, encoding)
+	if encoding == "LATIN1" then
+		encoding = "ISO-8859-1"
+	end
 	local connInfo = "pgsql://"..data.user..":"..data.password.."@"
 					..data.host..":"..data.port.."/?"
 					.."&PG_NEWDB_NAME="..data.database
@@ -331,9 +334,16 @@ local function addSpatialIndex(ds, dseName, dst, dsType, file)
 	end
 end
 
+local function getEncodingType(encoding)
+	if encoding == "LATIN1" then
+		return binding.CharEncoding.getEncodingType("ISO-8859-1")
+	end
+	return binding.CharEncoding.getEncodingType(encoding)
+end
+
 local function toUtf8(str)
 	if sessionInfo().system == "windows" then
-		return binding.CharEncoding.toUTF8(str, binding.CharEncoding.getEncodingType("LATIN1"))
+		return binding.CharEncoding.toUTF8(str, getEncodingType("LATIN1"))
 	end
 
 	return binding.CharEncoding.toUTF8(str)
@@ -447,7 +457,7 @@ local function createLayer(name, dSetName, connInfo, type, addSpatialIdx, srid, 
 			encoding = "LATIN1"
 		end
 
-		layer:setEncoding(binding.CharEncoding.getEncodingType(encoding))
+		layer:setEncoding(getEncodingType(encoding))
 
 		if srid then
 			sridReal = srid
@@ -1842,7 +1852,7 @@ local function createToDataInfoToSaveAs(toData, fromData, overwrite)
 	info.file = toData.file
 
 	if toData.encoding then
-		toDs:setEncoding(binding.CharEncoding.getEncodingType(toData.encoding))
+		toDs:setEncoding(getEncodingType(toData.encoding))
 	else
 		toDs:setEncoding(fromData.datasource:getEncoding())
 	end
@@ -2212,6 +2222,13 @@ local function getRasterSize(raster)
 	return raster:getNumberOfRows() * raster:getNumberOfColumns()
 end
 
+local function fixLatin1Encoding(encoding)
+	if encoding == "ISO-8859-1" then
+		return "LATIN1"
+	end
+	return encoding
+end
+
 TerraLib_ = {
 	type_ = "TerraLib",
 
@@ -2315,6 +2332,7 @@ TerraLib_ = {
 		info.name = layer:getTitle()
 		info.srid = layer:getSRID()
 		info.encoding = binding.CharEncoding.getEncodingName(layer:getEncoding())
+		info.encoding = fixLatin1Encoding(info.encoding)
 		local dseName = layer:getDataSetName()
 
 		loadProject(project, project.file)

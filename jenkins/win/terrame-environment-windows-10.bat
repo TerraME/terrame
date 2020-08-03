@@ -33,7 +33,7 @@ rmdir %_TERRAME_EXECUTION_DIR% /s /q
 mkdir %_TERRAME_BUILD_BASE%\solution %_TERRAME_REPOSITORY_DIR% %_TERRAME_TEST_DIR% %_TERRAME_EXECUTION_DIR%
 
 :: Copying TerraME compilation scripts to TerraME Solution directory
-xcopy %_TERRAME_GIT_DIR%\build\scripts\win\terrame-conf.* %_TERRAME_BUILD_BASE%\solution /i /h /e /y
+xcopy %_TERRAME_GIT_DIR%\build\scripts\win\terrame-conf.bat %_TERRAME_BUILD_BASE%\solution /i /h /e /y
 xcopy %_TERRAME_GIT_DIR%\jenkins\win\terrame-build-windows-10.bat %_TERRAME_BUILD_BASE%\solution /i /h /e /y
 xcopy %_TERRAME_GIT_DIR%\jenkins\win\terrame-installer-windows-10.bat %_TERRAME_BUILD_BASE%\solution /i /h /e /y
 xcopy %_TERRAME_GIT_DIR%\jenkins\win\terrame-repository-test-windows-10.bat %_TERRAME_REPOSITORY_DIR% /i /h /e /y

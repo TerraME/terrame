@@ -18,6 +18,7 @@
 :: In no event shall INPE and TerraLAB / UFOP be held liable to any party for direct,
 :: indirect, special, incidental, or consequential damages arising out of the use
 :: of this software and its documentation.
+::
 
 set "_ROOT_DIR=%CD%"
 

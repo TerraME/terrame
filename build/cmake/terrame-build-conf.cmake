@@ -18,22 +18,30 @@
 # In no event shall INPE and TerraLAB / UFOP be held liable to any party for direct,
 # indirect, special, incidental, or consequential damages arising out of the use
 # of this software and its documentation.
-#
+############################################################################################
 
-# Main configurations
-set(CMAKE_BUILD_TYPE "$ENV{_TERRAME_BUILD_TYPE}" CACHE PATH "Build Type" FORCE)
-set(CMAKE_INSTALL_PREFIX "$ENV{_TERRAME_INSTALL_PATH}" CACHE PATH "Where to install TerraME?" FORCE)
-set(CMAKE_PREFIX_PATH "$ENV{_TERRALIB_3RDPARTY_DIR};$ENV{_Qt5_DIR}/lib/cmake;$ENV{_TERRAME_DEPENDS_DIR};$ENV{_MSYS_DIR};$ENV{_TERRAME_VLD_DIR}" CACHE PATH "Where are the dependencies of TerraME?" FORCE)
-set(TERRAME_VERSION_STATUS "" CACHE STRING "Define name of installer" FORCE)
+message(STATUS "Install Path $ENV{_TERRAME_INSTALL_PATH}")
 
-set(TERRAME_BUILD_AS_BUNDLE $ENV{_TERRAME_BUILD_AS_BUNDLE} CACHE BOOL "If on, tells that the build will generate a bundle" FORCE)
-set(TERRAME_CREATE_INSTALLER $ENV{_TERRAME_CREATE_INSTALLER} CACHE BOOL "Create the installer" FORCE)
-set(TERRAME_MEMORY_LEAK_DETECTOR OFF CACHE BOOL "Create the installer" FORCE)
-
-# Paths configurations
-set(MSYS_DIR "$ENV{_MSYS_DIR}" CACHE PATH "MSYS directory" FORCE)
+set(TERRALIB_3RDPARTY_DIR "$ENV{_TERRALIB_3RDPARTY_DIR}" CACHE PATH "3RDPARTY" FORCE)
+set(Qt5_DIR "$ENV{_QT5_DIR}" CACHE PATH "Qt" FORCE)
 set(TERRAME_DEPENDENCIES_DIR "$ENV{_TERRAME_DEPENDS_DIR}" CACHE PATH "TerraME dependencies" FORCE)
 set(TERRALIB_DIR "$ENV{_TERRALIB_MODULES_DIR}" CACHE PATH "TerraLib directory" FORCE)
-set(TERRALIB_3RDPARTY_DIR "$ENV{_TERRALIB_3RDPARTY_DIR}" CACHE PATH "TerraLib 3rdparty directory" FORCE)
-set(QWT_INCLUDE_DIR "$ENV{_TERRALIB_3RDPARTY_DIR}/include/qwt" CACHE PATH "Qwt include" FORCE)
-set(SWIG_EXECUTABLE "$ENV{_TERRALIB_3RDPARTY_DIR}/swig/swig.exe" CACHE FILEPATH "Where are the SWIG?" FORCE)
+
+set(CMAKE_BUILD_TYPE "$ENV{_TERRAME_BUILD_TYPE}" CACHE STRING "Build type" FORCE)
+set(CMAKE_INSTALL_PREFIX "$ENV{_TERRAME_INSTALL_PATH}" CACHE PATH "Where to install TerraME?" FORCE)
+set(CMAKE_PREFIX_PATH "${TERRALIB_3RDPARTY_DIR};${Qt5_DIR};${TERRAME_DEPENDENCIES_DIR}" CACHE PATH "Where are the dependencies of TerraME?" FORCE)
+set(TERRAME_VERSION_STATUS "" CACHE STRING "Define name of installer" FORCE)
+set(TERRAME_BUILD_AS_BUNDLE $ENV{_TERRAME_BUILD_AS_BUNDLE} CACHE BOOL "If on, tells that the build will generate a bundle" FORCE)
+set(TERRAME_CREATE_INSTALLER $ENV{_TERRAME_CREATE_INSTALLER} CACHE BOOL "Create the installer" FORCE)
+
+if(APPLE)
+	set(QWT_INCLUDE_DIR "${TERRALIB_3RDPARTY_DIR}/lib/qwt.framework/Versions/6/Headers" CACHE PATH "Qwt include" FORCE)
+elseif(WIN32)
+	set(MSYS_DIR "$ENV{_MSYS_DIR}" CACHE PATH "MSYS directory" FORCE)
+	set(QWT_INCLUDE_DIR "$ENV{_TERRALIB_3RDPARTY_DIR}/include/qwt" CACHE PATH "Qwt include" FORCE)
+	set(SWIG_EXECUTABLE "$ENV{_TERRALIB_3RDPARTY_DIR}/swig/swig.exe" CACHE FILEPATH "Where are the SWIG?" FORCE)	
+elseif(UNIX)
+	set(TERRAME_UBUNTU_VERSION $ENV{_TERRAME_UBUNTU_VERSION} CACHE STRING "Ubuntu version" FORCE)
+endif()
+
+
