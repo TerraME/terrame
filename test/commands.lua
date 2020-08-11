@@ -186,3 +186,7 @@ sketch = {
 	base     = {arg = "-sketch"}
 }
 
+hpa = {
+	basic = {script = "hpa-basic.lua", arg = "-hpa"}
+}
+

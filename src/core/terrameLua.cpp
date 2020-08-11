@@ -342,6 +342,16 @@ int cpp_closeAllWidgets(lua_State* L)
 	return 0;
 }
 
+int cpp_hpa_run(lua_State* L)
+{
+	std::string script = lua_tostring(L, -1);
+	HPA *HPAFlow = new HPA(script, L);
+	HPAFlow->execute();
+	delete HPAFlow;
+
+	return 0;
+}
+
 extern ExecutionModes execModes;
 
 int main(int argc, char *argv[])
@@ -460,6 +470,9 @@ int main(int argc, char *argv[])
 	lua_pushcfunction(L, cpp_closeAllWidgets);
 	lua_setglobal(L, "cpp_closeAllWidgets");
 
+	lua_pushcfunction(L, cpp_hpa_run);
+	lua_setglobal(L, "cpp_hpa_run");
+
 	// Execute the lua files
 	if (argc < 2)
 	{
@@ -475,9 +488,6 @@ int main(int argc, char *argv[])
 		lua_newtable(L);
 
 		int argument = 1;
-		HPA *HPAFlow = new HPA(argv[argument], L);
-		HPAFlow->execute();
-		delete HPAFlow;
 		while (argument < argc)
 		{
 			lua_pushnumber(L, argument);
@@ -486,6 +496,10 @@ int main(int argc, char *argv[])
 
 			argument++;
 		}
+
+		//HPA *HPAFlow = new HPA("hpa_model_test.lua", L);
+		//HPAFlow->execute();
+		//delete HPAFlow;
 
 		lua_call(L, 1, 0);
 	}

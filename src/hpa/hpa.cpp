@@ -2,7 +2,9 @@
 
 #ifdef WIN32
 	#include <Windows.h>
-#endif // WIN32
+#elif __linux__
+	#include <unistd.h>
+#endif
 
 
 //Author: Saulo Henrique Cabral Silva
@@ -471,7 +473,6 @@ int HPA::parallel(lua_State* L){
 	toIncludeBagP.setNameTask(nameFuncToExec);
 	toIncludeBagP.setSetParam(namesOfPar);
 	toIncludeBagP.setSetRet(varReturn);
-qDebug() << to_execute.c_str() << nameFuncToExec.c_str() << namesOfPar[0].c_str() << namesOfPar[1].c_str();
 
 	if(namesOfPar.size() == 0)
 		lua_close(tempStackVals);
