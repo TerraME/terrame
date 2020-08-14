@@ -33,7 +33,8 @@ cp -r $_TERRAME_INSTALL_PATH/terrame.app/Contents/MacOS/packages/gis/doc $_TERRA
 # Removing old builds
 rm -rf $_TERRAME_INSTALL_PATH $_TERRAME_OUT_DIR
 
-# Executing TerraME build script
 ./terrame-conf.sh
 
+cd $_TERRAME_OUT_DIR
+cpack -C Release --config ./CPackConfig.cmake
 exit $?

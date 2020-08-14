@@ -31,11 +31,18 @@ xcopy %_TERRAME_INSTALL_PATH%\bin\packages\gis\doc %_TERRAME_GIT_DIR%\packages\g
 rmdir %_TERRAME_INSTALL_PATH% /s /q
 rmdir %_TERRAME_OUT_DIR% /s /q
 
-:: Executing TerraME build script
 call terrame-conf.bat
-
-:: Packing
+:: Packing NSIS
 cmake --build . --target PACKAGE --config Release
 copy terrame*.exe %WORKSPACE%
 
-exit %ERRORLEVEL%
+set "RESULT=%ERRORLEVEL%"
+
+set "_TERRAME_CPACK_GENERATOR=ZIP"
+call terrame-conf.bat
+:: Packing ZIP Portable
+cmake --build . --target PACKAGE --config Release
+copy terrame*.zip %WORKSPACE%
+
+set /a "RESULT=%RESULT%+%ERRORLEVEL%"
+exit %RESULT%
