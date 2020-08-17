@@ -34,7 +34,13 @@ cp -r $_TERRAME_INSTALL_PATH/terrame.app/Contents/MacOS/packages/gis/doc $_TERRA
 rm -rf $_TERRAME_INSTALL_PATH $_TERRAME_OUT_DIR
 
 ./terrame-conf.sh
-
 cd $_TERRAME_OUT_DIR
 cpack -C Release --config ./CPackConfig.cmake
-exit $?
+RESULT=$?
+cd ..
+
+export _TERRAME_CPACK_GENERATOR="ZIP"
+./terrame-conf.sh
+cd $_TERRAME_OUT_DIR
+cpack -C Release --config ./CPackConfig.cmake
+exit $(($RESULT + $?))
