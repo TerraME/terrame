@@ -68,6 +68,10 @@ if "%_TERRAME_VLD_DIR%" == "" (
   set "_TERRAME_VLD_DIR=C:/Program Files (x86)/Visual Leak Detector"
 )
 
+if "%_TERRAME_CPACK_GENERATOR%" == "" (
+  set _TERRAME_CPACK_GENERATOR="NSIS"
+)
+
 mkdir %_TERRAME_OUT_DIR%
 cd %_TERRAME_OUT_DIR%
 

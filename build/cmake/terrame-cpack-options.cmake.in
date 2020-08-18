@@ -58,8 +58,6 @@ if(NOT DEFINED CPACK_SOURCE_PACKAGE_FILE_NAME)
 	else()
 		message(FATAL_ERROR "terrame ERROR: unknown platform for generating install package. See terralib-cpack-options.cmake.in for more details!")
 	endif()
-else()
-	set(CPACK_PACKAGE_FILE_NAME "terrame-@TERRAME_VERSION_STRING@-src")
 endif()
 
 #
