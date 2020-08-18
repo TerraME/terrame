@@ -35,14 +35,15 @@ call terrame-conf.bat
 :: Packing NSIS
 cmake --build . --target PACKAGE --config Release
 copy terrame*.exe %WORKSPACE%
-
 set "RESULT=%ERRORLEVEL%"
+
+cd ..
 
 set "_TERRAME_CPACK_GENERATOR=ZIP"
 call terrame-conf.bat
 :: Packing ZIP Portable
 cmake --build . --target PACKAGE --config Release
 copy terrame*.zip %WORKSPACE%
-
 set /a "RESULT=%RESULT%+%ERRORLEVEL%"
+
 exit %RESULT%
