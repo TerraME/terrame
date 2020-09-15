@@ -248,8 +248,6 @@ string ParserHPA::manipulatePath(string modelPath){
 }
 
 void ParserHPA::writeModel(string path, vector<string> modelInVec){
-qWarning("WriteModel-------------------");
-qWarning(path.c_str());
     ofstream modelWrite;
     modelWrite.open(path.c_str(), ios_base::out);
 

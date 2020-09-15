@@ -35,12 +35,6 @@ of this software and its documentation.
 #include <sstream>
 #include <stdio.h>
 
-#if defined(TME_WIN32)
-#include <iostream>
-#else
-//#include <iostream.h>
-#endif
-
 using namespace std;
 
 typedef string ModelID;

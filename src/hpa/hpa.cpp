@@ -97,10 +97,8 @@ HPA::HPA(lua_State* L){
 
 
 	luaL_dostring(L,"__T__"); // Tiago - achei que isto era codigo que o Saulo usou para debug e esqueceu de apagar, mas se tirar estas linha tudo para de funcionar
-    qDebug() << lua_type(L, -1);
 
 	int temp = luaL_ref(L, LUA_REGISTRYINDEX); // Tiago - achei que isto era codigo que o Saulo usou para debug e esqueceu de apagar, , mas se tirar estas linha tudo para de funcionar
-    qDebug() << "REFFFFFFFFFFFFFF: " << temp << " : " << (temp == LUA_REFNIL) << " : " << (temp == LUA_NOREF); 
 	
 	//aqui setamos o recurso compartilhado para o processo ou a pilha principal(dessa forma economizamos memória)
 	setBag(&BAG);
@@ -170,8 +168,6 @@ HPA::HPA(lua_State* L){
 
 HPA::HPA(string pathModel, lua_State *L){
 	//ParserHPA *parser = new ParserHPA(pathModel); // Tiago - fonte de leak
-qWarning("construtor HPA - inicio");
-qWarning(pathModel.c_str());
 	//esta aqui é a pilha principal(ela efetua as chamadas)
 	ModeloMain = L;
 	mainStack = new ProcHPA(); // Tiago - fonte de leak
@@ -192,9 +188,7 @@ qWarning(pathModel.c_str());
 
 	//esse aqui é o novo modelo a ser executado (aqui ele já esta traduzido)
 	//pathModel = //"D:/terrame/tests/hpa_model_test.lua"; //parser->getNewPath();
-qWarning(pathModel.c_str());
 	mainStack->setNameTranslated(pathModel.c_str());
-qWarning("construtor HPA - fim");
 	//removendo todos os restos de conversão do path principal
 	//parser->cleanTranslate();
 
@@ -208,27 +202,21 @@ qWarning("construtor HPA - fim");
 // e quando a pilha lua é fehada por "lua_close()" no main(), o codigo abaixo gera um "segmentation fault"
 // tive que fazer mainStack = NULL no construtor HPA( lusState*) chamado por lua
 HPA::~HPA(){
-	qDebug() << "Destrutor 1" << this ;
-	if( mainStack) {
+	if(mainStack) {
 		if( mainStack->getState() ) removeWorkers(mainStack->getState());
 	    removeLockSections();
-		qDebug() << "Destrutor 2" << this;
 		delete mainStack;
 	}
     else // so o objeto HPA criado em Lua tem referencia e nao tem mainStack
 	{
 		luaL_unref(L,LUA_REGISTRYINDEX,refGlobalHPA);
 	}
-	qDebug() << "Destrutor 3" << this ;
 }
 
 int HPA::execute(){
 	//execução da thread aqui
-qWarning("execute iniciou");
 	mainStack->start();
 	mainStack->wait();
-qWarning("execute terminou");
-
 	return true;
 }
 
@@ -272,7 +260,12 @@ int HPA::joinall(lua_State* L){
 int HPA::np(lua_State* L){
 
 	int newQuantProc = lua_tonumber(L,1);
-
+	
+	if(!newQuantProc || (newQuantProc == numCPU)) 
+	{
+		lua_pushinteger(L, numCPU);
+		return 1;
+	}
 	//é preciso esperar todas as threads terminarem pois estas serão destruídas para a criação de novas
 	HPA::joinall(L);
 
@@ -318,7 +311,7 @@ int HPA::release(lua_State *L){
 	string nameSec = resultConvert;
 
 	justOne.lock();
-		lockSection[nameSec.c_str()]->unlock();
+	lockSection[nameSec.c_str()]->unlock();
 	justOne.unlock();
 		
 	return 0;
@@ -377,25 +370,32 @@ lua_State* HPA::Read_Parameters(lua_State* L, vector<string>name_of_par){
 	//leitura deve ser realizada aqui passar por todos os parametros
 	for(int ind = 0; ind < name_of_par.size();ind++){
 
-		if(lua_type(L,positionOfParam) != LUA_TTABLE){
+		if(lua_type(L,positionOfParam) != LUA_TTABLE)
+		{
 			HPAxcopy_aux(L,store_val,positionOfParam);
-		}else{	
+		}
+		else
+		{	
 			//todo tipo de tiago para aqui
 			lua_getfield(L,-1,"cObj_");
 					
 			//caso em que tenho um cellular space
-			if(lua_type(L,-1) == 7){
+			if(lua_type(L,-1) == 7)
+			{
 				//para este caso preciso inserir uma variavel de controle onde possa 
 				//consultar para efetuar o xmove
 				luaL_dostring(store_val,(name_of_par[ind]+"_is_ref = 1").c_str());
 
 				lua_pop(L,1);
 				lua_xmove(L,store_val,1);
-			}else{
+			}
+			else
+			{
 				lua_pop(L,1);
 				HPAxcopy(L,store_val,positionOfParam);
 			}
 		}
+ 
 		lua_setglobal(store_val,name_of_par[ind].c_str());
 		//luaL_ref(store_val,LUA_REGISTRYINDEX);
 		positionOfParam++;			

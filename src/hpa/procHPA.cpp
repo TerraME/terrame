@@ -40,30 +40,12 @@ string ProcHPA::getNameTranslated(){
 }
 
 void ProcHPA::run(){
-qWarning("ProcHPA iniciou");
-//	QString tmePath(getenv("TME_PATH"));
-//
-//	#if defined ( TME_WIN32 )
-//    //tmePath.append("\\bin\\Lua\\TerraME.lua");
-//	#else
-//qWarning("LINUX!!!!");
-//		tmePath.append("/bin/Lua/TerraME.lua");
-//	#endif
-
-	//luaL_openlibs(funcLua);
-//qWarning(tmePath.toAscii().constData());
-	//isso aqui deve encontrar o TME_PATH
-	//luaL_loadfile(funcLua, tmePath.toStdString().c_str()) //.toAscii().constData()) 
-	//				|| lua_pcall(funcLua, 0, 0, 0);
 	luaL_dostring(funcLua,"__HPA_MODEL_ID_ = 0;");
-qWarning(nameTranslatedModel.c_str());
 	//olhar esta chamada
 	int erroTrad = luaL_loadfile(funcLua, nameTranslatedModel.c_str());
 	if( ! erroTrad ) {
-qWarning("arquivo traduzido carregado com sucesso");	
 	}
-	else {
-qWarning("erro sintatico no arquivo traduzido");	
+	else {	
 		string msg = lua_tostring(funcLua,-1);
 		size_t firstPos = msg.find_first_of(":");
 		size_t lastPos = msg.find_first_of(":", firstPos+1);
@@ -88,11 +70,8 @@ qWarning("erro sintatico no arquivo traduzido");
 	//remove(nameTranslatedModel.c_str()); 
 
 	//aqui já tenho a execução do modelo principal
-	if( !lua_pcall(funcLua, 0, 0, 0)) {
-qWarning("arquivo executado com sucesso");	
-	}
-	else {
-qWarning("arquivo nao pode ser executado");	
+	if (lua_pcall(funcLua, 0, 0, 0)) 
+	{
 		string msg = lua_tostring(funcLua,-1);
 		//size_t firstPos = msg.find_first_of(":");
 		//size_t lastPos = msg.find_first_of(":", firstPos+1);
@@ -109,10 +88,7 @@ qWarning("arquivo nao pode ser executado");
 		//newMsg = newMsg + ":" + newLineNumber + ":" + msg.substr(lastPos+1);
 		string newMsg = msg; 
 		newMsg.erase(fileNamePos+1, 4);
-		qWarning(newMsg.c_str());
 	}
-
-qWarning("ProcHPA terminou");
 	/*
 	lua_getglobal(funcLua,"SAULO");
 	cerr << lua_tointeger(funcLua,-1) << endl;
