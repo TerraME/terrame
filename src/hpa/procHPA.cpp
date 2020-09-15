@@ -4,7 +4,7 @@
 
 extern  char* TME_PATH; // Tiago
 
-#define TME_WIN32
+//#define TME_WIN32
 
 extern "C"
 {
@@ -41,14 +41,14 @@ string ProcHPA::getNameTranslated(){
 
 void ProcHPA::run(){
 qWarning("ProcHPA iniciou");
-	QString tmePath(getenv("TME_PATH"));
-
-	#if defined ( TME_WIN32 )
-    //tmePath.append("\\bin\\Lua\\TerraME.lua");
-	#else
-qWarning("LINUX!!!!");
-		tmePath.append("/bin/Lua/TerraME.lua");
-	#endif
+//	QString tmePath(getenv("TME_PATH"));
+//
+//	#if defined ( TME_WIN32 )
+//    //tmePath.append("\\bin\\Lua\\TerraME.lua");
+//	#else
+//qWarning("LINUX!!!!");
+//		tmePath.append("/bin/Lua/TerraME.lua");
+//	#endif
 
 	//luaL_openlibs(funcLua);
 //qWarning(tmePath.toAscii().constData());
@@ -72,7 +72,7 @@ qWarning("erro sintatico no arquivo traduzido");
 		char newLineNumber[10];
 		sprintf(newLineNumber, "%d", lineNumber);
 		string newMsg = nameTranslatedModel; 
-		#if defined ( TME_WIN32 )
+		#ifdef WIN32
 		    int fileNamePos = nameTranslatedModel.find_last_of("\\");
 		#else
 		    int fileNamePos = nameTranslatedModel.find_last_of("/");
@@ -101,7 +101,7 @@ qWarning("arquivo nao pode ser executado");
 		//char newLineNumber[10];
 		//sprintf(newLineNumber, "%d", lineNumber);
 		//string newMsg = nameTranslatedModel; 
-		#if defined ( TME_WIN32 )
+		#ifdef WIN32
 		    int fileNamePos = nameTranslatedModel.find_last_of("\\");
 		#else
 		    int fileNamePos = nameTranslatedModel.find_last_of("/");

@@ -168,7 +168,7 @@ vector<string> ParserHPA::translate(vector<string> modelVec){
                     if(i == modelVec.size()){
 qWarning("erro");
                         cerr << "error na instrumetacao, PARALLEL nao tem chamada a ser executada";
-                        #if defined ( TME_WIN32 )
+                        #ifdef WIN32
 							exit(0);
 						#else
 							//procurar alguma forma de adicionar um erro aqui para o linux
@@ -226,7 +226,7 @@ string ParserHPA::manipulatePath(string modelPath){
 
     vector<string> splitPath;
     //remover espaços e tabulações
-    #if defined ( TME_WIN32 )
+    #ifdef WIN32
     	S_TokenizeParser(modelPath,splitPath,"\\");
     #else
         S_TokenizeParser(modelPath,splitPath,"/");
@@ -235,7 +235,7 @@ string ParserHPA::manipulatePath(string modelPath){
     string newPath = "";
 
     for(int i = 0; i < splitPath.size()-1;i++){
-        #if defined ( TME_WIN32 )
+        #ifdef WIN32
             newPath = newPath + splitPath.at(i) + "\\";
         #else
             newPath = newPath + splitPath.at(i) + "/";

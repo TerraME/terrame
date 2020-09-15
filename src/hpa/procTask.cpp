@@ -154,7 +154,7 @@ void ProcTask::run() {
 			string par_Now = "__HPA_VAR__";
 			char C_aux_par[BUFSIZ];
 
-			#if defined ( TME_WIN32 )
+			#ifdef WIN32
 				//para windows
 				itoa(ind+1, C_aux_par, 10);
 			#else
