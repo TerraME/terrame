@@ -1,0 +1,21 @@
+number of processors: 1
+setup elapsed time (parallel): 0.0110
+setup elapsed time (total): 0.3700
+multiplication elapsed time (parallel): 21.2570
+multiplication elapsed time (total): 21.5460
+mult granularity elapsed time (parallel): 19.5910
+mult granularity elapsed time (total): 19.7660
+number of processors: 2
+setup elapsed time (parallel): 0.0100
+setup elapsed time (total): 0.3570
+multiplication elapsed time (parallel): 12.8780
+multiplication elapsed time (total): 13.0820
+mult granularity elapsed time (parallel): 12.2050
+mult granularity elapsed time (total): 12.3720
+number of processors: 3
+setup elapsed time (parallel): 0.0090
+setup elapsed time (total): 0.3410
+multiplication elapsed time (parallel): 13.7420
+multiplication elapsed time (total): 13.9090
+mult granularity elapsed time (parallel): 13.4910
+mult granularity elapsed time (total): 13.6540

@@ -236,7 +236,8 @@ local function workers()
 		
 	print("start changing number of workers...")
 	io.flush()
-		
+	
+	local np = hpa:np()	
 	hpa:np(1)
 	for i = 1, loops do
 		hpa:parallel("foo()")
@@ -252,6 +253,7 @@ local function workers()
 	hpa:joinall()
 	print("Ok")
 	io.flush()
+	hpa:np(np)
 end
 
 local function returns()
