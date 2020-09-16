@@ -111,6 +111,7 @@ local function matrixMultiplicationGranularity(np, dim, csA, csB)
 end
 
 local np = hpa:np() - 1 -- time increase using all processors
+if np > 3 then np = 3 end
 local dim = 150
 
 for n = 1, np do

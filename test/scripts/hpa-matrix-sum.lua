@@ -96,6 +96,7 @@ local function matrixSum(np, dim, csA, csB, csC, csD)
 end
 
 local np = hpa:np() - 1 -- time increase using all processors
+if np > 3 then np = 3 end
 local dim = 500
 
 for n = 1, np do
