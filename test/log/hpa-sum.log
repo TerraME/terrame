@@ -1,15 +1,15 @@
 number of processors: 1
-setup elapsed time (parallel): 0.2530
-setup elapsed time (total): 8.8910
-sum elapsed time (parallel): 2.2950
-sum elapsed time (total): 4.4840
+setup elapsed time (parallel): 0.242
+setup elapsed time (total): 8.370
+sum elapsed time (parallel): 2.361
+sum elapsed time (total): 4.534
 number of processors: 2
-setup elapsed time (parallel): 0.1700
-setup elapsed time (total): 8.5770
-sum elapsed time (parallel): 1.7360
-sum elapsed time (total): 3.7770
+setup elapsed time (parallel): 0.156
+setup elapsed time (total): 9.059
+sum elapsed time (parallel): 1.868
+sum elapsed time (total): 4.564
 number of processors: 3
-setup elapsed time (parallel): 0.1920
-setup elapsed time (total): 8.1260
-sum elapsed time (parallel): 1.5920
-sum elapsed time (total): 3.8970
+setup elapsed time (parallel): 0.144
+setup elapsed time (total): 7.937
+sum elapsed time (parallel): 1.507
+sum elapsed time (total): 3.675

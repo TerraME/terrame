@@ -34,8 +34,8 @@ local function setup(np, dim)
 	io.flush()
 	local t2 = os.clock()
 
-	print(string.format("setup elapsed time (parallel): %.4f", t2 - t1))
-	print(string.format("setup elapsed time (total): %.4f", t2 - t0))	
+	print(string.format("setup elapsed time (parallel): %.3f", t2 - t1))
+	print(string.format("setup elapsed time (total): %.3f", t2 - t0))	
 
 	return csA, csB
 end
@@ -70,8 +70,8 @@ local function matrixMultiplication(np, dim, csA, csB)
 	io.flush()
 	local t2 = os.clock()
 
-	print(string.format("multiplication elapsed time (parallel): %.4f", t2 - t1))
-	print(string.format("multiplication elapsed time (total): %.4f", t2 - t0))
+	print(string.format("multiplication elapsed time (parallel): %.3f", t2 - t1))
+	print(string.format("multiplication elapsed time (total): %.3f", t2 - t0))
 	return res:sample().value
 end
 
@@ -105,8 +105,8 @@ local function matrixMultiplicationGranularity(np, dim, csA, csB)
 	io.flush()
 	local t2 = os.clock()
 
-	print(string.format("mult granularity elapsed time (parallel): %.4f", t2 - t1))
-	print(string.format("mult granularity elapsed time (total): %.4f", t2 - t0))
+	print(string.format("mult granularity elapsed time (parallel): %.3f", t2 - t1))
+	print(string.format("mult granularity elapsed time (total): %.3f", t2 - t0))
 	return res:sample().value
 end
 

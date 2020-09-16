@@ -151,6 +151,7 @@ local function approximateLine(line)
 	if string.match(line, "Creating")            then return 120 end
 	if string.match(line, "Building")            then return   8 end
 	if string.match(line, "should contain only") then return   1 end
+	if string.match(line, "elapsed time")        then return   6 end
 
 	return 0
 end

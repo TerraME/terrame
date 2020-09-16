@@ -56,8 +56,8 @@ local function setupToSum(np, dim)
 	io.flush()
 	local t2 = os.clock()
 
-	print(string.format("setup elapsed time (parallel): %.4f", t2 - t1))
-	print(string.format("setup elapsed time (total): %.4f", t2 - t0))
+	print(string.format("setup elapsed time (parallel): %.3f", t2 - t1))
+	print(string.format("setup elapsed time (total): %.3f", t2 - t0))
 
 	return csA, csB, csC, csD
 end
@@ -89,8 +89,8 @@ local function matrixSum(np, dim, csA, csB, csC, csD)
 	io.flush()
 	local t2 = os.clock()
 
-	print(string.format("sum elapsed time (parallel): %.4f", t2 - t1))
-	print(string.format("sum elapsed time (total): %.4f", t2 - t0))
+	print(string.format("sum elapsed time (parallel): %.3f", t2 - t1))
+	print(string.format("sum elapsed time (total): %.3f", t2 - t0))
 
 	return res:sample().value
 end
