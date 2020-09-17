@@ -1,4 +1,26 @@
-//Author: Saulo Henrique Cabral Silva
+/************************************************************************************
+TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
+Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
+
+This code is part of the TerraME framework.
+This framework is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library.
+
+The authors reassure the license terms regarding the warranties.
+They specifically disclaim any warranties, including, but not limited to,
+the implied warranties of merchantability and fitness for a particular purpose.
+The framework provided hereunder is on an "as is" basis, and the authors have no
+obligation to provide maintenance, support, updates, enhancements, or modifications.
+In no event shall INPE and TerraLAB / UFOP be held liable to any party for direct,
+indirect, special, incidental, or consequential damages arising out of the use
+of this software and its documentation.
+*************************************************************************************/
+
 #include <QApplication>
 #include <QtCore>
 #include <string>
@@ -32,7 +54,7 @@ vector<string> ParserHPA::readModel(string modelPath){
         cout << "problema ao abrir o modelo, verifique o path" << endl;
     }
 
-	//para resolver a ultima linha do modelo e nao restringir para o usuario em comentários
+	//para resolver a ultima linha do modelo e nao restringir para o usuario em comenta'rios
 
 	bool eof_ = false;
 	if(!fileModel.eof())
@@ -51,10 +73,10 @@ vector<string> ParserHPA::readModel(string modelPath){
         // Tiago - O codigo abaixo esta errado, pq o tramento do final de linha nao depende do SO onde o HPA foi compilado
         // Ele depende apenas do SO (ou formato) no qual o ARQUIVO do modelo foi gravado!!!!
 		// #if defined ( TME_WIN32 )
-		// 	//caso for windows faça isso
+		// 	//caso for windows faca isso
 		// 	modelInFle.push_back(line);
 		// #else
-		// 	//temos problemas com a quebra de linha por isso esse tratamento de versão
+		// 	//temos problemas com a quebra de linha por isso esse tratamento de versao
 		// 	string line_aux = "";
 		
 		// 	if(line.size() > 0)
@@ -90,7 +112,7 @@ vector<string> ParserHPA::readModel(string modelPath){
 vector<string> ParserHPA::removeProblemsLine(string line){
 
     vector<string> lineClean;
-    //remover espaços e tabulações
+    //remover espacos e tabulacoes
     S_TokenizeParser(line,lineClean," \t \n");
 
     return lineClean;
@@ -122,7 +144,7 @@ string ParserHPA::solveParallel(vector<string> splits){
         if(i == unionTranlate.size()-1 || (vetChar[i+1] == ';' && vetChar[i] == ')'))
             controlPar = false;
 
-        //estamos entre colchetes vamos armazenar tudo como parâmetro usuário define
+        //estamos entre colchetes vamos armazenar tudo como parâmetro usua'rio define
         if(controlPar)
             parameters = parameters + vetChar[i];
 
@@ -133,11 +155,11 @@ string ParserHPA::solveParallel(vector<string> splits){
 
     resultTranslate = resultTranslate + "\"";
 
-    //caso em que temos parametros para a função
+    //caso em que temos parametros para a funcao
     if(parameters.size() > 0)
         resultTranslate = resultTranslate + "," + parameters;
 
-    //encerrando a chamada a função parallel
+    //encerrando a chamada a funcao parallel
     resultTranslate = resultTranslate + ");";
 
     return resultTranslate;
@@ -152,7 +174,7 @@ vector<string> ParserHPA::translate(vector<string> modelVec){
 
     for(int i = 0; i < modelVec.size()-1;i++){
 
-        //tenho que fazer uma operação de split para limpar as linhas
+        //tenho que fazer uma operacao de split para limpar as linhas
         vector<string> vectorClean = removeProblemsLine(modelVec.at(i));
 
         if(vectorClean.size() > 0 && !vectorClean.at(0).compare("--HPA")){
@@ -225,7 +247,7 @@ qWarning("erro");
 string ParserHPA::manipulatePath(string modelPath){
 
     vector<string> splitPath;
-    //remover espaços e tabulações
+    //remover espacos e tabulacoes
     #ifdef WIN32
     	S_TokenizeParser(modelPath,splitPath,"\\");
     #else
@@ -262,7 +284,7 @@ void ParserHPA::writeModel(string path, vector<string> modelInVec){
 }
 
 void ParserHPA::parser(string modelPath){
-    //leitura do modelo apenas uma vez para reduzir operações em disco
+    //leitura do modelo apenas uma vez para reduzir operacoes em disco
     vector<string> modelToTranslated = readModel(modelPath);
 
     if(modelToTranslated.empty()){
@@ -272,7 +294,7 @@ qWarning("erro");
 
     modelToTranslated = translate(modelToTranslated);
 
-    //função para gravação do novo modelo
+    //funcao para gravacao do novo modelo
     newPath = manipulatePath(modelPath);
     writeModel(newPath,modelToTranslated);
 

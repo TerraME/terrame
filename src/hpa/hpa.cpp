@@ -1,3 +1,26 @@
+/************************************************************************************
+TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
+Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
+
+This code is part of the TerraME framework.
+This framework is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library.
+
+The authors reassure the license terms regarding the warranties.
+They specifically disclaim any warranties, including, but not limited to,
+the implied warranties of merchantability and fitness for a particular purpose.
+The framework provided hereunder is on an "as is" basis, and the authors have no
+obligation to provide maintenance, support, updates, enhancements, or modifications.
+In no event shall INPE and TerraLAB / UFOP be held liable to any party for direct,
+indirect, special, incidental, or consequential damages arising out of the use
+of this software and its documentation.
+*************************************************************************************/
+
 #include "hpa.h"
 
 #ifdef WIN32
@@ -5,9 +28,6 @@
 #elif __linux__
 	#include <unistd.h>
 #endif
-
-
-//Author: Saulo Henrique Cabral Silva
 
 void HPA::createWorkers(){
 	
@@ -20,7 +40,7 @@ void HPA::createWorkers(){
 		workers.at(workers.size()-1)->set_State(lua_newthread(ModeloMain));
 		workers.at(workers.size()-1)->setRefThread(luaL_ref(ModeloMain, LUA_REGISTRYINDEX));
 		//setamos aqui o recurso compartilhado entre o processo principal hpa e os trabalhadores
-		//(é preciso efetuar o controle de acesso as tasks)
+		//(e' preciso efetuar o controle de acesso as tasks)
 		workers.at(workers.size()-1)->setBag(&BAG);
 		workers.at(workers.size()-1)->setControlQMut(&LOCK_BAG);
 		lua_gc(workers.at(workers.size()-1)->getState(),LUA_GCSTOP,0);
@@ -74,7 +94,7 @@ HPA::HPA(lua_State* L){
 //	mainStack->set_State(ModeloMain);
 //
 //#ifdef WIN32
-//	//informação sobre a quantidade de cores da maquina
+//	//informacao sobre a quantidade de cores da maquina
 //	SYSTEM_INFO sysinfo;
 //	GetSystemInfo(&sysinfo);
 //	setNumCpu(sysinfo.dwNumberOfProcessors);
@@ -88,7 +108,7 @@ HPA::HPA(lua_State* L){
 //	qWarning(pathModel.c_str());
 //	mainStack->setNameTranslated(pathModel.c_str());
 //	qWarning("construtor HPA - fim");
-//	//removendo todos os restos de conversão do path principal
+//	//removendo todos os restos de conversao do path principal
 //	//parser->cleanTranslate();
 
 //////////////////////////////////////////////////////////////////////////////////////
@@ -100,7 +120,7 @@ HPA::HPA(lua_State* L){
 
 	int temp = luaL_ref(L, LUA_REGISTRYINDEX); // Tiago - achei que isto era codigo que o Saulo usou para debug e esqueceu de apagar, , mas se tirar estas linha tudo para de funcionar
 	
-	//aqui setamos o recurso compartilhado para o processo ou a pilha principal(dessa forma economizamos memória)
+	//aqui setamos o recurso compartilhado para o processo ou a pilha principal(dessa forma economizamos memo'ria)
 	setBag(&BAG);
 	setControlQMut(&LOCK_BAG);
 
@@ -112,17 +132,17 @@ HPA::HPA(lua_State* L){
 
 
 
-// Tiago -- comentei pq não estava em uso
+// Tiago -- comentei pq nao estava em uso
 // HPA::HPA(string pathModel){
 // 	ParserHPA *parser = new ParserHPA(pathModel);
 	
 // 	mainStack = new ProcHPA();
 // 	ModeloMain = luaL_newstate();
 
-// 	//esta aqui é a pilha principal(ela efetua as chamadas)
+// 	//esta aqui e' a pilha principal(ela efetua as chamadas)
 // 	mainStack->set_State(ModeloMain);
 		
-// 	//informação sobre a quantidade de cores da maquina
+// 	//informacao sobre a quantidade de cores da maquina
 // 	#if defined ( TME_WIN32 )
 // 		SYSTEM_INFO sysinfo;
 // 		GetSystemInfo(&sysinfo);
@@ -136,7 +156,7 @@ HPA::HPA(lua_State* L){
 
 // 	luaL_openlibs(mainStack->getState());
 
-// 	//esse aqui é o novo modelo a ser executado (aqui ele já esta traduzido)
+// 	//esse aqui e' o novo modelo a ser executado (aqui ele ja' esta traduzido)
 // 	pathModel = parser->getNewPath();
 	
 // 	Luna<luaCellIndex>::Register(mainStack->getState());
@@ -162,20 +182,20 @@ HPA::HPA(lua_State* L){
 
 // 	mainStack->setNameTranslated(pathModel);
 	
-// 	//removendo todos os restos de conversão do path principal
+// 	//removendo todos os restos de conversao do path principal
 // 	//parser->cleanTranslate();
 // }
 
 HPA::HPA(string pathModel, lua_State *L){
 	//ParserHPA *parser = new ParserHPA(pathModel); // Tiago - fonte de leak
-	//esta aqui é a pilha principal(ela efetua as chamadas)
+	//esta aqui e' a pilha principal(ela efetua as chamadas)
 	ModeloMain = L;
 	mainStack = new ProcHPA(); // Tiago - fonte de leak
 
 	mainStack->set_State(ModeloMain);
 	
 	#ifdef WIN32
-		//informação sobre a quantidade de cores da maquina
+		//informacao sobre a quantidade de cores da maquina
 		SYSTEM_INFO sysinfo;
 		GetSystemInfo(&sysinfo);
 		setNumCpu(sysinfo.dwNumberOfProcessors);
@@ -186,10 +206,10 @@ HPA::HPA(string pathModel, lua_State *L){
 
 	createWorkers();
 
-	//esse aqui é o novo modelo a ser executado (aqui ele já esta traduzido)
+	//esse aqui e' o novo modelo a ser executado (aqui ele ja' esta traduzido)
 	//pathModel = //"D:/terrame/tests/hpa_model_test.lua"; //parser->getNewPath();
 	mainStack->setNameTranslated(pathModel.c_str());
-	//removendo todos os restos de conversão do path principal
+	//removendo todos os restos de conversao do path principal
 	//parser->cleanTranslate();
 
 	// Tiago -- removendo leaks de memoria gerados pelo Saulo
@@ -199,7 +219,7 @@ HPA::HPA(string pathModel, lua_State *L){
 
 // Tiago -- estava tentando remover leaks de memoria gerados pelo Saulo
 // mas o codigo abaixo nao funcionou, parece que o HPA roda como variavel statica pq "this" tem sempre o mesmo valor
-// e quando a pilha lua é fehada por "lua_close()" no main(), o codigo abaixo gera um "segmentation fault"
+// e quando a pilha lua e' fehada por "lua_close()" no main(), o codigo abaixo gera um "segmentation fault"
 // tive que fazer mainStack = NULL no construtor HPA( lusState*) chamado por lua
 HPA::~HPA(){
 	if(mainStack) {
@@ -214,7 +234,7 @@ HPA::~HPA(){
 }
 
 int HPA::execute(){
-	//execução da thread aqui
+	//execucao da thread aqui
 	mainStack->start();
 	mainStack->wait();
 	return true;
@@ -254,7 +274,7 @@ int HPA::joinall(lua_State* L){
 	return 0;
 }
 
-//método para setar quantidade de cores a serem utilizados na execução(para testes TDD)
+//me'todo para setar quantidade de cores a serem utilizados na execucao(para testes TDD)
 // Tiago - comentei linha abaixo para manter coerencia com a nomenclarura adotada no TerraME
 //int HPA::HPA_NP(lua_State* L){
 int HPA::np(lua_State* L){
@@ -266,7 +286,7 @@ int HPA::np(lua_State* L){
 		lua_pushinteger(L, numCPU);
 		return 1;
 	}
-	//é preciso esperar todas as threads terminarem pois estas serão destruídas para a criação de novas
+	//e' preciso esperar todas as threads terminarem pois estas serao destrui'das para a criacao de novas
 	HPA::joinall(L);
 
 	removeWorkers(L);
@@ -288,7 +308,7 @@ int HPA::acquire(lua_State *L){
 
 	justOne.lock();
 
-	//aqui entra a parte de verificação na HASH principal
+	//aqui entra a parte de verificacao na HASH principal
 	if(!lockSection.contains(nameSec.c_str())){
 		lockSection.insert(nameSec.c_str(), new QMutex());  // Tiago -- esse mutex vai gerar leak
 	}
@@ -344,7 +364,7 @@ int HPA::join(lua_State* L){
 	}
 	justOne.unlock();
 	
-	//existe processo na bag com este nome e temos que aguardar a sua execução
+	//existe processo na bag com este nome e temos que aguardar a sua execucao
 	if(thereATask){
 		for(int i = 0; i < workers.size();i++){
 			workers.at(i)->wait();
@@ -444,22 +464,22 @@ int HPA::parallel(lua_State* L){
 
 	int q_paramet = lua_gettop(L);
 
-	//aqui vem a chamada da função e seus parâmetros
+	//aqui vem a chamada da funcao e seus parâmetros
 	string to_execute = lua_tostring(L, 1);
 
 	//chamada do metodo para tratar o retorno de resultado aqui (to_execute)
-	//Será implementado posteriormente uma vez que ainda é preciso pensar em Cenários para esta antes de implementar (TDD)
+	//Sera' implementado posteriormente uma vez que ainda e' preciso pensar em Cena'rios para esta antes de implementar (TDD)
 
-	//função para reconhecer os respectivos nomes dos parametros passados (retornamos um vetor com os nomes)
+	//funcao para reconhecer os respectivos nomes dos parametros passados (retornamos um vetor com os nomes)
 	vector<string> namesOfPar = findNamePar(to_execute);
 
-	//nome da função que sera executa (caso em que temos retorno isso aqui vai alterar)
+	//nome da funcao que sera executa (caso em que temos retorno isso aqui vai alterar)
 	string nameFuncToExec = findNameFunc(to_execute);
 
-	//declaração de um vetor para retorno da função (o tratamento da chamada da função deve aqui)
+	//declaracao de um vetor para retorno da funcao (o tratamento da chamada da funcao deve aqui)
 	vector<string> varReturn;
 
-	//inserção na bag aqui para baixo (mudança agora na inserção do nome da função a que a task corresponde)
+	//insercao na bag aqui para baixo (mudanca agora na insercao do nome da funcao a que a task corresponde)
 	//stack com o valor dos parametros para serem passados
 	lua_State *tempStackVals = Read_Parameters(L,namesOfPar);
 
@@ -484,7 +504,7 @@ int HPA::parallel(lua_State* L){
 
 	//fim do metodo insertion aqui
 
-	//aqui verificamos se existe algum worker parado e efetuamos a inicialização de algum deles para tratar a requisição caso algum esteja ocioso
+	//aqui verificamos se existe algum worker parado e efetuamos a inicializacao de algum deles para tratar a requisicao caso algum esteja ocioso
 	for(int i = 0; i < workers.size();i++){
 		if(!workers.at(i)->isRunning()){
 			workers.at(i)->start();

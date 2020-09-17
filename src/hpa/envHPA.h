@@ -1,4 +1,25 @@
-//author: Saulo Henrique Cabral Silva
+/************************************************************************************
+TerraME - a software platform for multiple scale spatially-explicit dynamic modeling.
+Copyright (C) 2001-2017 INPE and TerraLAB/UFOP -- www.terrame.org
+
+This code is part of the TerraME framework.
+This framework is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library.
+
+The authors reassure the license terms regarding the warranties.
+They specifically disclaim any warranties, including, but not limited to,
+the implied warranties of merchantability and fitness for a particular purpose.
+The framework provided hereunder is on an "as is" basis, and the authors have no
+obligation to provide maintenance, support, updates, enhancements, or modifications.
+In no event shall INPE and TerraLAB / UFOP be held liable to any party for direct,
+indirect, special, incidental, or consequential damages arising out of the use
+of this software and its documentation.
+*************************************************************************************/
 
 #ifndef ENV_HPA
 #define ENV_HPA
@@ -14,21 +35,21 @@ using namespace std;
 
 /////////////////////////////////////////////////////////////////////////VAR's GLOBAIS////////////////////////////////////////////////////
 
-//tenho que ver como tratar isso aqui (primeira solução para o carrinho de rolimã andar... :D)
+//tenho que ver como tratar isso aqui (primeira solucao para o carrinho de rolima andar... :D)
 
-//modelo do usuário a ser executado luaState
+//modelo do usua'rio a ser executado luaState
 static lua_State *ModeloMain;
 
-//quantidade de núcleos da máquina que esta sendo utilizada
+//quantidade de nu'cleos da ma'quina que esta sendo utilizada
 static int numCPU;
 
 static QMutex LOCK_ACESS;
 
-//1p tentativa de controle de variáveis globais
+//1p tentativa de controle de varia'veis globais
 //QHash<QString,lua_State*> Table_VarGlobal;
 
 ///////////////////////////////////////////////////////////////////////////TOOLS////////////////////////////////////////////////////////////
-//metodo S. Tokenizen para utilizaão no parser
+//metodo S. Tokenizen para utilizaao no parser
 static void S_Tokenize(const string& linha, vector<string>& tokens, const string& delimitadores = " ") {
     string::size_type lastPos = linha.find_first_not_of(delimitadores, 0);
     string::size_type pos = linha.find_first_of(delimitadores, lastPos);
@@ -91,7 +112,7 @@ static int HPAxcopy_aux(lua_State *Principal, lua_State *To_Stack, int idx)
 	return 1;
 }
 
-//troca de paramtros entre pilhas de execução
+//troca de paramtros entre pilhas de execucao
 static int HPAxcopy(lua_State *Principal, lua_State *To_Stack, int idx)
 {
 	int top;
@@ -166,7 +187,7 @@ static void hpaLoadParams(lua_State *now, vector<string>Par,lua_State *now_par) 
 					lua_xmove(now_par,now,1);
 				}else{
 					lua_pop(now_par,1);
-					//tenho que verificar se é tipo de tiago se for preciso usar x_move			
+					//tenho que verificar se e' tipo de tiago se for preciso usar x_move			
 					HPAxcopy(now_par,now,-2);
 				}
 			}
@@ -192,7 +213,7 @@ static void hpaLoadParams(lua_State *now, vector<string>Par,lua_State *now_par) 
 
 /////////////////////////////////////////////////////////////////////////ENV/////////////////////////////////////////////////////////////////
 
-//metodos para manipular a quantidade de threads que o hpa ira utilizar para a execução do modelo (será possível alterar utilizando diretiva)
+//metodos para manipular a quantidade de threads que o hpa ira utilizar para a execucao do modelo (sera' possi'vel alterar utilizando diretiva)
 static int getNumCpu(){
 	return numCPU;
 }
@@ -201,7 +222,7 @@ static void setNumCpu(int numCpu_){
 	numCPU = numCpu_;
 }
 
-//metodos para acesso e manipulação da pilha principal do modelo
+//metodos para acesso e manipulacao da pilha principal do modelo
 static void setMainStack(lua_State* ModeloMain_){
 	ModeloMain = ModeloMain_;
 }
