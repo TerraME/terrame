@@ -47,7 +47,6 @@ private:
 	string nameFuncTask;
 	//int ID_by_executed;
 	//local onde o retorno da funcao eecutada em paralelo deve ser empilhado
-	
 	int refOfReturn;
 	//State em que se encontram os parametros que seram passados para o metodo
 	//tava com problema em pegar os parametros antigos
@@ -82,7 +81,7 @@ public:
 	//
 	void setSetRet(vector<string> SetReturns_);
 
-	//e' possi'vel obter toda a lista de parâmetros
+	//e' possi'vel obter toda a lista de parametros
 	vector<string> getSetParam();
 
 	//retorna toda a lista de retorno(quais varia'veis vao ser atribuidas)
@@ -95,7 +94,6 @@ public:
 	string getNameTask();
 
 	void setNameTask(string nameTask);
-
 };
 
 #endif

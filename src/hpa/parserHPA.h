@@ -21,8 +21,8 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this software and its documentation.
 *************************************************************************************/
 
-#ifndef PARSER_HPA_H 
-#define PARSER_HPA_H 
+#ifndef PARSER_HPA_H
+#define PARSER_HPA_H
 
 #include <string>
 #include <iostream>
@@ -46,7 +46,6 @@ public:
 	ParserHPA(string pathModel);
 	string getNewPath();
 	void cleanTranslate();
-
 };
 
 #endif

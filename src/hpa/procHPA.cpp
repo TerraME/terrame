@@ -65,9 +65,8 @@ void ProcHPA::run(){
 	luaL_dostring(funcLua, "__HPA_MODEL_ID_ = 0; ");
 	//olhar esta chamada
 	int erroTrad = luaL_loadfile(funcLua, nameTranslatedModel.c_str());
-	if( ! erroTrad ) {
-	}
-	else {
+	if(erroTrad)
+	{
 		string msg = lua_tostring(funcLua, -1);
 		size_t firstPos = msg.find_first_of(":");
 		size_t lastPos = msg.find_first_of(":", firstPos+1);
@@ -84,7 +83,7 @@ void ProcHPA::run(){
 		newMsg = newMsg + ":" + newLineNumber + ":" + msg.substr(lastPos+1);
 		newMsg.erase(fileNamePos+1, 4);
 
-		cerr << "Error: " << erroTrad << " msg: \n" << msg << "\n" << firstPos << ", " << lastPos << ", " <<  originalLineNumber  << ", "<< lineNumber<<"\n" << newMsg << endl;
+		cerr << "Error: " << erroTrad << " msg: \n" << msg << "\n" << firstPos << ", " << lastPos << ", " <<  originalLineNumber  << ", " << lineNumber << "\n" << newMsg << endl;
 	}
 
 	// Tiago - Comente a linha abaixo se quiser ver o codigo traduzido

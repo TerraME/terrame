@@ -71,7 +71,6 @@ void HPA::removeWorkers(lua_State *L){
 	}
 
 	workers.clear();
-
 }
 
 void HPA::removeLockSections( void ){
@@ -208,7 +207,6 @@ HPA::HPA(string pathModel, lua_State *L){
 
 	// Tiago -- removendo leaks de memoria gerados pelo Saulo
 	//delete parser;
-
 }
 
 // Tiago -- estava tentando remover leaks de memoria gerados pelo Saulo
@@ -367,7 +365,7 @@ int HPA::join(lua_State* L){
 	return 0;
 }
 
-//metodo auxiliar para o TerraMEHPA para leitura dos parâmetros de entrada da chamada paralela
+//metodo auxiliar para o TerraMEHPA para leitura dos parametros de entrada da chamada paralela
 lua_State* HPA::Read_Parameters(lua_State* L, vector<string>name_of_par){
 	//estado que vai armezanar temporariamente o valor dos parametros
 	lua_State *store_val = luaL_newstate();
@@ -448,7 +446,7 @@ string HPA::findNameFunc(string toExecut){
 int HPA::parallel(lua_State* L){
 	int q_paramet = lua_gettop(L);
 
-	//aqui vem a chamada da funcao e seus parâmetros
+	//aqui vem a chamada da funcao e seus parametros
 	string to_execute = lua_tostring(L, 1);
 
 	//chamada do metodo para tratar o retorno de resultado aqui (to_execute)
@@ -500,14 +498,13 @@ int HPA::parallel(lua_State* L){
 }
 
 lua_State *getthread (lua_State *L, int *arg) {
-  if (lua_isthread(L, 1)) {
-    *arg = 1;
-    return lua_tothread(L, 1);
-  }
-  else {
-    *arg = 0;
-    return L;
-  }
+	if (lua_isthread(L, 1)) {
+		*arg = 1;
+		return lua_tothread(L, 1);
+	}
+
+	*arg = 0;
+	return L;
 }
 
 int HPA::HPATests(lua_State * now){

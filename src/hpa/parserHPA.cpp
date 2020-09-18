@@ -90,6 +90,7 @@ vector<string> ParserHPA::readModel(string modelPath){
         string line_aux = "";
 
         if(line.size() > 0)
+		{
            for(int i = 0; i < line.size(); i++)
            {
                if (line[i] != '\r')
@@ -97,9 +98,8 @@ vector<string> ParserHPA::readModel(string modelPath){
                   line_aux = line_aux+line[i];
                }
            }
-
+		}
         modelInFle.push_back(line_aux);
-
     }
 
     return modelInFle;
@@ -136,11 +136,11 @@ string ParserHPA::solveParallel(vector<string> splits){
         if(i == unionTranlate.size()-1 || (vetChar[i+1] == '; ' && vetChar[i] == ')'))
             controlPar = false;
 
-        //estamos entre colchetes vamos armazenar tudo como parâmetro usua'rio define
+        //estamos entre colchetes vamos armazenar tudo como parametro usua'rio define
         if(controlPar)
             parameters = parameters + vetChar[i];
 
-        //inicio de passagem de parâmetros
+        //inicio de passagem de parametros
         if(vetChar[i] == '(')
             controlPar = true;
     }
@@ -175,7 +175,7 @@ vector<string> ParserHPA::translate(vector<string> modelVec){
                 while(vectorClean.empty()){
                     i++;
                     if(i == modelVec.size()){
-qWarning("erro");
+						qWarning("erro");
                         cerr << "error na instrumetacao, PARALLEL nao tem chamada a ser executada";
                         #ifdef WIN32
 							exit(0);
@@ -221,7 +221,6 @@ qWarning("erro");
                     cerr << "error: quantidade de nucleos nao foi informada" << endl;
                 }
             }
-
         }else{
             modelTranslated.push_back(modelVec.at(i));
         }
@@ -274,8 +273,8 @@ void ParserHPA::parser(string modelPath){
     vector<string> modelToTranslated = readModel(modelPath);
 
     if(modelToTranslated.empty()){
-        cerr << "modelo em branco, verifique o modelo ou o path passado!"<<endl;
-qWarning("erro");
+        cerr << "modelo em branco, verifique o modelo ou o path passado!" << endl;
+		qWarning("erro");
     }
 
     modelToTranslated = translate(modelToTranslated);

@@ -42,11 +42,13 @@ static QMutex LOCK_BAG;
 static int bagOfTask(list<ParamTask> *bag_, ParamTask *firtTask) {
 	LOCK_BAG.lock();
 	//neste caso sai um resultado para ser tratado no run (preciso refatorar aqui)
-	if(bag_->empty()){
+	if(bag_->empty())
+	{
 		LOCK_BAG.unlock();
 		return 0;
 	}
-	else{
+	else
+	{
 		firtTask = &bag_->front();
 		bag_->pop_front();
 	}

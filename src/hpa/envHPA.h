@@ -164,7 +164,7 @@ static void hpaLoadParams(lua_State *now, vector<string>Par, lua_State *now_par)
 
 		//verifico se a variavel esta na pilha auxiliar de parametros
 		lua_getglobal(now_par, name_Var.c_str());
-		if(lua_type(now_par, -1)!=0)
+		if(lua_type(now_par, -1) != 0)
 			is_global = true;
 
         if (is_global) {
@@ -174,8 +174,11 @@ static void hpaLoadParams(lua_State *now, vector<string>Par, lua_State *now_par)
             lua_getglobal(now_par, name_Var.c_str());
 
 			if(lua_type(now_par, -1) != LUA_TTABLE)
+			{
 				HPAxcopy_aux(now_par, now, -1);
-			else{
+			}
+			else
+			{
 				//todo tipo de tiago tem este identficador
 				lua_getglobal(now_par, (name_Var + "_is_ref").c_str());
 

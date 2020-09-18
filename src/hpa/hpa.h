@@ -90,7 +90,7 @@ private:
 	//QMutex controlAcess();
 
 public:
-	//contrutor HPA, e' preciso passar como parâmetro o modelo instrumentado com as diretivas
+	//contrutor HPA, e' preciso passar como parametro o modelo instrumentado com as diretivas
 	//metodo apenas para ref no lua
 
 	// HPA(string pathModel); // Tiago -- comentei pq nao estva em uso

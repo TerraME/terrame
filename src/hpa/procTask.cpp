@@ -102,7 +102,6 @@ void ProcTask::setParms(vector<string> param_of_cham_, vector<string> param_of_r
 	//State em que se encontram os parametros que seram passados para o metodo
 	//tava com problema em pegar os parametros antigos
 	this->storeVal = store_val_;
-
 }
 
 void ProcTask::setParms(vector<string> param_of_cham_, vector<string> param_of_return_, int ID_by_executed_, lua_State* store_val_){
@@ -227,7 +226,6 @@ void ProcTask::run() {
 		if(just_one){
 			break;
 		}
-
 	}
 	setRunState(0);
 }

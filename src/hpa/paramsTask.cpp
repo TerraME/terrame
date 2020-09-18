@@ -79,7 +79,7 @@ void ParamTask::setSetRet(vector<string> SetReturns_){
 	this->paramsOfReturn = SetReturns_;
 }
 
-//e' possi'vel obter toda a lista de parâmetros
+//e' possi'vel obter toda a lista de parametros
 vector<string> ParamTask::getSetParam(){
 	return paramsOfCall;
 }

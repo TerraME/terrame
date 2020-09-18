@@ -21,7 +21,7 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this software and its documentation.
 *************************************************************************************/
 
-#ifndef PROC_HPA_H 
+#ifndef PROC_HPA_H
 #define PROC_HPA_H
 
 #include <QApplication>
@@ -64,18 +64,17 @@ public:
 
 	//quando uma funcao terminou
     void set_State(lua_State *Func);
-    
+
 	lua_State* getState();
 
 	//nome da funcao que esta sendo executada (para controle do join)
     string getNameTranslated();
 
-	//qual a pro'xima funcao a ser executada (lembre-se que esttou tentando fazer reuso das instâncias de worker's)
+	//qual a pro'xima funcao a ser executada (lembre-se que esttou tentando fazer reuso das instancias de worker's)
     void setNameTranslated(string);
 
 	//Thread
     virtual void run();
-
 };
 
 #endif //PROC_HPA_H
