@@ -21,7 +21,7 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this software and its documentation.
 *************************************************************************************/
 
-#ifndef PROC_TASK_H 
+#ifndef PROC_TASK_H
 #define PROC_TASK_H
 
 extern "C"{
@@ -51,7 +51,7 @@ private:
 
 	//variaveis de retorno da task
 	vector<string> paramOfReturn;
-	
+
 	int refOfReturn;
 	//State em que se encontram os parametros que seram passados para o metodo
 	//tava com problema em pegar os parametros antigos
@@ -67,23 +67,23 @@ private:
 	QMutex *lock_bag;
 
 public:
-	
+
 	ProcTask();
 
     //quando um a funcao terminou
     void set_State(lua_State *Func);
-    
+
 	lua_State* getState();
 
 	//nome da funcao
     string getName();
-    
+
 	//nome da nova funcao a ser executada
 	void setName(string);
 
 	//parametros para a execucao da pro'xima funcao
-	void setParms(vector<string>,vector<string>,int,int,lua_State*);
-	void setParms(vector<string>,vector<string>,int,lua_State*);
+	void setParms(vector<string>, vector<string>, int, int, lua_State*);
+	void setParms(vector<string>, vector<string>, int, lua_State*);
 
 	vector<string> getParamOfCham();
 	vector<string> getParamOfReturn();
@@ -104,7 +104,7 @@ public:
 	void setRefThread(int ref_);
 	int getRefThread();
 
-	//metodos para acessar e setar a bag para fora(public, like interface) para o controle de acesso tambe'm uma vez 
+	//metodos para acessar e setar a bag para fora(public, like interface) para o controle de acesso tambe'm uma vez
 	//que ele e' compartilhado
 	void setBag(list<ParamTask>*);
 	void setControlQMut(QMutex* controlMutex);

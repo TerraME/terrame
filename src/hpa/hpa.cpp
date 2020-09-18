@@ -30,10 +30,10 @@ of this software and its documentation.
 #endif
 
 void HPA::createWorkers(){
-	
-	//lua_settop(ModeloMain,0);
-	//lua_gc(ModeloMain,LUA_GCCOLLECT,0);
-	
+
+	//lua_settop(ModeloMain, 0);
+	//lua_gc(ModeloMain, LUA_GCCOLLECT, 0);
+
 	//iniciando os workers
 	for(int i = 0; i < getNumCpu();i++){
 		workers.push_back(new ProcTask()); // tiago - outra fonte de leak!
@@ -43,7 +43,7 @@ void HPA::createWorkers(){
 		//(e' preciso efetuar o controle de acesso as tasks)
 		workers.at(workers.size()-1)->setBag(&BAG);
 		workers.at(workers.size()-1)->setControlQMut(&LOCK_BAG);
-		lua_gc(workers.at(workers.size()-1)->getState(),LUA_GCSTOP,0);
+		lua_gc(workers.at(workers.size()-1)->getState(), LUA_GCSTOP, 0);
 	}
 }
 
@@ -51,7 +51,7 @@ void HPA::createWorkers(){
 // Tiago - Metodo do Saulo que eu considerei muito mal implementdo, entao comentei e fiz o meu a seguir
 // void HPA::removeWorkers(lua_State *L){
 // 	for(int i = 0; i < getNumCpu();i++){
-// 		luaL_unref(L,workers.at(i)->getRefThread(),	LUA_REGISTRYINDEX);
+// 		luaL_unref(L, workers.at(i)->getRefThread(),	LUA_REGISTRYINDEX);
 
 // 		// Tiago -- necessario para remover leak de memoria geraso pelo saulo
 // 		if (workers[i]) delete workers[i];
@@ -74,14 +74,14 @@ void HPA::removeWorkers(lua_State *L){
 	}
 
 	workers.clear();
-	
+
 }
 
 void HPA::removeLockSections( void ){
-	QHash<QString,QMutex*>::iterator it;
-	
+	QHash<QString, QMutex*>::iterator it;
+
 	for (it = lockSection.begin(); it != lockSection.end(); ++it)  delete it.value();
-	
+
 	lockSection.clear();
 	lockSectionUse.clear();
 }
@@ -98,7 +98,7 @@ HPA::HPA(lua_State* L){
 //	SYSTEM_INFO sysinfo;
 //	GetSystemInfo(&sysinfo);
 //	setNumCpu(sysinfo.dwNumberOfProcessors);
-//#else		
+//#else
 //	int numberOfProcessors = sysconf(_SC_NPROCESSORS_ONLN);
 //	setNumCpu(numberOfProcessors);
 //#endif
@@ -112,14 +112,14 @@ HPA::HPA(lua_State* L){
 //	//parser->cleanTranslate();
 
 //////////////////////////////////////////////////////////////////////////////////////
-    
+
 	refGlobalHPA = luaL_ref(L, LUA_REGISTRYINDEX);
 
 
-	luaL_dostring(L,"__T__"); // Tiago - achei que isto era codigo que o Saulo usou para debug e esqueceu de apagar, mas se tirar estas linha tudo para de funcionar
+	luaL_dostring(L, "__T__"); // Tiago - achei que isto era codigo que o Saulo usou para debug e esqueceu de apagar, mas se tirar estas linha tudo para de funcionar
 
 	int temp = luaL_ref(L, LUA_REGISTRYINDEX); // Tiago - achei que isto era codigo que o Saulo usou para debug e esqueceu de apagar, , mas se tirar estas linha tudo para de funcionar
-	
+
 	//aqui setamos o recurso compartilhado para o processo ou a pilha principal(dessa forma economizamos memo'ria)
 	setBag(&BAG);
 	setControlQMut(&LOCK_BAG);
@@ -127,7 +127,7 @@ HPA::HPA(lua_State* L){
 	// Tiago - linha necessaria para resolver leak
 	mainStack = NULL;
 
-	//luaL_unref(L,LUA_REGISTRYINDEX,temp);
+	//luaL_unref(L, LUA_REGISTRYINDEX, temp);
 }
 
 
@@ -135,13 +135,13 @@ HPA::HPA(lua_State* L){
 // Tiago -- comentei pq nao estava em uso
 // HPA::HPA(string pathModel){
 // 	ParserHPA *parser = new ParserHPA(pathModel);
-	
+
 // 	mainStack = new ProcHPA();
 // 	ModeloMain = luaL_newstate();
 
 // 	//esta aqui e' a pilha principal(ela efetua as chamadas)
 // 	mainStack->set_State(ModeloMain);
-		
+
 // 	//informacao sobre a quantidade de cores da maquina
 // 	#if defined ( TME_WIN32 )
 // 		SYSTEM_INFO sysinfo;
@@ -158,7 +158,7 @@ HPA::HPA(lua_State* L){
 
 // 	//esse aqui e' o novo modelo a ser executado (aqui ele ja' esta traduzido)
 // 	pathModel = parser->getNewPath();
-	
+
 // 	Luna<luaCellIndex>::Register(mainStack->getState());
 
 //     Luna<luaCell >::Register(mainStack->getState());
@@ -181,7 +181,7 @@ HPA::HPA(lua_State* L){
 //     Luna<luaTrajectory >::Register(mainStack->getState());
 
 // 	mainStack->setNameTranslated(pathModel);
-	
+
 // 	//removendo todos os restos de conversao do path principal
 // 	//parser->cleanTranslate();
 // }
@@ -193,13 +193,13 @@ HPA::HPA(string pathModel, lua_State *L){
 	mainStack = new ProcHPA(); // Tiago - fonte de leak
 
 	mainStack->set_State(ModeloMain);
-	
+
 	#ifdef WIN32
 		//informacao sobre a quantidade de cores da maquina
 		SYSTEM_INFO sysinfo;
 		GetSystemInfo(&sysinfo);
 		setNumCpu(sysinfo.dwNumberOfProcessors);
-	#else		
+	#else
 		int numberOfProcessors = sysconf( _SC_NPROCESSORS_ONLN );
 		setNumCpu(numberOfProcessors);
 	#endif
@@ -229,7 +229,7 @@ HPA::~HPA(){
 	}
     else // so o objeto HPA criado em Lua tem referencia e nao tem mainStack
 	{
-		luaL_unref(L,LUA_REGISTRYINDEX,refGlobalHPA);
+		luaL_unref(L, LUA_REGISTRYINDEX, refGlobalHPA);
 	}
 }
 
@@ -243,10 +243,10 @@ int HPA::execute(){
 // Tiago - comentei linha abaixo para manter coerencia com a nomenclarura adotada no TerraME
 //int HPA::HPA_JOINALL(lua_State* L){
 int HPA::joinall(lua_State* L){
-	
+
 	while(!Bag->empty()){
 		for (int i = 0; i < getNumCpu(); i++) {
-			if (!workers.at(i)->isRunning() && !Bag->empty()) 
+			if (!workers.at(i)->isRunning() && !Bag->empty())
                 workers.at(i)->start();
 		}
 
@@ -255,17 +255,17 @@ int HPA::joinall(lua_State* L){
 				workers.at(i)->wait();
 		}
     }
-	
+
 	for (int i = 0; i < getNumCpu(); i++){
 		if (!workers.at(i)->isRunning() && !Bag->empty())
 			workers.at(i)->start();
 	}
-	
+
 	for (int i = 0; i < getNumCpu(); i++){
 		if (workers.at(i)->isRunning())
 			workers.at(i)->wait();
 	}
-	
+
 	/*
 	if(lua_status(L) != 0 && lua_status(L) != 1){
 		cerr << "error in main stack \n";
@@ -279,9 +279,9 @@ int HPA::joinall(lua_State* L){
 //int HPA::HPA_NP(lua_State* L){
 int HPA::np(lua_State* L){
 
-	int newQuantProc = lua_tonumber(L,1);
-	
-	if(!newQuantProc || (newQuantProc == numCPU)) 
+	int newQuantProc = lua_tonumber(L, 1);
+
+	if(!newQuantProc || (newQuantProc == numCPU))
 	{
 		lua_pushinteger(L, numCPU);
 		return 1;
@@ -300,8 +300,8 @@ int HPA::np(lua_State* L){
 //int HPA::HPA_Acquire(lua_State *L){
 int HPA::acquire(lua_State *L){
 
-	int temp_par = lua_tonumber(L,1);
-	
+	int temp_par = lua_tonumber(L, 1);
+
 	char resultConvert[16];
 	sprintf(resultConvert, "%d", temp_par);
 	string nameSec = resultConvert;
@@ -312,11 +312,11 @@ int HPA::acquire(lua_State *L){
 	if(!lockSection.contains(nameSec.c_str())){
 		lockSection.insert(nameSec.c_str(), new QMutex());  // Tiago -- esse mutex vai gerar leak
 	}
-	
+
 	justOne.unlock();
 
 	lockSection[nameSec.c_str()]->lock();
-	
+
 	return 0;
 }
 
@@ -324,7 +324,7 @@ int HPA::acquire(lua_State *L){
 //int HPA::HPA_Release(lua_State *L){
 int HPA::release(lua_State *L){
 
-	int temp_par = lua_tonumber(L,1);
+	int temp_par = lua_tonumber(L, 1);
 
 	char resultConvert[16];
 	sprintf(resultConvert, "%d", temp_par);
@@ -333,7 +333,7 @@ int HPA::release(lua_State *L){
 	justOne.lock();
 	lockSection[nameSec.c_str()]->unlock();
 	justOne.unlock();
-		
+
 	return 0;
 }
 
@@ -341,7 +341,7 @@ int HPA::release(lua_State *L){
 //int HPA::HPA_JOIN(lua_State* L){
 int HPA::join(lua_State* L){
 
-	string nameFuncJoin = lua_tostring(L,1);
+	string nameFuncJoin = lua_tostring(L, 1);
 
 	//dos workers que estao executando existe algum qeu esta a executar esta funcao?
 	for(int i = 0;i < workers.size();i++){
@@ -363,7 +363,7 @@ int HPA::join(lua_State* L){
 		}
 	}
 	justOne.unlock();
-	
+
 	//existe processo na bag com este nome e temos que aguardar a sua execucao
 	if(thereATask){
 		for(int i = 0; i < workers.size();i++){
@@ -390,35 +390,35 @@ lua_State* HPA::Read_Parameters(lua_State* L, vector<string>name_of_par){
 	//leitura deve ser realizada aqui passar por todos os parametros
 	for(int ind = 0; ind < name_of_par.size();ind++){
 
-		if(lua_type(L,positionOfParam) != LUA_TTABLE)
+		if(lua_type(L, positionOfParam) != LUA_TTABLE)
 		{
-			HPAxcopy_aux(L,store_val,positionOfParam);
+			HPAxcopy_aux(L, store_val, positionOfParam);
 		}
 		else
-		{	
+		{
 			//todo tipo de tiago para aqui
-			lua_getfield(L,-1,"cObj_");
-					
-			//caso em que tenho um cellular space
-			if(lua_type(L,-1) == 7)
-			{
-				//para este caso preciso inserir uma variavel de controle onde possa 
-				//consultar para efetuar o xmove
-				luaL_dostring(store_val,(name_of_par[ind]+"_is_ref = 1").c_str());
+			lua_getfield(L, -1, "cObj_");
 
-				lua_pop(L,1);
-				lua_xmove(L,store_val,1);
+			//caso em que tenho um cellular space
+			if(lua_type(L, -1) == 7)
+			{
+				//para este caso preciso inserir uma variavel de controle onde possa
+				//consultar para efetuar o xmove
+				luaL_dostring(store_val, (name_of_par[ind]+"_is_ref = 1").c_str());
+
+				lua_pop(L, 1);
+				lua_xmove(L, store_val, 1);
 			}
 			else
 			{
-				lua_pop(L,1);
-				HPAxcopy(L,store_val,positionOfParam);
+				lua_pop(L, 1);
+				HPAxcopy(L, store_val, positionOfParam);
 			}
 		}
- 
-		lua_setglobal(store_val,name_of_par[ind].c_str());
-		//luaL_ref(store_val,LUA_REGISTRYINDEX);
-		positionOfParam++;			
+
+		lua_setglobal(store_val, name_of_par[ind].c_str());
+		//luaL_ref(store_val, LUA_REGISTRYINDEX);
+		positionOfParam++;
 	}
 
 	return store_val;
@@ -429,7 +429,7 @@ vector<string> HPA::findNamePar(string toExecut){
 	vector<string> executeClean;
     vector<string> namesPar;
 
-    S_Tokenize(toExecut,executeClean,"( , )");
+    S_Tokenize(toExecut, executeClean, "( , )");
 
     for(int i = 1;i < executeClean.size();i++){
         if(i == executeClean.size()-1){
@@ -444,11 +444,11 @@ vector<string> HPA::findNamePar(string toExecut){
 	return namesPar;
 }
 
-string HPA::findNameFunc(string toExecut){ 
+string HPA::findNameFunc(string toExecut){
 
 	vector<string> executeClean;
 
-    S_Tokenize(toExecut,executeClean,"(");
+    S_Tokenize(toExecut, executeClean, "(");
 
 	if(executeClean.empty()){
 		exit(0);
@@ -481,9 +481,9 @@ int HPA::parallel(lua_State* L){
 
 	//insercao na bag aqui para baixo (mudanca agora na insercao do nome da funcao a que a task corresponde)
 	//stack com o valor dos parametros para serem passados
-	lua_State *tempStackVals = Read_Parameters(L,namesOfPar);
+	lua_State *tempStackVals = Read_Parameters(L, namesOfPar);
 
-	//bagInsertion(to_execute,nameFuncToExec,namesOfPar,varReturn,tempStackVals);
+	//bagInsertion(to_execute, nameFuncToExec, namesOfPar, varReturn, tempStackVals);
 
 	//isso aqui faz parte do metodo de baginsertion
 	lock_bag->lock();
@@ -498,7 +498,7 @@ int HPA::parallel(lua_State* L){
 		lua_close(tempStackVals);
 	else
 		toIncludeBagP.set_State(tempStackVals);
-	
+
 	Bag->push_back(toIncludeBagP);
 	lock_bag->unlock();
 
@@ -528,7 +528,7 @@ lua_State *getthread (lua_State *L, int *arg) {
 
 
 int HPA::HPATests(lua_State * now){
-	//string s = lua_tostring(now,1);
+	//string s = lua_tostring(now, 1);
 	/*
 	lua_newtable(now);
 	lua_pushinteger(now, 1337);
@@ -538,30 +538,30 @@ int HPA::HPATests(lua_State * now){
 	/*
 	lua_Debug luaDebug;
 	lua_getstack(now, 0, &luaDebug);
-	lua_setlocal(now,&luaDebug,0);
+	lua_setlocal(now, &luaDebug, 0);
 	*/
-	
-	lua_pushinteger(now,98);
-	lua_setglobal(now,"teste");
-	lua_getglobal(now,"teste");
+
+	lua_pushinteger(now, 98);
+	lua_setglobal(now, "teste");
+	lua_getglobal(now, "teste");
 
 	int arg;
 	lua_State *L1 = getthread(now, &arg);
 	lua_Debug ar;
-	
+
 	if (!lua_getstack(L1, luaL_checkinteger(now, arg+1), &ar))
 		return luaL_argerror(now, arg+1, "level out of range");
-	
+
 	luaL_checkany(now, arg+3);
 	lua_settop(now, arg+3);
 	lua_xmove(now, L1, 1);
 	lua_pushstring(now, lua_setlocal(L1, &ar, luaL_checkinteger(now, arg+2)));
 	cerr << "oi" << endl;
-	
+
 	return 1;
-	
-	//luaL_dostring(now,"teste = 10");
-	//lua_pushinteger(now,10);
+
+	//luaL_dostring(now, "teste = 10");
+	//lua_pushinteger(now, 10);
 	//return 1;
 }
 

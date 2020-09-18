@@ -21,8 +21,8 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this software and its documentation.
 *************************************************************************************/
 
-#ifndef BAG_OF_TASKS_H 
-#define BAG_OF_TASKS_H 
+#ifndef BAG_OF_TASKS_H
+#define BAG_OF_TASKS_H
 
 extern "C" {
 	#include <lua.h>
@@ -63,7 +63,7 @@ static int bagSize(list<ParamTask> *bag_){
 	return nTasks;
 }
 
-static void bagInsertion(list<ParamTask> *bag_,string toExec, string nameFunc, vector<string> params, vector<string> returns, lua_State* storeVals){
+static void bagInsertion(list<ParamTask> *bag_, string toExec, string nameFunc, vector<string> params, vector<string> returns, lua_State* storeVals){
 	LOCK_BAG.lock();
 
 	ParamTask toIncludeBagP;
@@ -76,7 +76,7 @@ static void bagInsertion(list<ParamTask> *bag_,string toExec, string nameFunc, v
 		lua_close(storeVals);
 	else
 		toIncludeBagP.set_State(storeVals);
-	
+
 	bag_->push_back(toIncludeBagP);
 
 	LOCK_BAG.unlock();

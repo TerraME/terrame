@@ -62,20 +62,20 @@ string ProcHPA::getNameTranslated(){
 }
 
 void ProcHPA::run(){
-	luaL_dostring(funcLua,"__HPA_MODEL_ID_ = 0;");
+	luaL_dostring(funcLua, "__HPA_MODEL_ID_ = 0;");
 	//olhar esta chamada
 	int erroTrad = luaL_loadfile(funcLua, nameTranslatedModel.c_str());
 	if( ! erroTrad ) {
 	}
-	else {	
-		string msg = lua_tostring(funcLua,-1);
+	else {
+		string msg = lua_tostring(funcLua, -1);
 		size_t firstPos = msg.find_first_of(":");
 		size_t lastPos = msg.find_first_of(":", firstPos+1);
 		string originalLineNumber = msg.substr(firstPos+1, (lastPos-firstPos)-1);
 		int lineNumber = atoi(originalLineNumber.c_str()) - 1;
 		char newLineNumber[10];
 		sprintf(newLineNumber, "%d", lineNumber);
-		string newMsg = nameTranslatedModel; 
+		string newMsg = nameTranslatedModel;
 		#ifdef WIN32
 		    int fileNamePos = nameTranslatedModel.find_last_of("\\");
 		#else
@@ -88,32 +88,32 @@ void ProcHPA::run(){
 		cerr << "Error: " << erroTrad << " msg: \n" << msg << "\n" << firstPos << ", " << lastPos << ", " <<  originalLineNumber  << ", "<< lineNumber<<"\n" << newMsg << endl;
 	}
 
-	// Tiago - Comente a linha abaixo se quiser ver o codigo traduzido 
-	//remove(nameTranslatedModel.c_str()); 
+	// Tiago - Comente a linha abaixo se quiser ver o codigo traduzido
+	//remove(nameTranslatedModel.c_str());
 
 	//aqui ja' tenho a execucao do modelo principal
-	if (lua_pcall(funcLua, 0, 0, 0)) 
+	if (lua_pcall(funcLua, 0, 0, 0))
 	{
-		string msg = lua_tostring(funcLua,-1);
+		string msg = lua_tostring(funcLua, -1);
 		//size_t firstPos = msg.find_first_of(":");
 		//size_t lastPos = msg.find_first_of(":", firstPos+1);
 		//string originalLineNumber = msg.substr(firstPos+1, (lastPos-firstPos)-1);
 		//int lineNumber = atoi(originalLineNumber.c_str()) - 1;
 		//char newLineNumber[10];
 		//sprintf(newLineNumber, "%d", lineNumber);
-		//string newMsg = nameTranslatedModel; 
+		//string newMsg = nameTranslatedModel;
 		#ifdef WIN32
 		    int fileNamePos = nameTranslatedModel.find_last_of("\\");
 		#else
 		    int fileNamePos = nameTranslatedModel.find_last_of("/");
 		#endif
 		//newMsg = newMsg + ":" + newLineNumber + ":" + msg.substr(lastPos+1);
-		string newMsg = msg; 
+		string newMsg = msg;
 		newMsg.erase(fileNamePos+1, 4);
 	}
 	/*
-	lua_getglobal(funcLua,"SAULO");
-	cerr << lua_tointeger(funcLua,-1) << endl;
+	lua_getglobal(funcLua, "SAULO");
+	cerr << lua_tointeger(funcLua, -1) << endl;
 	*/
 }
 

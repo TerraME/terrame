@@ -21,8 +21,8 @@ indirect, special, incidental, or consequential damages arising out of the use
 of this software and its documentation.
 *************************************************************************************/
 
-#ifndef HPA_H 
-#define HPA_H 
+#ifndef HPA_H
+#define HPA_H
 
 #include "procHPA.h"
 #include "procTask.h"
@@ -50,28 +50,28 @@ using namespace std;
 static vector<ProcTask*> workers;
 
 
-class HPA { 
+class HPA {
 
-	
+
 	int refGlobalHPA;
 
 public:
 	//para seguir o template do Luna
     static const char className[];
     static Luna<HPA>::RegType methods[];
-		
+
 private:
 
 	//pilha de execucao principal
 	ProcHPA *mainStack;
 	string pathModel;
-	
+
 	list<ParamTask> *Bag;
 	QMutex *lock_bag;
 
 	//Hash para criacao das secoes criticas lembrar de utilizalos com o wait condition
-	QHash<QString,QMutex*> lockSection;
-	QHash<QString,bool> lockSectionUse;
+	QHash<QString, QMutex*> lockSection;
+	QHash<QString, bool> lockSectionUse;
 	QMutex justOne;
 
 	void createWorkers();
@@ -81,7 +81,7 @@ private:
 	vector<string> findNamePar(string);
 	string findNameFunc(string toExecut);
 
-	//metodos para acessar e setar a bag para fora(public, like interface) para o controle de acesso tambe'm uma vez 
+	//metodos para acessar e setar a bag para fora(public, like interface) para o controle de acesso tambe'm uma vez
 	//que ele e' compartilhado
 	void setBag(list<ParamTask>*);
 	void setControlQMut(QMutex* controlMutex);
@@ -89,14 +89,14 @@ private:
 	list<ParamTask>* getBag();
 	QMutex* getControlQMut();
 
-	//QHash<QString,QMutex*> getLockSec();
-	//QHash<QString,bool> getLockSecUse();
+	//QHash<QString, QMutex*> getLockSec();
+	//QHash<QString, bool> getLockSecUse();
 	//QMutex controlAcess();
 
 public:
 	//contrutor HPA, e' preciso passar como parâmetro o modelo instrumentado com as diretivas
 	//metodo apenas para ref no lua
-	
+
 	// HPA(string pathModel); // Tiago -- comentei pq nao estva em uso
 	HPA(string pathModel, lua_State *);
 	int execute();
@@ -104,7 +104,7 @@ public:
 	//--------------------------implementacao das diretivas--------------------------
 	//Executa o Join em todas as funcoes que estao executando ate' o ponto de chamada
     HPA(lua_State *L);
-	
+
 
     int joinall(lua_State*);
     //Executa o Join na/nas funcoes name_func que esta/estao executando

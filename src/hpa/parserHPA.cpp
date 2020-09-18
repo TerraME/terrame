@@ -49,7 +49,7 @@ vector<string> ParserHPA::readModel(string modelPath){
     ifstream fileModel;
 
     try{
-        fileModel.open(modelPath.c_str(),ifstream::in);
+        fileModel.open(modelPath.c_str(), ifstream::in);
     }catch(exception e){
         cout << "problema ao abrir o modelo, verifique o path" << endl;
     }
@@ -65,9 +65,9 @@ vector<string> ParserHPA::readModel(string modelPath){
 
 		if(fileModel.eof())
 			eof_ = false;
-		
+
         char temp[1000];
-        fileModel.getline(temp,1000);
+        fileModel.getline(temp, 1000);
         string line = temp;
 
         // Tiago - O codigo abaixo esta errado, pq o tramento do final de linha nao depende do SO onde o HPA foi compilado
@@ -78,30 +78,30 @@ vector<string> ParserHPA::readModel(string modelPath){
 		// #else
 		// 	//temos problemas com a quebra de linha por isso esse tratamento de versao
 		// 	string line_aux = "";
-		
+
 		// 	if(line.size() > 0)
 		// 		for(int i = 0; i < line.size()-1; i++)
 		// 			line_aux = line_aux+line[i];
-			
+
 		// 	modelInFle.push_back(line_aux);
 		// #endif
 
         // Tiago - pelo motivo expresso no comentario acima, eu resolvi retirar o caracter \r, ja a funcao "getline()"
         // por padrao para no caracter \n gerando uma string terminada em \0. Desta forma o modelo resultante tera sempre
-        // o modelo utilizado no linux e no windows 
+        // o modelo utilizado no linux e no windows
         string line_aux = "";
-        
+
         if(line.size() > 0)
            for(int i = 0; i < line.size(); i++)
            {
 
-               if (line[i] != '\r') 
+               if (line[i] != '\r')
                {
                   line_aux = line_aux+line[i];
                }
-           }    
+           }
 
-        
+
         modelInFle.push_back(line_aux);
 
     }
@@ -113,7 +113,7 @@ vector<string> ParserHPA::removeProblemsLine(string line){
 
     vector<string> lineClean;
     //remover espacos e tabulacoes
-    S_TokenizeParser(line,lineClean," \t \n");
+    S_TokenizeParser(line, lineClean, " \t \n");
 
     return lineClean;
 }
@@ -122,7 +122,7 @@ vector<string> ParserHPA::removeProblemsLine(string line){
 
 string ParserHPA::solveParallel(vector<string> splits){
 
-    // Tiago - na linha a seguir eu subistitui o : por . 
+    // Tiago - na linha a seguir eu subistitui o : por .
     // Veja as explicacoes no proximo comentario com meu nome
     //string resultTranslate = "__HPA__:HPA_PARALLEL(\"";
     string resultTranslate = "__HPA__:parallel(\"";
@@ -157,7 +157,7 @@ string ParserHPA::solveParallel(vector<string> splits){
 
     //caso em que temos parametros para a funcao
     if(parameters.size() > 0)
-        resultTranslate = resultTranslate + "," + parameters;
+        resultTranslate = resultTranslate + ", " + parameters;
 
     //encerrando a chamada a funcao parallel
     resultTranslate = resultTranslate + ");";
@@ -214,15 +214,15 @@ qWarning("erro");
                 }
             }else if(!vectorClean.at(1).compare("ACQUIRE")){
                 if(vectorClean.size() > 2){
-                    //modelTranslated.push_back("__HPA__:HPA_Acquire(" + vectorClean.at(2) + ",\"" + vectorClean.at(2) + "\");");
-                    modelTranslated.push_back("__HPA__:acquire(" + vectorClean.at(2) + ",\"" + vectorClean.at(2) + "\");");
+                    //modelTranslated.push_back("__HPA__:HPA_Acquire(" + vectorClean.at(2) + ", \"" + vectorClean.at(2) + "\");");
+                    modelTranslated.push_back("__HPA__:acquire(" + vectorClean.at(2) + ", \"" + vectorClean.at(2) + "\");");
                 }else{
                     cerr << "error: nome da secao critica para ACQUIRE nao foi informado ou e de tipo incompativel" << endl;
                 }
             }else if(!vectorClean.at(1).compare("RELEASE")){
                 if(vectorClean.size() > 2){
-                    //modelTranslated.push_back("__HPA__:HPA_Release(" + vectorClean.at(2) + ",\"" + vectorClean.at(2) + "\");");
-                    modelTranslated.push_back("__HPA__:release(" + vectorClean.at(2) + ",\"" + vectorClean.at(2) + "\");");
+                    //modelTranslated.push_back("__HPA__:HPA_Release(" + vectorClean.at(2) + ", \"" + vectorClean.at(2) + "\");");
+                    modelTranslated.push_back("__HPA__:release(" + vectorClean.at(2) + ", \"" + vectorClean.at(2) + "\");");
                 }else{
                     cerr << "error: nome da secao critica para RELEASE nao foi informado ou e de tipo incompativel" << endl;
                 }
@@ -249,9 +249,9 @@ string ParserHPA::manipulatePath(string modelPath){
     vector<string> splitPath;
     //remover espacos e tabulacoes
     #ifdef WIN32
-    	S_TokenizeParser(modelPath,splitPath,"\\");
+    	S_TokenizeParser(modelPath, splitPath, "\\");
     #else
-        S_TokenizeParser(modelPath,splitPath,"/");
+        S_TokenizeParser(modelPath, splitPath, "/");
     #endif
 
     string newPath = "";
@@ -296,7 +296,7 @@ qWarning("erro");
 
     //funcao para gravacao do novo modelo
     newPath = manipulatePath(modelPath);
-    writeModel(newPath,modelToTranslated);
+    writeModel(newPath, modelToTranslated);
 
     // Tiago
     cerr << newPath << " : " << modelPath << endl;
