@@ -408,10 +408,9 @@ Luna<HPA>::RegType HPA::methods[] =
 	method(HPA, parallel),
 	method(HPA, acquire),
 	method(HPA, release),
-	//method(HPA, execute),
 	method(HPA, np),
 	method(HPA, HPATests),
-	{0,0}
+	{0, 0}
 };
 
 #endif // REGISTRY_OBJECT_H
