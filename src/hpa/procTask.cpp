@@ -81,7 +81,6 @@ void ProcTask::setRunState(int runState_){
 }
 
 void ProcTask::w_stack(){
-
 	QTime now;
 	double calc_t;
 	//for(int ind = 0; ind < this->n_execute_clock; ind++)
@@ -90,7 +89,6 @@ void ProcTask::w_stack(){
 }
 
 void ProcTask::setParms(vector<string> param_of_cham_, vector<string> param_of_return_, int ID_by_executed_, int ref_of_return_, lua_State* store_val_){
-
 	//tilizamos os valores setados pois nao e' necessa'rio acessar a bag para este
 	//use_Params_Set = true;
 
@@ -108,7 +106,6 @@ void ProcTask::setParms(vector<string> param_of_cham_, vector<string> param_of_r
 }
 
 void ProcTask::setParms(vector<string> param_of_cham_, vector<string> param_of_return_, int ID_by_executed_, lua_State* store_val_){
-
 	//tilizamos os valores setados pois nao e' necessa'rio acessar a bag para este
 	//use_Params_Set = true;
 
@@ -121,14 +118,12 @@ void ProcTask::setParms(vector<string> param_of_cham_, vector<string> param_of_r
 }
 
 void ProcTask::run() {
-
 	bool just_one = false;
 
 	//thread comecou a consumir
 	this->isRunning_ = 1;
 
 	while(!Bag->empty()){
-
 		lock_bag->lock();
 
 		if(Bag->size() <= getNumCpu()){

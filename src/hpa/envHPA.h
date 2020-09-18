@@ -138,7 +138,6 @@ static int HPAxcopy(lua_State *Principal, lua_State *To_Stack, int idx)
 }
 
 static void hpaLoadParams(lua_State *now, vector<string>Par, lua_State *now_par) {
-
     //para inserir estas variaveis para a funcao que deve ser executada
     string my_var;
     string name_Var;
@@ -147,7 +146,6 @@ static void hpaLoadParams(lua_State *now, vector<string>Par, lua_State *now_par)
 	//Espace_MAIN.acquire(1);
 
     for (int co = 0; co < Par.size(); co++) {
-
         name_Var = Par[co];
         //apenas para conversao dos contadores de cada novo parametro
         char aaux[BUFSIZ];
@@ -210,7 +208,6 @@ static void hpaLoadParams(lua_State *now, vector<string>Par, lua_State *now_par)
 	//Espace_MAIN.release(1);
 }
 
-
 /////////////////////////////////////////////////////////////////////////ENV/////////////////////////////////////////////////////////////////
 
 //metodos para manipular a quantidade de threads que o hpa ira utilizar para a execucao do modelo (sera' possi'vel alterar utilizando diretiva)
@@ -234,6 +231,5 @@ static lua_State* getMainStack(){
 //////////////////////////////////////////////////////////////////////LOCK///////////////////////////////////////////////////////////////////
 
 static QMutex lockAcess;
-
 
 #endif

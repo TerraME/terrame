@@ -67,7 +67,6 @@ private:
 	QMutex *lock_bag;
 
 public:
-
 	ProcTask();
 
     //quando um a funcao terminou
@@ -112,6 +111,5 @@ public:
 	list<ParamTask>* getBag();
 	QMutex* getControlQMut();
 };
-
 
 #endif //PROC_HPA_H

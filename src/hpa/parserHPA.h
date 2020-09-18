@@ -33,7 +33,6 @@ using namespace std;
 
 class ParserHPA{
 private:
-
 	string newPath;
 	vector<string> removeProblemsLine(string line);
 	string solveParallel(vector<string> splits);
@@ -44,7 +43,6 @@ private:
 	vector<string> readModel(string modelPath);
 
 public:
-
 	ParserHPA(string pathModel);
 	string getNewPath();
 	void cleanTranslate();

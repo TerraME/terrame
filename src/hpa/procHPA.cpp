@@ -84,7 +84,6 @@ void ProcHPA::run(){
 		newMsg = newMsg + ":" + newLineNumber + ":" + msg.substr(lastPos+1);
 		newMsg.erase(fileNamePos+1, 4);
 
-
 		cerr << "Error: " << erroTrad << " msg: \n" << msg << "\n" << firstPos << ", " << lastPos << ", " <<  originalLineNumber  << ", "<< lineNumber<<"\n" << newMsg << endl;
 	}
 
@@ -116,4 +115,3 @@ void ProcHPA::run(){
 	cerr << lua_tointeger(funcLua, -1) << endl;
 	*/
 }
-

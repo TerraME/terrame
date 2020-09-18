@@ -47,7 +47,6 @@ of this software and its documentation.
 #include "luaControlMode.h"
 #include "luaEnvironment.h"
 
-
 using namespace std;
 
 // Tiago - comentario
@@ -55,14 +54,12 @@ using namespace std;
 // Ele executa a pilha principal do modelo lua e gerencia o trabalho dos workers.
 class ProcHPA : public QThread {
 private:
-
     //estado da funcao/modelo que vai ser executada (entrada da chamada externa)
     lua_State *funcLua;
     //nome do modelo traduzido
     string nameTranslatedModel;
 
 public:
-
 	ProcHPA();
 
 	//quando uma funcao terminou

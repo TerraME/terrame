@@ -30,7 +30,6 @@ of this software and its documentation.
 #endif
 
 void HPA::createWorkers(){
-
 	//lua_settop(ModeloMain, 0);
 	//lua_gc(ModeloMain, LUA_GCCOLLECT, 0);
 
@@ -47,7 +46,6 @@ void HPA::createWorkers(){
 	}
 }
 
-
 // Tiago - Metodo do Saulo que eu considerei muito mal implementdo, entao comentei e fiz o meu a seguir
 // void HPA::removeWorkers(lua_State *L){
 // 	for(int i = 0; i < getNumCpu();i++){
@@ -63,7 +61,6 @@ void HPA::createWorkers(){
 // }
 
 void HPA::removeWorkers(lua_State *L){
-
 	vector<ProcTask*>::iterator it;
 
 	for(it = workers.begin(); it != workers.end(); it++){
@@ -115,7 +112,6 @@ HPA::HPA(lua_State* L){
 
 	refGlobalHPA = luaL_ref(L, LUA_REGISTRYINDEX);
 
-
 	luaL_dostring(L, "__T__"); // Tiago - achei que isto era codigo que o Saulo usou para debug e esqueceu de apagar, mas se tirar estas linha tudo para de funcionar
 
 	int temp = luaL_ref(L, LUA_REGISTRYINDEX); // Tiago - achei que isto era codigo que o Saulo usou para debug e esqueceu de apagar, , mas se tirar estas linha tudo para de funcionar
@@ -129,8 +125,6 @@ HPA::HPA(lua_State* L){
 
 	//luaL_unref(L, LUA_REGISTRYINDEX, temp);
 }
-
-
 
 // Tiago -- comentei pq nao estava em uso
 // HPA::HPA(string pathModel){
@@ -243,7 +237,6 @@ int HPA::execute(){
 // Tiago - comentei linha abaixo para manter coerencia com a nomenclarura adotada no TerraME
 //int HPA::HPA_JOINALL(lua_State* L){
 int HPA::joinall(lua_State* L){
-
 	while(!Bag->empty()){
 		for (int i = 0; i < getNumCpu(); i++) {
 			if (!workers.at(i)->isRunning() && !Bag->empty())
@@ -278,7 +271,6 @@ int HPA::joinall(lua_State* L){
 // Tiago - comentei linha abaixo para manter coerencia com a nomenclarura adotada no TerraME
 //int HPA::HPA_NP(lua_State* L){
 int HPA::np(lua_State* L){
-
 	int newQuantProc = lua_tonumber(L, 1);
 
 	if(!newQuantProc || (newQuantProc == numCPU))
@@ -299,7 +291,6 @@ int HPA::np(lua_State* L){
 // Tiago - comentei linha abaixo para manter coerencia com a nomenclarura adotada no TerraME
 //int HPA::HPA_Acquire(lua_State *L){
 int HPA::acquire(lua_State *L){
-
 	int temp_par = lua_tonumber(L, 1);
 
 	char resultConvert[16];
@@ -323,7 +314,6 @@ int HPA::acquire(lua_State *L){
 // Tiago - comentei linha abaixo para manter coerencia com a nomenclarura adotada no TerraME
 //int HPA::HPA_Release(lua_State *L){
 int HPA::release(lua_State *L){
-
 	int temp_par = lua_tonumber(L, 1);
 
 	char resultConvert[16];
@@ -340,7 +330,6 @@ int HPA::release(lua_State *L){
 // Tiago - comentei linha abaixo para manter coerencia com a nomenclarura adotada no TerraME
 //int HPA::HPA_JOIN(lua_State* L){
 int HPA::join(lua_State* L){
-
 	string nameFuncJoin = lua_tostring(L, 1);
 
 	//dos workers que estao executando existe algum qeu esta a executar esta funcao?
@@ -380,7 +369,6 @@ int HPA::join(lua_State* L){
 
 //metodo auxiliar para o TerraMEHPA para leitura dos parâmetros de entrada da chamada paralela
 lua_State* HPA::Read_Parameters(lua_State* L, vector<string>name_of_par){
-
 	//estado que vai armezanar temporariamente o valor dos parametros
 	lua_State *store_val = luaL_newstate();
 
@@ -389,7 +377,6 @@ lua_State* HPA::Read_Parameters(lua_State* L, vector<string>name_of_par){
 
 	//leitura deve ser realizada aqui passar por todos os parametros
 	for(int ind = 0; ind < name_of_par.size();ind++){
-
 		if(lua_type(L, positionOfParam) != LUA_TTABLE)
 		{
 			HPAxcopy_aux(L, store_val, positionOfParam);
@@ -425,7 +412,6 @@ lua_State* HPA::Read_Parameters(lua_State* L, vector<string>name_of_par){
 }
 
 vector<string> HPA::findNamePar(string toExecut){
-
 	vector<string> executeClean;
     vector<string> namesPar;
 
@@ -445,7 +431,6 @@ vector<string> HPA::findNamePar(string toExecut){
 }
 
 string HPA::findNameFunc(string toExecut){
-
 	vector<string> executeClean;
 
     S_Tokenize(toExecut, executeClean, "(");
@@ -461,7 +446,6 @@ string HPA::findNameFunc(string toExecut){
 // Tiago - comentei linha abaixo para manter coerencia com a nomenclarura adotada no TerraME
 //int HPA::HPA_PARALLEL(lua_State* L){
 int HPA::parallel(lua_State* L){
-
 	int q_paramet = lua_gettop(L);
 
 	//aqui vem a chamada da funcao e seus parâmetros
@@ -525,7 +509,6 @@ lua_State *getthread (lua_State *L, int *arg) {
     return L;
   }
 }
-
 
 int HPA::HPATests(lua_State * now){
 	//string s = lua_tostring(now, 1);

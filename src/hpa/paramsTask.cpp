@@ -33,7 +33,6 @@ ParamTask::ParamTask(){
 }
 
 ParamTask::~ParamTask(){
-
 	paramsOfCall.clear();
 	paramsOfReturn.clear();
 	nameFuncTask.clear();
@@ -106,4 +105,3 @@ void ParamTask::setNameTask(string nameTask_){
 	//cerr << "set: " << nameTask_ << endl;
 	this->nameFuncTask = nameTask_;
 }
-

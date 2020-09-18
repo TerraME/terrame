@@ -44,7 +44,6 @@ void S_TokenizeParser(const string& linha, vector<string>& tokens, const string&
 
 //metodo para acesso ao modelo
 vector<string> ParserHPA::readModel(string modelPath){
-
     vector<string> modelInFle;
     ifstream fileModel;
 
@@ -62,7 +61,6 @@ vector<string> ParserHPA::readModel(string modelPath){
 
     cerr << "lendo!!!!!!!!!!!!!!!!!!!! " << endl;
     while(eof_) {
-
 		if(fileModel.eof())
 			eof_ = false;
 
@@ -94,13 +92,11 @@ vector<string> ParserHPA::readModel(string modelPath){
         if(line.size() > 0)
            for(int i = 0; i < line.size(); i++)
            {
-
                if (line[i] != '\r')
                {
                   line_aux = line_aux+line[i];
                }
            }
-
 
         modelInFle.push_back(line_aux);
 
@@ -110,7 +106,6 @@ vector<string> ParserHPA::readModel(string modelPath){
 }
 
 vector<string> ParserHPA::removeProblemsLine(string line){
-
     vector<string> lineClean;
     //remover espacos e tabulacoes
     S_TokenizeParser(line, lineClean, " \t \n");
@@ -118,10 +113,7 @@ vector<string> ParserHPA::removeProblemsLine(string line){
     return lineClean;
 }
 
-
-
 string ParserHPA::solveParallel(vector<string> splits){
-
     // Tiago - na linha a seguir eu subistitui o : por .
     // Veja as explicacoes no proximo comentario com meu nome
     //string resultTranslate = "__HPA__:HPA_PARALLEL(\"";
@@ -165,22 +157,17 @@ string ParserHPA::solveParallel(vector<string> splits){
     return resultTranslate;
 }
 
-
 /// Tiago - Alterei todas as chamadas geradas pelo paser para que utilizam letras minusculas :
 // Por exemplo, ao inves de gerar a chamada " __HPA__:HPA_JOINALL()" o  parser ira gerar "__HPA__.joinall()"
 vector<string> ParserHPA::translate(vector<string> modelVec){
-
     vector<string> modelTranslated;
 
     for(int i = 0; i < modelVec.size()-1;i++){
-
         //tenho que fazer uma operacao de split para limpar as linhas
         vector<string> vectorClean = removeProblemsLine(modelVec.at(i));
 
         if(vectorClean.size() > 0 && !vectorClean.at(0).compare("--HPA")){
-
             if(!vectorClean.at(1).compare("PARALLEL")){
-
                 //preciso pegar a linha imediatamente abaixo que seja diferente de vazio
                 i++;
                 vectorClean = removeProblemsLine(modelVec.at(i));
@@ -245,7 +232,6 @@ qWarning("erro");
 
 //novo path para o modelo instrumentando (modificar para linux /)
 string ParserHPA::manipulatePath(string modelPath){
-
     vector<string> splitPath;
     //remover espacos e tabulacoes
     #ifdef WIN32
@@ -309,4 +295,3 @@ string ParserHPA::getNewPath(){
 void ParserHPA::cleanTranslate(){
 	remove(newPath.c_str());
 }
-

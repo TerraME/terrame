@@ -49,10 +49,7 @@ using namespace std;
 //vetor de trabalhadores (minhas threads)
 static vector<ProcTask*> workers;
 
-
 class HPA {
-
-
 	int refGlobalHPA;
 
 public:
@@ -61,7 +58,6 @@ public:
     static Luna<HPA>::RegType methods[];
 
 private:
-
 	//pilha de execucao principal
 	ProcHPA *mainStack;
 	string pathModel;
@@ -105,7 +101,6 @@ public:
 	//Executa o Join em todas as funcoes que estao executando ate' o ponto de chamada
     HPA(lua_State *L);
 
-
     int joinall(lua_State*);
     //Executa o Join na/nas funcoes name_func que esta/estao executando
     int join(lua_State*);
@@ -115,7 +110,6 @@ public:
 	int acquire(lua_State *now);
 	int release(lua_State *now);
 	int np(lua_State *now);
-
 
 	int HPATests(lua_State * now);
 
