@@ -166,7 +166,7 @@ void ProcTask::run() {
 //sprintf(buffer, "%d" , ar.currentline);
 //qWarning(buffer);
 
-		for(int ind = 0;ind < tempParam.getSetParam().size();ind++){
+		for(int ind = 0; ind < tempParam.getSetParam().size(); ind++){
 			string par_Now = "__HPA_VAR__";
 			char C_aux_par[BUFSIZ];
 
@@ -197,7 +197,7 @@ void ProcTask::run() {
 			//voltar a versao antiga
 			/*lua_getref(Execute_HPA->MAIN->Func_Lua, temp_Param.ref_of_return);
 			lua_xmove(Func_Lua, Execute_HPA->MAIN->Func_Lua, temp_Param.param_of_return.size());
-			lua_unref(Execute_HPA->MAIN->Func_Lua, temp_Param.ref_of_return);*/
+			lua_unref(Execute_HPA->MAIN->Func_Lua, temp_Param.ref_of_return); */
 			hpaLoadParams(getState(), tempParam.getSetRet(), tempParam.get_State());
 		}else{
 			//necessito retirar a chamada da funcao do topo

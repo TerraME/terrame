@@ -121,7 +121,7 @@ string ParserHPA::solveParallel(vector<string> splits){
     string unionTranlate = "";
     string parameters = "";
 
-    for(int i = 0;i < splits.size();i++){
+    for(int i = 0; i < splits.size(); i++){
         resultTranslate = resultTranslate + splits.at(i);
         unionTranlate = unionTranlate + splits.at(i);
     }
@@ -131,9 +131,9 @@ string ParserHPA::solveParallel(vector<string> splits){
 
     const char *vetChar = unionTranlate.c_str();
 
-    for(int i = 0; i < unionTranlate.size()-1;i++){
+    for(int i = 0; i < unionTranlate.size()-1; i++){
         //se estamos no fim da chamada precisamos tomar estes cuidados
-        if(i == unionTranlate.size()-1 || (vetChar[i+1] == ';' && vetChar[i] == ')'))
+        if(i == unionTranlate.size()-1 || (vetChar[i+1] == '; ' && vetChar[i] == ')'))
             controlPar = false;
 
         //estamos entre colchetes vamos armazenar tudo como parâmetro usua'rio define
@@ -152,7 +152,7 @@ string ParserHPA::solveParallel(vector<string> splits){
         resultTranslate = resultTranslate + ", " + parameters;
 
     //encerrando a chamada a funcao parallel
-    resultTranslate = resultTranslate + ");";
+    resultTranslate = resultTranslate + "); ";
 
     return resultTranslate;
 }
@@ -162,7 +162,7 @@ string ParserHPA::solveParallel(vector<string> splits){
 vector<string> ParserHPA::translate(vector<string> modelVec){
     vector<string> modelTranslated;
 
-    for(int i = 0; i < modelVec.size()-1;i++){
+    for(int i = 0; i < modelVec.size()-1; i++){
         //tenho que fazer uma operacao de split para limpar as linhas
         vector<string> vectorClean = removeProblemsLine(modelVec.at(i));
 
@@ -190,33 +190,33 @@ qWarning("erro");
                 string lineTranslated = solveParallel(vectorClean);
                 modelTranslated.push_back(lineTranslated);
             }else if(!vectorClean.at(1).compare("JOINALL")){
-                //modelTranslated.push_back("__HPA__.HPA_JOINALL();");
-                modelTranslated.push_back("__HPA__:joinall();");
+                //modelTranslated.push_back("__HPA__.HPA_JOINALL(); ");
+                modelTranslated.push_back("__HPA__:joinall(); ");
             }else if(!vectorClean.at(1).compare("JOIN")){
                 if(vectorClean.size() > 2){
-                    //modelTranslated.push_back("__HPA__:HPA_JOIN(\"" + vectorClean.at(2) + "\");");
-                    modelTranslated.push_back("__HPA__:join(\"" + vectorClean.at(2) + "\");");
+                    //modelTranslated.push_back("__HPA__:HPA_JOIN(\"" + vectorClean.at(2) + "\"); ");
+                    modelTranslated.push_back("__HPA__:join(\"" + vectorClean.at(2) + "\"); ");
                 }else{
                     cerr << "error: nome da funcao para a funcao JOIN nao foi informado" << endl;
                 }
             }else if(!vectorClean.at(1).compare("ACQUIRE")){
                 if(vectorClean.size() > 2){
-                    //modelTranslated.push_back("__HPA__:HPA_Acquire(" + vectorClean.at(2) + ", \"" + vectorClean.at(2) + "\");");
-                    modelTranslated.push_back("__HPA__:acquire(" + vectorClean.at(2) + ", \"" + vectorClean.at(2) + "\");");
+                    //modelTranslated.push_back("__HPA__:HPA_Acquire(" + vectorClean.at(2) + ", \"" + vectorClean.at(2) + "\"); ");
+                    modelTranslated.push_back("__HPA__:acquire(" + vectorClean.at(2) + ", \"" + vectorClean.at(2) + "\"); ");
                 }else{
                     cerr << "error: nome da secao critica para ACQUIRE nao foi informado ou e de tipo incompativel" << endl;
                 }
             }else if(!vectorClean.at(1).compare("RELEASE")){
                 if(vectorClean.size() > 2){
-                    //modelTranslated.push_back("__HPA__:HPA_Release(" + vectorClean.at(2) + ", \"" + vectorClean.at(2) + "\");");
-                    modelTranslated.push_back("__HPA__:release(" + vectorClean.at(2) + ", \"" + vectorClean.at(2) + "\");");
+                    //modelTranslated.push_back("__HPA__:HPA_Release(" + vectorClean.at(2) + ", \"" + vectorClean.at(2) + "\"); ");
+                    modelTranslated.push_back("__HPA__:release(" + vectorClean.at(2) + ", \"" + vectorClean.at(2) + "\"); ");
                 }else{
                     cerr << "error: nome da secao critica para RELEASE nao foi informado ou e de tipo incompativel" << endl;
                 }
             }else if(!vectorClean.at(1).compare("NP")){
                 if(vectorClean.size() > 2){
-                    //modelTranslated.push_back("__HPA__:HPA_NP("+vectorClean.at(2)+");");
-                    modelTranslated.push_back("__HPA__:np("+vectorClean.at(2)+");");
+                    //modelTranslated.push_back("__HPA__:HPA_NP("+vectorClean.at(2)+"); ");
+                    modelTranslated.push_back("__HPA__:np("+vectorClean.at(2)+"); ");
                 }else{
                     cerr << "error: quantidade de nucleos nao foi informada" << endl;
                 }
@@ -242,7 +242,7 @@ string ParserHPA::manipulatePath(string modelPath){
 
     string newPath = "";
 
-    for(int i = 0; i < splitPath.size()-1;i++){
+    for(int i = 0; i < splitPath.size()-1; i++){
         #ifdef WIN32
             newPath = newPath + splitPath.at(i) + "\\";
         #else
@@ -259,9 +259,9 @@ void ParserHPA::writeModel(string path, vector<string> modelInVec){
     ofstream modelWrite;
     modelWrite.open(path.c_str(), ios_base::out);
 
-    modelWrite << "__HPA__ = HPA();\n";
+    modelWrite << "__HPA__ = HPA(); \n";
 
-    for(int i = 0; i < modelInVec.size();i++){
+    for(int i = 0; i < modelInVec.size(); i++){
         modelWrite << modelInVec.at(i);
         modelWrite << "\n";
     }

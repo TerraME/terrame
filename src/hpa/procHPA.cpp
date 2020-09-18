@@ -62,7 +62,7 @@ string ProcHPA::getNameTranslated(){
 }
 
 void ProcHPA::run(){
-	luaL_dostring(funcLua, "__HPA_MODEL_ID_ = 0;");
+	luaL_dostring(funcLua, "__HPA_MODEL_ID_ = 0; ");
 	//olhar esta chamada
 	int erroTrad = luaL_loadfile(funcLua, nameTranslatedModel.c_str());
 	if( ! erroTrad ) {

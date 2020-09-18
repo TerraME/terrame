@@ -34,7 +34,7 @@ void HPA::createWorkers(){
 	//lua_gc(ModeloMain, LUA_GCCOLLECT, 0);
 
 	//iniciando os workers
-	for(int i = 0; i < getNumCpu();i++){
+	for(int i = 0; i < getNumCpu(); i++){
 		workers.push_back(new ProcTask()); // tiago - outra fonte de leak!
 		workers.at(workers.size()-1)->set_State(lua_newthread(ModeloMain));
 		workers.at(workers.size()-1)->setRefThread(luaL_ref(ModeloMain, LUA_REGISTRYINDEX));
@@ -48,7 +48,7 @@ void HPA::createWorkers(){
 
 // Tiago - Metodo do Saulo que eu considerei muito mal implementdo, entao comentei e fiz o meu a seguir
 // void HPA::removeWorkers(lua_State *L){
-// 	for(int i = 0; i < getNumCpu();i++){
+// 	for(int i = 0; i < getNumCpu(); i++){
 // 		luaL_unref(L, workers.at(i)->getRefThread(),	LUA_REGISTRYINDEX);
 
 // 		// Tiago -- necessario para remover leak de memoria geraso pelo saulo
@@ -333,7 +333,7 @@ int HPA::join(lua_State* L){
 	string nameFuncJoin = lua_tostring(L, 1);
 
 	//dos workers que estao executando existe algum qeu esta a executar esta funcao?
-	for(int i = 0;i < workers.size();i++){
+	for(int i = 0; i < workers.size(); i++){
 		if(!workers.at(i)->getName().compare(nameFuncJoin)){
 			workers.at(i)->wait();
 		}
@@ -355,7 +355,7 @@ int HPA::join(lua_State* L){
 
 	//existe processo na bag com este nome e temos que aguardar a sua execucao
 	if(thereATask){
-		for(int i = 0; i < workers.size();i++){
+		for(int i = 0; i < workers.size(); i++){
 			workers.at(i)->wait();
 		}
 	}
@@ -376,7 +376,7 @@ lua_State* HPA::Read_Parameters(lua_State* L, vector<string>name_of_par){
 	int positionOfParam = 2;
 
 	//leitura deve ser realizada aqui passar por todos os parametros
-	for(int ind = 0; ind < name_of_par.size();ind++){
+	for(int ind = 0; ind < name_of_par.size(); ind++){
 		if(lua_type(L, positionOfParam) != LUA_TTABLE)
 		{
 			HPAxcopy_aux(L, store_val, positionOfParam);
@@ -417,9 +417,9 @@ vector<string> HPA::findNamePar(string toExecut){
 
     S_Tokenize(toExecut, executeClean, "( , )");
 
-    for(int i = 1;i < executeClean.size();i++){
+    for(int i = 1; i < executeClean.size(); i++){
         if(i == executeClean.size()-1){
-			if(executeClean.at(i).compare(";")){
+			if(executeClean.at(i).compare("; ")){
                 namesPar.push_back(executeClean.at(i));
 			}
 		}else{
@@ -489,7 +489,7 @@ int HPA::parallel(lua_State* L){
 	//fim do metodo insertion aqui
 
 	//aqui verificamos se existe algum worker parado e efetuamos a inicializacao de algum deles para tratar a requisicao caso algum esteja ocioso
-	for(int i = 0; i < workers.size();i++){
+	for(int i = 0; i < workers.size(); i++){
 		if(!workers.at(i)->isRunning()){
 			workers.at(i)->start();
 			break;
