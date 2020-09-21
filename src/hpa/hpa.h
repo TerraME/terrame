@@ -27,7 +27,6 @@ of this software and its documentation.
 #include "procHPA.h"
 #include "procTask.h"
 #include "envHPA.h"
-#include "parserHPA.h"
 
 #include <iostream>
 #include <vector>

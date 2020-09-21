@@ -214,8 +214,9 @@ HPA::HPA(string pathModel, lua_State *L){
 // e quando a pilha lua e' fehada por "lua_close()" no main(), o codigo abaixo gera um "segmentation fault"
 // tive que fazer mainStack = NULL no construtor HPA( lusState*) chamado por lua
 HPA::~HPA(){
-	if(mainStack) {
-		if( mainStack->getState()) 
+	if(mainStack)
+	{
+		if( mainStack->getState())
 			removeWorkers(mainStack->getState());
 		removeLockSections();
 		delete mainStack;
