@@ -102,6 +102,5 @@ string ParamTask::getNameTask(){
 }
 
 void ParamTask::setNameTask(string nameTask_){
-	//cerr << "set: " << nameTask_ << endl;
 	this->nameFuncTask = nameTask_;
 }

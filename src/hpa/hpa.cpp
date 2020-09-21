@@ -215,8 +215,9 @@ HPA::HPA(string pathModel, lua_State *L){
 // tive que fazer mainStack = NULL no construtor HPA( lusState*) chamado por lua
 HPA::~HPA(){
 	if(mainStack) {
-		if( mainStack->getState() ) removeWorkers(mainStack->getState());
-	    removeLockSections();
+		if( mainStack->getState()) 
+			removeWorkers(mainStack->getState());
+		removeLockSections();
 		delete mainStack;
 	}
     else // so o objeto HPA criado em Lua tem referencia e nao tem mainStack
@@ -536,7 +537,6 @@ int HPA::HPATests(lua_State * now){
 	lua_settop(now, arg+3);
 	lua_xmove(now, L1, 1);
 	lua_pushstring(now, lua_setlocal(L1, &ar, luaL_checkinteger(now, arg+2)));
-	cerr << "oi" << endl;
 
 	return 1;
 

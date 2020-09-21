@@ -76,9 +76,9 @@ void ProcHPA::run(){
 		sprintf(newLineNumber, "%d", lineNumber);
 		string newMsg = nameTranslatedModel;
 		#ifdef WIN32
-		    int fileNamePos = nameTranslatedModel.find_last_of("\\");
+			int fileNamePos = nameTranslatedModel.find_last_of("\\");
 		#else
-		    int fileNamePos = nameTranslatedModel.find_last_of("/");
+			int fileNamePos = nameTranslatedModel.find_last_of("/");
 		#endif
 		newMsg = newMsg + ":" + newLineNumber + ":" + msg.substr(lastPos+1);
 		newMsg.erase(fileNamePos+1, 4);
@@ -101,9 +101,9 @@ void ProcHPA::run(){
 		//sprintf(newLineNumber, "%d", lineNumber);
 		//string newMsg = nameTranslatedModel;
 		#ifdef WIN32
-		    int fileNamePos = nameTranslatedModel.find_last_of("\\");
+			int fileNamePos = nameTranslatedModel.find_last_of("\\");
 		#else
-		    int fileNamePos = nameTranslatedModel.find_last_of("/");
+			int fileNamePos = nameTranslatedModel.find_last_of("/");
 		#endif
 		//newMsg = newMsg + ":" + newLineNumber + ":" + msg.substr(lastPos+1);
 		string newMsg = msg;
