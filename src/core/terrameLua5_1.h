@@ -138,5 +138,7 @@ luaCell * findCell(luaCellularSpace*, CellIndex&);
 #include "luaTcpSender.h"
 #include "luaUdpSender.h"
 
+#include "hpa/hpa.h"
+
 #endif // TERRAME_LUA_5_1_H
 

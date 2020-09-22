@@ -186,3 +186,9 @@ sketch = {
 	base     = {arg = "-sketch"}
 }
 
+hpa = {
+	basic = {script = "hpa-basic.lua", arg = "-hpa"},
+	sum = {script = "hpa-matrix-sum.lua", arg = "-hpa"},
+	multiplication = {script = "hpa-matrix-mult.lua", arg = "-hpa"}
+}
+

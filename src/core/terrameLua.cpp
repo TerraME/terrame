@@ -58,6 +58,8 @@ extern "C"
 #include "luna.h"
 #include "LuaBindingDelegate.h"
 
+#include "hpa/hpa.h"
+
 QApplication* app;
 
 //////////////////////////////////////////////////////////////////////////////
@@ -165,6 +167,7 @@ void registerClasses()
 	Luna<luaLogFile>::getInstance()->setup(L);
 	Luna<luaTcpSender>::getInstance()->setup(L);
 	Luna<luaUdpSender>::getInstance()->setup(L);
+	Luna<HPA>::getInstance()->setup(L);
 }
 
 int cpp_runcommand(lua_State *L)
@@ -339,6 +342,16 @@ int cpp_closeAllWidgets(lua_State* L)
 	return 0;
 }
 
+int cpp_hpa_run(lua_State* L)
+{
+	std::string script = lua_tostring(L, -1);
+	HPA *HPAFlow = new HPA(script, L);
+	HPAFlow->execute();
+	delete HPAFlow;
+
+	return 0;
+}
+
 extern ExecutionModes execModes;
 
 int main(int argc, char *argv[])
@@ -457,6 +470,9 @@ int main(int argc, char *argv[])
 	lua_pushcfunction(L, cpp_closeAllWidgets);
 	lua_setglobal(L, "cpp_closeAllWidgets");
 
+	lua_pushcfunction(L, cpp_hpa_run);
+	lua_setglobal(L, "cpp_hpa_run");
+
 	// Execute the lua files
 	if (argc < 2)
 	{
@@ -480,6 +496,10 @@ int main(int argc, char *argv[])
 
 			argument++;
 		}
+
+		//HPA *HPAFlow = new HPA("hpa_model_test.lua", L);
+		//HPAFlow->execute();
+		//delete HPAFlow;
 
 		lua_call(L, 1, 0);
 	}

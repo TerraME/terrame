@@ -984,7 +984,7 @@ function _Gtme.loadTmeFile(luafile)
 end
 
 local function runScript(script)
-	if info_.mode ~= "quiet" then
+	if info_.mode ~= "quiet" and not info_.hpa then --TODO: hap doesn't work whit mode ~= quiet
 		local mt = getmetatable(_G)
 		_Gtme.checkNilVariables(mt)
 	end
@@ -1023,7 +1023,13 @@ local function runScript(script)
 		end
 	end
 
-	local success, result = _Gtme.myxpcall(function() dofile(tostring(script)) end)
+	local success, result
+	if info_.hpa then
+		success, result = _Gtme.myxpcall(function() cpp_hpa_run(tostring(script)) end)
+	else
+		success, result = _Gtme.myxpcall(function() dofile(tostring(script)) end)
+	end
+
 	if not success then
 		_Gtme.printError(result)
 		os.exit(1)
@@ -1622,6 +1628,8 @@ function _Gtme.execute(arguments) -- 'arguments' is a vector of strings
 				local numIssues = _Gtme.checkPackage(package, pkgPath)
 
 				os.exit(numIssues)
+			elseif arg == "-hpa" then
+				info_.hpa = true
 			else
 				_Gtme.printError("Option not recognized: '"..arg.."'.")
 				os.exit(1)
