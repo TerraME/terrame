@@ -347,6 +347,8 @@ int main(int argc, char *argv[])
 	// compatible with the version of the headers we compiled against.
 	GOOGLE_PROTOBUF_VERIFY_VERSION;
 
+	QLocale::setDefault(QLocale::English);
+
 	Q_INIT_RESOURCE(observerResource);
 
 	QLoggingCategory::setFilterRules("qt.network.ssl.warning=false");
