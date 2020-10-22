@@ -47,20 +47,23 @@ for i in "${repos[@]}"; do
 	git clone "$GIT_BASE_URL/$i" $i
 done
 
-echo ""
-echo ""
-
 RESULT=0
 
 for i in "${repos[@]}"; do
+	echo ""
+	echo "###########################################################"
 	terrame -color -package $i -check
 	RESULT=$(($? + $RESULT))
 	echo ""
+	echo "###########################################################"	
+	terrame -color -package $i -projects
+	RESULT=$(($? + $RESULT))
 	echo ""
+	echo "###########################################################"
 	terrame -color -package $i -doc
 	RESULT=$(($? + $RESULT))
 	echo ""
-	echo ""	
+	echo "###########################################################"	
 	terrame -color -package $i -test
 	RESULT=$(($? + $RESULT))		
 done
