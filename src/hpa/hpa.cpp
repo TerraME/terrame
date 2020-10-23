@@ -23,11 +23,7 @@ of this software and its documentation.
 
 #include "hpa.h"
 
-#ifdef WIN32
-	#include <Windows.h>
-#elif __linux__
-	#include <unistd.h>
-#endif
+#include <thread>
 
 void HPA::createWorkers(){
 	//lua_settop(ModeloMain, 0);
@@ -187,15 +183,7 @@ HPA::HPA(string pathModel, lua_State *L){
 
 	mainStack->set_State(ModeloMain);
 
-	#ifdef WIN32
-		//informacao sobre a quantidade de cores da maquina
-		SYSTEM_INFO sysinfo;
-		GetSystemInfo(&sysinfo);
-		setNumCpu(sysinfo.dwNumberOfProcessors);
-	#else
-		int numberOfProcessors = sysconf( _SC_NPROCESSORS_ONLN );
-		setNumCpu(numberOfProcessors);
-	#endif
+	setNumCpu(std::thread::hardware_concurrency());
 
 	createWorkers();
 
