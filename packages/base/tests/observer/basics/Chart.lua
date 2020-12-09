@@ -45,7 +45,7 @@ return{
 		unitTest:assertType(tube.c, "Chart")
 
 		tube:run(10)
-		unitTest:assertSnapshot(tube.c, "chart-table-0.bmp", 0.02)
+		unitTest:assertSnapshot(tube.c, "chart-table-0.bmp", 0.025)
 
 		local world = Agent{
 			count = 0,
