@@ -43,7 +43,7 @@ return {
 
 		local layerName = "WMS-Layer"
 		local url = "http://terrabrasilis.dpi.inpe.br/geoserver/ows"
-		local dataset = "prodes-cerrado:temporal_mosaic_cerrado_2000_2019"
+		local dataset = "prodes-amz:accumulated_deforestation_1988_2007_biome"
 		local directory = currentDir()
 		local srid = 29901
 
@@ -87,7 +87,7 @@ return {
 
 			local layerName = "LayerWMS"
 			local url = "http://terrabrasilis.dpi.inpe.br/geoserver/ows"
-			local dataset = "prodes-legal-amz:temporal_mosaic_legal_amazon_2000_2018"
+			local dataset = "prodes-legal-amz:states_legal_amazon"
 			local srid = 29901
 			local directory = currentDir()
 			local conn = {
