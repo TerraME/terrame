@@ -43,7 +43,7 @@ return {
 				project = qgp,
 				name = "LayerWMS",
 				service = "http://terrabrasilis.dpi.inpe.br/geoserver/ows",
-				map = "prodes-legal-amz:temporal_mosaic_legal_amazon_2000_2018"
+				map = "prodes-cerrado:prodes_cerrado_2000_2018_uf_mun"
 			}
 
 			local qgp2 =  Project{

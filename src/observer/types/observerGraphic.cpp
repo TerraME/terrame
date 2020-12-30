@@ -34,6 +34,7 @@ using namespace std;
 
 #include <qwt_plot_legenditem.h>
 #include <qwt_plot_item.h>
+#include <qwt_scale_widget.h>
 
 #include "chartPlot.h"
 #include "internalCurve.h"
@@ -81,6 +82,7 @@ ObserverGraphic::ObserverGraphic(Subject *sub, QWidget *parent)
     palette.setColor(QPalette::Background, Qt::white);
     plotter->setPalette(palette);
     plotter->setWindowTitle("Chart");
+    plotter->axisWidget(QwtPlot::yLeft)->setMinBorderDist(10, 10);
 
     VisualArrangement::getInstance()->starts(plotter->getId(), plotter);
 
@@ -244,19 +246,19 @@ void ObserverGraphic::setTitles(const QString &title, const QString &xTitle, con
 	QFont font = qfd.font("Ubuntu", QString(), 12);
 	QwtText qtitle(title);
 	qtitle.setFont(font);
-    plotter->setTitle(qtitle);
-
-	plotter->setAxisFont(0, font);
+	plotter->setTitle(qtitle);
+	font.setWordSpacing(1.0);
 	plotter->setAxisFont(1, font);
-	plotter->setAxisFont(2, font);
+	plotter->setAxisFont(2, font); //x axis
+	plotter->setAxisFont(0, font); //y axis
 
 	QwtText qxTitle(xTitle);
 	qxTitle.setFont(font);
-    plotter->setAxisTitle(QwtPlot::xBottom, qxTitle);
+	plotter->setAxisTitle(QwtPlot::xBottom, qxTitle);
 
 	QwtText qyTitle(yTitle);
 	qyTitle.setFont(font);
-    plotter->setAxisTitle(QwtPlot::yLeft, qyTitle);
+	plotter->setAxisTitle(QwtPlot::yLeft, qyTitle);
 }
 
 void ObserverGraphic::setLegendPosition(QwtPlot::LegendPosition pos)
@@ -386,6 +388,7 @@ void ObserverGraphic::setAttributes(const QStringList &attribs, const QStringLis
                 qWarning("%s", qPrintable(TerraMEObserver::MEMORY_ALLOC_FAILED));
         }
     }
+
     plotter->setInternalCurves(internalCurves->values());
 }
 
