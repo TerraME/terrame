@@ -23,7 +23,6 @@
 -------------------------------------------------------------------------------------------
 
 local gis = getPackage("gis")
-local cellArea
 
 Cell_ = {
 	type_ = "Cell",
@@ -291,13 +290,8 @@ Cell_ = {
 	-- @usage -- DONTRUN
 	-- cell:area()
 	area = function(self)
-		if cellArea then
-			return cellArea
-		end
-
 		if self.geom then
-			cellArea = gis.TerraLib().getArea(self.geom)
-			return cellArea
+			return gis.TerraLib().getArea(self.geom)
 		else
 			customError("It was not possible to calculate the area. Geometry was not found.")
 		end
