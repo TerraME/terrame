@@ -3178,8 +3178,7 @@ TerraLib_ = {
 
 		if (geomType == "MultiPolygon") or (geomType == "CurvePolygon") or
 			(geomType == "Polygon") then
-			local env = geom:getMBR()
-			return env:getArea()
+			return geom:getArea()
 		else
 			customWarning("Geometry should be a polygon to get the area.")
 		end

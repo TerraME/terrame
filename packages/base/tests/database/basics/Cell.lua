@@ -48,6 +48,45 @@ return{
 		}
 
 		-- SHAPE
+		local cs1 = CellularSpace{
+			project = projName,
+			layer = layerName1
+		}
+
+		local areas = {
+			AM = 1601675499688.9,
+			BA = 564229585351.11,
+			AL = 28168487396.904,
+			CE = 149907674247.99,
+			MA = 330188402174.26,
+			MG = 592198348836.93,
+			MS = 361756445187.47,
+			PA = 1214210378305.2,
+			PE = 97860692177.33,
+			PB = 54587304824.333,
+			PR = 196600897555.39,
+			RJ = 42120876433.086,
+			RN = 53762908439.105,
+			RO = 242382991893.6,
+			RR = 244841730635.56,
+			RS = 271939274442.49,
+			SC = 95387870311.867,
+			SE = 21982287629.894,
+			SP = 247546936216.45,
+			TO = 275466806493.38,
+			PI = 255173646784.11,
+			ES = 46478925246.813,
+			AP = 136242737344.92,
+			AC = 154725610931.57,
+			DF = 6123834608.5798,
+			GO = 338731171994.97,
+			MT = 898282431069.91
+		}
+
+		forEachCell(cs1, function(cell)
+			unitTest:assertEquals(math.floor(areas[cell.SIGLA]), math.floor(cell:area()))
+		end)
+
 		local shp1 = "brazil_cells.shp"
 		local filePath1 = currentDir()..shp1
 
