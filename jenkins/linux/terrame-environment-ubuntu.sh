@@ -40,11 +40,11 @@ echo ""
 echo "### TerraME Environment ###"
 
 echo "Cleaning last directories"
-rm -rf $_TERRAME_BUILD_BASE/solution $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR
+rm -rf $_TERRAME_BUILD_BASE/solution $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR $_TERRAME_PACKAGES_DIR 
 valid $? "Error: Cleaning fail"
 
 echo "Creating TerraME Test directories"
-mkdir $_TERRAME_BUILD_BASE/solution $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR
+mkdir $_TERRAME_BUILD_BASE/solution $_TERRAME_REPOSITORY_DIR $_TERRAME_TEST_DIR $_TERRAME_EXECUTION_DIR $_TERRAME_PACKAGES_DIR
 valid $? "Error: Creating fail"
 
 echo "Copying TerraME compilation scripts to TerraME Solution directory"
@@ -103,6 +103,8 @@ valid $? "Error: Copying fail"
 cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-cpp-test-ubuntu.sh $_TERRAME_TEST_DIR
 valid $? "Error: Copying fail"
 cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-cpp-linter-ubuntu.sh $_TERRAME_TEST_DIR
+valid $? "Error: Copying fail"
+cp --verbose $_TERRAME_GIT_DIR/jenkins/linux/terrame-packages-current-ubuntu.sh $_TERRAME_PACKAGES_DIR
 valid $? "Error: Copying fail"
 
 echo ""
