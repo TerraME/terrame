@@ -683,7 +683,7 @@ elseif(LINUX)
 	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}
 	        COMPONENT runtime)
 
-	install(FILES ${Qt5_DIR}/../../qt5/plugins/platforms/libqxcb.so
+	install(FILES ${Qt5_DIR}/../../../plugins/platforms/libqxcb.so
 	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}/platforms
 	        COMPONENT runtime)
 
