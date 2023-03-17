@@ -419,9 +419,9 @@ if(APPLE)
 	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}/share
 	        COMPONENT runtime)			
 
-	install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck
-	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}
-	        COMPONENT runtime)
+#	install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck
+#	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}
+#	        COMPONENT runtime)
 elseif(WIN32)
 	set(TERRAME_LUA_SRC_DIR ${TERRAME_SRC_DIR}/lua)
 
