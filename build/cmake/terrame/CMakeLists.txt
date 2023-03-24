@@ -419,7 +419,7 @@ if(APPLE)
 	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}/share
 	        COMPONENT runtime)			
 
-	install(DIRECTORY ${_TERRAME_3RDPARTY_DIR}/luacheck/src/luacheck
+	install(DIRECTORY ${_LUACHECK_SRC_DIR}/src/luacheck/
 	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}
 	        COMPONENT runtime)
 elseif(WIN32)
@@ -573,7 +573,7 @@ elseif(WIN32)
 	        COMPONENT runtime
 	        CONFIGURATIONS Release)
 
-	install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck/
+	install(DIRECTORY ${_LUACHECK_SRC_DIR}/src/luacheck/
 	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}/luacheck
 	        COMPONENT runtime)
 
@@ -740,7 +740,7 @@ elseif(LINUX)
 	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}/share
 	        COMPONENT runtime)			
 
-	install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck/
+	install(DIRECTORY ${_LUACHECK_SRC_DIR}/src/luacheck/
 	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}/luacheck
 	        COMPONENT runtime)
 endif()
