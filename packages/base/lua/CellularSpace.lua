@@ -905,7 +905,6 @@ CellularSpace_ = {
 	-- See the table below.
 	-- @tabular strategy
 	-- Strategy & Description & Compulsory Arguments & Optional Arguments \
-	-- "3x3" & A 3x3 (Couclelis) Neighborhood (Deprecated. Use mxn instead). & & name, filter, weight, inmemory \
 	-- "coord" & A bidirected relation between two CellularSpaces connecting Cells with the same
 	-- (x, y) coordinates. & target & name, inmemory\
 	-- "diagonal" & Connect each Cell to its (at most) four diagonal neighbors.
