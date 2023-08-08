@@ -419,7 +419,7 @@ if(APPLE)
 	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}/share
 	        COMPONENT runtime)			
 
-	install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck
+	install(DIRECTORY ${_LUACHECK_SRC_DIR}/src/luacheck/
 	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}
 	        COMPONENT runtime)
 elseif(WIN32)
@@ -573,7 +573,7 @@ elseif(WIN32)
 	        COMPONENT runtime
 	        CONFIGURATIONS Release)
 
-	install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck/
+	install(DIRECTORY ${_LUACHECK_SRC_DIR}/src/luacheck/
 	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}/luacheck
 	        COMPONENT runtime)
 
@@ -683,7 +683,7 @@ elseif(LINUX)
 	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}
 	        COMPONENT runtime)
 
-	install(FILES ${Qt5_DIR}/../../qt5/plugins/platforms/libqxcb.so
+	install(FILES ${Qt5_DIR}/../../../plugins/platforms/libqxcb.so
 	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}/platforms
 	        COMPONENT runtime)
 
@@ -740,7 +740,7 @@ elseif(LINUX)
 	        DESTINATION ${TERRAME_DESTINATION_RUNTIME}/share
 	        COMPONENT runtime)			
 
-	install(DIRECTORY ${TERRAME_DEPENDENCIES_DIR}/luacheck/src/luacheck/
+	install(DIRECTORY ${_LUACHECK_SRC_DIR}/src/luacheck/
 	        DESTINATION ${TERRAME_DESTINATION_LIBRARY}/luacheck
 	        COMPONENT runtime)
 endif()
